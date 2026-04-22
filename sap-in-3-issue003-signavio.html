@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 003 · SAP Signavio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628;
+      --navy-mid: #152035;
+      --navy-light: #1E2E47;
+      --gold: #C9A84C;
+      --gold-light: #E2C47A;
+      --gold-pale: #F5EDD5;
+      --cream: #FAF7F2;
+      --slate: #8497B0;
+      --red-accent: #C0392B;
+      --green-accent: #1A7C5C;
+      --text-body: #2C3E50;
+      --text-light: #5D6D7E;
+      --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+    .masthead { background: var(--navy); color: white; padding: 0; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* ── TRILOGY BANNER ───────────────────────────── */
+    .trilogy-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 16px 60px; }
+    .trilogy-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 0; }
+    .trilogy-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-right: 24px; white-space: nowrap; }
+    .trilogy-steps { display: flex; gap: 0; flex: 1; }
+    .trilogy-step { flex: 1; padding: 10px 16px; text-align: center; border: 1px solid rgba(201,168,76,0.2); }
+    .trilogy-step.active { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+    .trilogy-step-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 3px; }
+    .trilogy-step-name { font-family: 'Playfair Display', serif; font-size: 13px; color: white; font-weight: 700; }
+    .trilogy-step-tag { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--slate); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .trilogy-step.active .trilogy-step-tag { color: var(--gold-light); }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; color: var(--text-body); margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; }
+    .icon-alert { background: #FCE4EC; }
+    .icon-ok { background: #E8F5E9; }
+    .icon-blue { background: #E3F2FD; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); }
+    .tag-gold { background: #FDF5E4; color: #8B6914; }
+    .tag-green { background: #E8F5EF; color: var(--green-accent); }
+    .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── NEXT UP TEASER ───────────────────────────── */
+    .next-up { background: var(--navy-mid); border: 1px solid rgba(201,168,76,0.25); border-radius: 8px; padding: 32px 36px; margin: 48px 0; }
+    .next-up-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .next-up-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .next-up-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.15); border-radius: 4px; padding: 16px 18px; }
+    .next-up-issue { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 6px; }
+    .next-up-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .next-up-desc { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--slate); line-height: 1.5; }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .next-up-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .trilogy-inner { flex-direction: column; gap: 12px; }
+      .trilogy-steps { flex-direction: column; }
+      .trilogy-banner { padding: 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · Business Transformation · Part 1 of 3</div>
+    <div class="masthead-issue">Issue 003 · April 22, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">You Cannot Transform a Process You Cannot See</div>
+    <div class="hero-deck">Why the most expensive mistake in enterprise transformation is skipping the diagnosis — and how SAP Signavio gives organizations the process intelligence to get it right the first time.</div>
+    <div class="hero-pull">
+      "Every failed transformation has one thing in common: someone assumed they understood how the business actually worked. SAP Signavio exists to replace that assumption with evidence."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>SAP Signavio</strong>Business Transformation Series</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Tuesday</div>
+  </div>
+</header>
+
+<!-- ═══ TRILOGY BANNER ════════════════════════════════ -->
+<div class="trilogy-banner">
+  <div class="trilogy-inner">
+    <div class="trilogy-label">🎯 The 1-2-3 Punch · Business Transformation Trilogy</div>
+    <div class="trilogy-steps">
+      <div class="trilogy-step active">
+        <div class="trilogy-step-num">ISSUE 003</div>
+        <div class="trilogy-step-name">SAP Signavio</div>
+        <div class="trilogy-step-tag">① See It</div>
+      </div>
+      <div class="trilogy-step">
+        <div class="trilogy-step-num">ISSUE 004</div>
+        <div class="trilogy-step-name">SAP LeanIX</div>
+        <div class="trilogy-step-tag">② Plan It</div>
+      </div>
+      <div class="trilogy-step">
+        <div class="trilogy-step-num">ISSUE 005</div>
+        <div class="trilogy-step-name">SAP WalkMe</div>
+        <div class="trilogy-step-tag">③ Land It</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BODY ════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- INTRODUCTION -->
+  <div class="intro-text">
+    <p class="drop-cap">Every major enterprise transformation begins with a plan. The plan describes the future state — leaner processes, faster decisions, better customer experiences, lower operating costs. It is presented with confidence, approved with optimism, and funded with conviction. And then, somewhere between the boardroom and the implementation team, reality intervenes. The processes that were supposed to change turn out to work differently than anyone thought. The workarounds, exceptions, and informal habits that accumulated over years don't appear in any documentation. The transformation hits the actual organization and discovers it is remodeling a building nobody fully mapped.</p>
+    <p>This is not an edge case. It is the default outcome of transformation programs that skip the most important step — understanding how the business actually operates before deciding how it should change. SAP Signavio is the platform built to close that gap. As the first installment in our three-part Business Transformation Trilogy, this issue breaks down why process intelligence is the foundation every transformation needs, how Signavio delivers it, and what changes when organizations stop guessing and start knowing.</p>
+  </div>
+
+  <!-- FINDING 01 — WHY -->
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">The Transformation Blind Spot That Is Costing Organizations Billions</div>
+    </div>
+    <div class="finding-body">
+      <p>The global enterprise software market will spend over $500 billion this year on technology intended to transform how organizations operate. A significant portion of that investment will underperform — not because the technology is wrong, but because the organizations deploying it don't have an accurate picture of the processes they are trying to transform. You cannot optimize what you cannot see. You cannot automate what you don't understand. And you cannot redesign a process whose actual current state exists only in the institutional memory of the people who run it every day.</p>
+      <p>The problem is structural and surprisingly consistent across industries. Most organizations have process documentation — flowcharts, standard operating procedures, training materials — that describes how work is supposed to flow. What they rarely have is an accurate picture of how work actually flows: the deviations, the exceptions, the informal approvals, the manual workarounds that have accumulated over years and become invisible to everyone except the people performing them. When a transformation program hits that gap between documented process and actual process, the consequences range from delayed timelines and cost overruns to outright project failure. SAP Signavio was built specifically to close that gap before the transformation begins — not after it stalls.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">The Three Faces of Process Blindness · Why Transformations Stall</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">🔴</div>
+          <div>
+            <div class="diagram-row-title">The Documentation Gap — What You Think vs. What Is</div>
+            <div class="diagram-row-body">Process documentation in most organizations reflects how work was designed to flow — not how it actually flows today. Years of workarounds, system limitations, regulatory changes, and informal adaptations create a growing gap between the map and the territory. Transformation programs designed against the map fail when they encounter the territory. Signavio process mining closes this gap by extracting actual process flows directly from system event logs — showing the real picture, not the aspirational one.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🟡</div>
+          <div>
+            <div class="diagram-row-title">The Variation Problem — One Process, Many Realities</div>
+            <div class="diagram-row-body">In large organizations, the same nominal process — purchase order approval, customer onboarding, invoice processing — is often executed in dozens of different ways across business units, geographies, and teams. Each variation carries different costs, different risks, and different performance characteristics. Without visibility into that variation, standardization efforts target the wrong things and miss the highest-value improvement opportunities. Signavio surfaces every process variant in a single analytical view.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">✅</div>
+          <div>
+            <div class="diagram-row-title">The Benchmarking Opportunity — How Do You Compare?</div>
+            <div class="diagram-row-body">SAP Signavio's process benchmarking capability connects organizational process performance to anonymized industry data — showing not just how your processes work, but how they compare to peers. Organizations consistently discover that processes they considered well-performing are actually significant outliers — and that the improvement opportunity is larger than internal benchmarks suggested. That discovery, made before a transformation begins, fundamentally changes the ambition and the ROI of the program.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — Process Intelligence Gap Analysis · Enterprise Transformation Context · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-red">70% of Transformations Underperform</span>
+        <span class="tag tag-gold">Process Variation Invisible to Leadership</span>
+        <span class="tag tag-navy">Documentation ≠ Reality</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The most dangerous words in enterprise transformation are "we know how this process works." In our experience, the organizations that are most confident about their process knowledge are often the ones with the largest gap between what they believe and what the data shows.</div>
+        <div class="callout-source">SAP Signavio Process Intelligence Research · 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Imagine trying to redesign the traffic flow of a city using only the original urban planning documents from twenty years ago — without ever observing how people actually drive, where the informal shortcuts are, or which intersections are causing the real congestion. That's what most enterprise transformations are doing with their process documentation. SAP Signavio is the traffic monitoring system that shows you where vehicles actually go, how long journeys actually take, and where the real bottlenecks actually are. You'd never redesign a city without that data. You shouldn't redesign your business processes without it either.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 02 — HOW -->
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP Signavio Turns Process Complexity Into Transformation Clarity</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP Signavio is a process intelligence platform built around three integrated capabilities that work together to give organizations a complete, data-driven picture of how their business operates. The first is process mining — the ability to reconstruct actual process flows from the event log data that already exists inside ERP, CRM, and other enterprise systems. The second is process modeling — structured tools for designing, documenting, and collaborating on target-state processes. The third is process management — the governance layer that connects current-state analysis to transformation execution and tracks performance over time.</p>
+      <p>What distinguishes Signavio from standalone process mapping tools is the intelligence layer that connects all three capabilities. Process mining doesn't just show you how a process flows — it shows you where it deviates from the intended design, which variants are most costly, where bottlenecks accumulate, and how performance compares to industry benchmarks. That analytical depth transforms process documentation from a static artifact into a dynamic management tool — one that can tell a transformation team not just what needs to change, but where to start, what to prioritize, and how to measure whether the change actually worked.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How SAP Signavio Works · The Four Core Capabilities</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🔬</div>
+          <div>
+            <div class="diagram-row-title">Process Mining — See What's Actually Happening</div>
+            <div class="diagram-row-body">Extracts event log data from SAP S/4HANA, SAP ECC, Salesforce, and other connected systems to automatically reconstruct actual process flows — no interviews, no workshops, no manual documentation. The result is a data-accurate picture of how every process variant actually executes, how long each step takes, where exceptions cluster, and which process paths are driving the most cost and delay. This is the foundation that makes everything else meaningful.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🗺️</div>
+          <div>
+            <div class="diagram-row-title">Process Modeling &amp; Collaboration</div>
+            <div class="diagram-row-body">A structured environment for designing and documenting target-state processes using BPMN 2.0 — the global standard for business process notation. Cross-functional teams collaborate in real time on process designs, with version control, approval workflows, and a centralized process repository that ensures everyone is working from the same current version. Replaces the fragmented world of Visio diagrams, PowerPoint flows, and email-versioned documentation.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">📊</div>
+          <div>
+            <div class="diagram-row-title">Process Performance &amp; Benchmarking</div>
+            <div class="diagram-row-body">Continuously monitors live process performance against defined KPIs — cycle times, error rates, rework volumes, automation rates — and compares results to the SAP Signavio benchmarking database of anonymized industry data. Organizations can see not just whether their processes improved, but whether they improved enough relative to what best-in-class looks like in their industry.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🔗</div>
+          <div>
+            <div class="diagram-row-title">Transformation Roadmap Integration</div>
+            <div class="diagram-row-body">Connects process intelligence directly to SAP's transformation methodology — linking process analysis findings to S/4HANA migration planning, clean core assessments, and implementation sequencing. Organizations using Signavio alongside RISE with SAP or Grow with SAP engagements use process mining data to accelerate fit-gap analysis and reduce the discovery phase of implementation projects by weeks.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2 — SAP Signavio Capability Architecture · Process Intelligence Platform · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">Process Mining from Live System Data</span>
+        <span class="tag tag-navy">BPMN 2.0 Process Modeling</span>
+        <span class="tag tag-green">Industry Benchmarking</span>
+        <span class="tag tag-gold">S/4HANA Migration Accelerator</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">30<span>%</span></div>
+          <div class="stat-label">Reduction in transformation project discovery time reported by Signavio customers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">40<span>%</span></div>
+          <div class="stat-label">Of process variants in a typical enterprise are unknown to process owners before mining</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3<span>x</span></div>
+          <div class="stat-label">Faster process documentation vs. traditional workshop-based discovery methods</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">$500<span>B</span></div>
+          <div class="stat-label">Annual global enterprise transformation spend — the market Signavio is built to de-risk</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think of SAP Signavio the way a hospital thinks about diagnostic imaging before surgery. A surgeon could make assumptions about what needs fixing based on symptoms and experience — and sometimes they'd be right. But the standard of care is to image first, understand the actual anatomy, and plan the procedure based on what the data shows. SAP Signavio is the diagnostic imaging for your business processes. It shows the actual anatomy of how your organization works — before your transformation team picks up the scalpel. The investment in the diagnosis is always returned many times over in the quality of the intervention.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 03 — WHAT -->
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Changes When You Build Transformation on Evidence Instead of Assumption</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from SAP Signavio operate at two levels that compound over time. The immediate level is efficiency — faster discovery, more accurate fit-gap analysis, reduced rework in implementation projects, and a shared process vocabulary that eliminates the cross-functional misalignment that costs transformation programs weeks of misaligned effort. Organizations consistently report that the discovery phase of S/4HANA migration projects — typically one of the most time-consuming and expensive phases — compresses significantly when process mining data replaces workshop-based documentation. That compression alone frequently justifies the Signavio investment.</p>
+      <p>The deeper level of value is strategic. Organizations that build a process intelligence capability — a living, continuously updated picture of how their business operates — gain something that extends well beyond any single transformation program. They gain the ability to detect process degradation before it becomes a performance problem, to identify automation opportunities with data-backed ROI calculations, and to benchmark continuously against industry performance rather than waiting for a consultant to tell them they've fallen behind. In an environment where the pace of change is only accelerating, the organizations with the clearest, most current picture of their own operations will consistently outmaneuver those operating on assumptions.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">Before and After SAP Signavio · The Process Intelligence Transformation</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">📉</div>
+          <div>
+            <div class="diagram-row-title">Before — Transformation Built on Assumption</div>
+            <div class="diagram-row-body">Discovery relies on stakeholder interviews and workshops that take weeks and produce subjective, incomplete pictures of current-state processes. Process documentation is outdated, fragmented, and stored in disconnected tools. Fit-gap analysis for SAP implementations is based on assumed process flows that don't match system reality. Transformation programs hit unexpected complexity mid-implementation, triggering scope changes, cost overruns, and timeline extensions that erode executive confidence and ROI.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">📈</div>
+          <div>
+            <div class="diagram-row-title">After — Transformation Built on Evidence</div>
+            <div class="diagram-row-body">Process mining reconstructs actual current-state flows from system data in days — not weeks. Every process variant, deviation, and bottleneck is visible before transformation planning begins. Fit-gap analysis is grounded in data-accurate process maps. Implementation teams arrive with a verified understanding of the processes they are transforming. Scope surprises decrease dramatically. Transformation programs deliver closer to plan — in scope, on time, and within budget.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🏆</div>
+          <div>
+            <div class="diagram-row-title">The Strategic Gain — A Living Process Intelligence Capability</div>
+            <div class="diagram-row-body">Beyond any single transformation, Signavio establishes a continuous process monitoring capability — an organizational nervous system that detects performance changes, flags emerging bottlenecks, and surfaces improvement opportunities in real time. Organizations with this capability don't wait for annual process reviews to discover they've drifted from best practice. They know continuously — and can respond accordingly.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3 — Signavio Transformation Impact Model · Before &amp; After · SAP Customer Data · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-green">30% Faster Discovery Phase</span>
+        <span class="tag tag-gold">Data-Accurate Fit-Gap Analysis</span>
+        <span class="tag tag-navy">Continuous Process Monitoring</span>
+        <span class="tag tag-green">Transformation Risk Reduction</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The organizations that get the most from their SAP transformation investments are not the ones with the biggest budgets — they are the ones that understood their processes well enough to know exactly what they were changing and why.</div>
+        <div class="callout-source">SAP Signavio Customer Research · Business Transformation Intelligence · 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here's a question worth asking your transformation team: at the start of your last major SAP implementation, how confident were you that your process documentation accurately reflected how the business actually operated? If the honest answer is "not very" — you already understand the problem Signavio solves. And if your next transformation is already in planning, the most valuable investment you can make right now is the one that ensures this time you're building on evidence, not on what everyone hopes is true.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOOD NEWS -->
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">The Integration Story</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">☁️</div>
+        <div class="gn-card-title">Deployment Model</div>
+        <div class="gn-card-body">SAP Signavio is a cloud-native SaaS platform with rapid deployment timelines. Process mining connectors for SAP S/4HANA and SAP ECC are pre-built and well-documented — organizations can have live process mining running against their SAP landscape within weeks of deployment initiation.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">SAP Ecosystem Integration</div>
+        <div class="gn-card-body">Deep native integration with SAP S/4HANA, SAP ECC, SAP BTP, and SAP's RISE and Grow transformation programs. Signavio process intelligence is embedded directly into SAP's standard transformation methodology — making it the recommended starting point for any S/4HANA migration or clean core initiative.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Non-SAP Compatibility</div>
+        <div class="gn-card-body">Process mining connectors available for Salesforce, ServiceNow, Oracle, Microsoft Dynamics, and major ERP platforms. Organizations running hybrid landscapes can mine processes across multiple systems simultaneously — giving a complete cross-platform picture of end-to-end process flows that span SAP and non-SAP systems.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🏭</div>
+        <div class="gn-card-title">Industry &amp; Size Fit</div>
+        <div class="gn-card-body">Highest value in any organization with complex, multi-system process landscapes planning or executing a major transformation — S/4HANA migration, cloud consolidation, shared services implementation, or post-merger integration. Particularly powerful in manufacturing, financial services, healthcare, and public sector where process compliance and auditability are regulatory requirements.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">See It First. Then Transform It.</div>
+    <div class="bottom-line-text">
+      <p>The case for SAP Signavio is ultimately a case for intellectual honesty about how enterprise transformation actually works. The assumption that organizations know how their processes operate — well enough to redesign them without first measuring them — has been the single most consistent source of transformation underperformance for two decades. Signavio doesn't fix transformation programs. It fixes the foundation those programs are built on — replacing assumption with evidence before the first line of code is configured or the first process is redesigned.</p>
+      <p>For organizations currently planning or executing SAP S/4HANA migrations, the ROI case is particularly direct. The discovery and fit-gap phases of implementation projects — where process ambiguity is most costly — compress measurably when process mining data replaces stakeholder interviews as the primary source of current-state knowledge. That compression saves weeks of consulting time, reduces scope surprises, and produces implementation designs that are grounded in how the business actually operates rather than how it was documented five years ago.</p>
+      <p>Issue 003 of our Business Transformation Trilogy establishes the foundation. Next week in Issue 004, we cover SAP LeanIX — the enterprise architecture intelligence platform that answers the question Signavio inevitably surfaces: now that we understand our processes, do we have the right technology landscape to support where we need to go? The 1-2-3 punch continues.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — What to Track This Quarter</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Your process documentation currency:</strong> When was your core process documentation last validated against actual system behavior? If the answer is more than 18 months ago — or "we're not sure" — process mining should be on your transformation planning agenda before your next implementation kick-off.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>S/4HANA migration discovery costs:</strong> Ask your implementation partner what percentage of their discovery phase budget is typically consumed by current-state process documentation. That number — often 20–30% of total discovery cost — is directly reducible with Signavio process mining data.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Process variant count in key workflows:</strong> Pick one high-volume process — purchase order approval, customer onboarding, invoice processing. Ask how many documented variants exist. Then ask how confident your team is that the documented variants represent all the actual variants. The gap in that answer is Signavio's value proposition in one question.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>SAP Signavio AI roadmap:</strong> SAP is actively embedding AI-driven process recommendations into Signavio — including automated identification of automation candidates, predictive bottleneck detection, and generative process design suggestions. Organizations on the platform now will access these capabilities as quarterly updates throughout 2026 and beyond.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEXT UP TEASER -->
+  <div class="next-up">
+    <div class="next-up-label">🎯 Coming Next · The Business Transformation Trilogy Continues</div>
+    <div class="next-up-grid">
+      <div class="next-up-card">
+        <div class="next-up-issue">ISSUE 004 · NEXT WEEK</div>
+        <div class="next-up-name">SAP LeanIX</div>
+        <div class="next-up-desc">You've seen your processes. Now — do you have the right technology landscape to transform them? Enterprise architecture intelligence for the modern SAP organization.</div>
+      </div>
+      <div class="next-up-card">
+        <div class="next-up-issue">ISSUE 005 · TWO WEEKS</div>
+        <div class="next-up-name">SAP WalkMe</div>
+        <div class="next-up-desc">The last mile of every transformation. You've built the right system. Now how do you ensure your people actually use it — and change how they work?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Product capabilities, statistics, and integration specifications referenced herein reflect publicly available SAP product documentation and industry research as of April 2026. Always consult your SAP account executive and qualified advisors before making technology or business strategy decisions. · SAP in 3 is an independent intelligence series.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 003 · April 22, 2026 · SAP Signavio · Business Transformation Trilogy Part 1 of 3
+</footer>
+
+</body>
+</html>
