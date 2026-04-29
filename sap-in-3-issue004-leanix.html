@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 004 · SAP LeanIX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628;
+      --navy-mid: #152035;
+      --navy-light: #1E2E47;
+      --gold: #C9A84C;
+      --gold-light: #E2C47A;
+      --gold-pale: #F5EDD5;
+      --cream: #FAF7F2;
+      --slate: #8497B0;
+      --red-accent: #C0392B;
+      --green-accent: #1A7C5C;
+      --text-body: #2C3E50;
+      --text-light: #5D6D7E;
+      --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+    .masthead { background: var(--navy); color: white; padding: 0; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    .trilogy-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 16px 60px; }
+    .trilogy-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 0; }
+    .trilogy-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-right: 24px; white-space: nowrap; }
+    .trilogy-steps { display: flex; gap: 0; flex: 1; }
+    .trilogy-step { flex: 1; padding: 10px 16px; text-align: center; border: 1px solid rgba(201,168,76,0.2); }
+    .trilogy-step.active { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+    .trilogy-step.done { background: rgba(26,124,92,0.1); border-color: var(--green-accent); }
+    .trilogy-step-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 3px; }
+    .trilogy-step.done .trilogy-step-num { color: #4CAF82; }
+    .trilogy-step-name { font-family: 'Playfair Display', serif; font-size: 13px; color: white; font-weight: 700; }
+    .trilogy-step-tag { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--slate); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .trilogy-step.active .trilogy-step-tag { color: var(--gold-light); }
+    .trilogy-step.done .trilogy-step-tag { color: #4CAF82; }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; color: var(--text-body); margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; }
+    .icon-alert { background: #FCE4EC; }
+    .icon-ok { background: #E8F5E9; }
+    .icon-blue { background: #E3F2FD; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); }
+    .tag-gold { background: #FDF5E4; color: #8B6914; }
+    .tag-green { background: #E8F5EF; color: var(--green-accent); }
+    .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+    .next-up { background: var(--navy-mid); border: 1px solid rgba(201,168,76,0.25); border-radius: 8px; padding: 32px 36px; margin: 48px 0; }
+    .next-up-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .next-up-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .next-up-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.15); border-radius: 4px; padding: 16px 18px; }
+    .next-up-card.done { border-color: rgba(26,124,92,0.4); background: rgba(26,124,92,0.06); }
+    .next-up-issue { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 6px; }
+    .next-up-card.done .next-up-issue { color: #4CAF82; }
+    .next-up-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .next-up-desc { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--slate); line-height: 1.5; }
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .next-up-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .trilogy-inner { flex-direction: column; gap: 12px; }
+      .trilogy-steps { flex-direction: column; }
+      .trilogy-banner { padding: 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · Business Transformation · Part 2 of 3</div>
+    <div class="masthead-issue">Issue 004 · April 29, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">You Know What Your Processes Do. Do You Know What Technology Is Running Them?</div>
+    <div class="hero-deck">Why enterprise architecture blindness is silently undermining transformation investments — and how SAP LeanIX gives technology leaders the clarity to plan with confidence.</div>
+    <div class="hero-pull">
+      "Most organizations have a strategy for where they want to go. Very few have an accurate map of where they actually are. SAP LeanIX is that map — and without it, every transformation is navigating by memory."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>SAP LeanIX</strong>Business Transformation Series</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<!-- ═══ TRILOGY BANNER ════════════════════════════════ -->
+<div class="trilogy-banner">
+  <div class="trilogy-inner">
+    <div class="trilogy-label">🎯 The 1-2-3 Punch · Business Transformation Trilogy</div>
+    <div class="trilogy-steps">
+      <div class="trilogy-step done">
+        <div class="trilogy-step-num">ISSUE 003 ✓</div>
+        <div class="trilogy-step-name">SAP Signavio</div>
+        <div class="trilogy-step-tag">① See It — Published</div>
+      </div>
+      <div class="trilogy-step active">
+        <div class="trilogy-step-num">ISSUE 004</div>
+        <div class="trilogy-step-name">SAP LeanIX</div>
+        <div class="trilogy-step-tag">② Plan It — This Week</div>
+      </div>
+      <div class="trilogy-step">
+        <div class="trilogy-step-num">ISSUE 005</div>
+        <div class="trilogy-step-name">SAP WalkMe</div>
+        <div class="trilogy-step-tag">③ Land It — Next Week</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BODY ════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- INTRODUCTION -->
+  <div class="intro-text">
+    <p class="drop-cap">Last week in Issue 003, SAP Signavio answered the first question every transformation must ask: do we actually understand how our business processes work today? Process mining replaced assumption with evidence, giving organizations a data-accurate picture of their current-state operations before redesigning them. That foundation is essential. But it surfaces a second question — one that is equally important and equally underestimated. Now that we understand our processes, do we have the right technology landscape to support where we need to go?</p>
+    <p>For most large organizations, that question is harder to answer than it should be. Enterprise technology landscapes have grown organically over decades — layer upon layer of applications, integrations, and platforms accumulated through acquisitions, departmental decisions, and technology cycles that nobody fully mapped along the way. SAP LeanIX is the platform built to bring clarity to that complexity. As Part 2 of our Business Transformation Trilogy, this issue explains why enterprise architecture intelligence is the missing link in most transformation programs, how LeanIX delivers it, and what changes when technology leaders can finally see the full picture of what they own, what it costs, and what needs to change.</p>
+  </div>
+
+  <!-- FINDING 01 — WHY -->
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">The Hidden Cost of Not Knowing What Technology You Actually Have</div>
+    </div>
+    <div class="finding-body">
+      <p>There is a number sitting inside most enterprise IT organizations that nobody talks about openly — the true count of applications running across the business. Ask the CIO and they will give you an estimate. Ask the CFO and they will give you a different one. Ask the business units and the numbers diverge further still. The reality, when organizations actually conduct a comprehensive technology inventory, is almost always larger than any individual estimate — and the gap between what leadership believes they have and what is actually running is one of the most consistent sources of wasted technology spend in the enterprise.</p>
+      <p>Research consistently shows that large enterprises run between 900 and 1,200 applications on average — with significant duplication, shadow IT, and end-of-life systems that no longer align to current business strategy. The annual cost of maintaining that complexity — in licensing, integration overhead, security exposure, and the organizational friction of operating incompatible systems — runs into the tens of millions for organizations of meaningful scale. More critically, this architectural opacity makes transformation planning extraordinarily difficult. When you don't have an accurate, current picture of what technology supports which business capabilities, every decision about what to change, replace, or retire is made against incomplete information. SAP LeanIX was built to eliminate that blind spot permanently.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">The Enterprise Architecture Blind Spot · Three Dimensions of Technology Opacity</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">🔴</div>
+          <div>
+            <div class="diagram-row-title">Application Sprawl — The Invisible Tax</div>
+            <div class="diagram-row-body">The average large enterprise runs far more applications than any single leader can account for. Duplicate tools performing the same function, legacy systems nobody has decommissioned, departmental SaaS subscriptions that bypassed IT procurement — all accumulate into a technology landscape that consumes budget, creates security exposure, and resists standardization. Without a single source of truth for the application portfolio, rationalization efforts are slow, incomplete, and frequently restart from scratch after leadership changes.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🟡</div>
+          <div>
+            <div class="diagram-row-title">Transformation Planning Without a Map</div>
+            <div class="diagram-row-body">When a CIO launches a cloud migration, an S/4HANA implementation, or a post-merger integration without an accurate enterprise architecture map, the discovery phase of that program becomes its most expensive phase. Dependencies nobody knew existed surface mid-implementation. Applications assumed to be retired turn out to be actively used. Integration points undocumented in any system diagram create cascading delays. The cost of discovering architectural complexity during transformation is always dramatically higher than the cost of mapping it beforehand.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">✅</div>
+          <div>
+            <div class="diagram-row-title">The Strategic Opportunity — Architecture as a Decision Tool</div>
+            <div class="diagram-row-body">Organizations with a live, continuously maintained enterprise architecture map — showing every application, its business capabilities, its technology health, its integration dependencies, and its cost — make technology investment decisions from a position of genuine clarity. They can identify redundancy, model the impact of decommissioning a system, prioritize migration sequences based on dependency chains, and present boards with data-driven technology roadmaps. That capability is the difference between IT as a cost center and IT as a strategic partner.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — Enterprise Architecture Complexity · CIO Visibility Gap · Large Enterprise Context · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-red">900–1,200 Apps Per Large Enterprise on Average</span>
+        <span class="tag tag-gold">Significant Duplication & Shadow IT</span>
+        <span class="tag tag-navy">Architecture Opacity = Transformation Risk</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">You cannot rationalize a technology landscape you cannot see. And you cannot plan a transformation on top of architecture you don't fully understand. LeanIX solves both problems — simultaneously and continuously.</div>
+        <div class="callout-source">SAP LeanIX Enterprise Architecture Research · 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think of your enterprise technology landscape the way you think about a city's infrastructure — roads, utilities, buildings, pipes running under the streets. A city can function without a current, accurate infrastructure map. But the moment you try to build something new — a new transit line, a new district, a major redevelopment — you discover very quickly that what was built over decades doesn't always align with what anyone thinks is there. SAP LeanIX is the infrastructure map for your technology landscape. It shows every system, every connection, every dependency — so that when you decide to build something new, you know exactly what you're building on top of.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 02 — HOW -->
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP LeanIX Builds and Maintains Your Enterprise Architecture Intelligence</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP LeanIX is an enterprise architecture management platform that creates and continuously maintains a single source of truth for an organization's entire technology landscape. Unlike traditional enterprise architecture tools — which produce static diagrams that become outdated the moment they're published — LeanIX is built around a live data model that integrates with the systems it documents, pulling updates automatically and surfacing changes in real time. The result is an architecture map that stays current without requiring manual maintenance effort, and that serves as an active decision-support tool rather than a historical record.</p>
+      <p>The platform organizes technology intelligence around business capabilities — connecting each application to the business function it supports, the processes it enables, and the strategic outcomes it contributes to. That capability-based model is what makes LeanIX transformationally useful rather than just informationally useful. It allows a CIO to answer not just "what applications do we have?" but "which applications support our most strategically critical capabilities?" and "what is the technology health and obsolescence risk of the systems our most important processes depend on?" Those questions — answered with data rather than intuition — form the foundation of credible, defensible technology investment decisions.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How SAP LeanIX Works · The Five Core Capabilities</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🗺️</div>
+          <div>
+            <div class="diagram-row-title">Application Portfolio Management</div>
+            <div class="diagram-row-body">A continuously maintained inventory of every application in the enterprise — with business owner, technology health rating, lifecycle status, cost, and strategic fit assessment for each. Integrates with IT service management tools, software asset management systems, and cloud platforms to stay current automatically. Replaces the spreadsheet-based application inventories that most organizations rely on and that are outdated before they're finished.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🔗</div>
+          <div>
+            <div class="diagram-row-title">Business Capability Mapping</div>
+            <div class="diagram-row-body">Maps every application to the business capabilities it supports — creating a visual picture of which technologies underpin which organizational functions. When a capability is strategically important, LeanIX shows immediately which systems it depends on, their health status, and their risk profile. When a system is being considered for decommission, LeanIX shows which capabilities would be affected and what dependencies need to be resolved first.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🔍</div>
+          <div>
+            <div class="diagram-row-title">Technology Risk & Obsolescence Tracking</div>
+            <div class="diagram-row-body">Monitors the technology health of every application against vendor lifecycle data — surfacing end-of-life risks, unsupported versions, and security vulnerabilities before they become operational incidents. In the context of SAP ECC end-of-maintenance timelines, LeanIX gives organizations a real-time picture of their legacy exposure and the sequencing logic for migration prioritization.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">📊</div>
+          <div>
+            <div class="diagram-row-title">Transformation Roadmap Planning</div>
+            <div class="diagram-row-body">Scenario modeling tools that allow architecture teams to plan and visualize transformation roadmaps — showing the future-state architecture, the migration path from current to target state, and the dependency sequencing required to execute the transition without disrupting business operations. Roadmaps built in LeanIX are grounded in actual architectural data, not optimistic assumptions about what exists and how it connects.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🤖</div>
+          <div>
+            <div class="diagram-row-title">AI-Assisted Architecture Intelligence</div>
+            <div class="diagram-row-body">SAP has embedded AI capabilities into LeanIX that automatically identify application redundancy, recommend rationalization opportunities, and surface optimization suggestions based on the portfolio data. What once required weeks of manual analysis by enterprise architects is now surfaced continuously — allowing architecture teams to focus on strategic decisions rather than data collection and pattern recognition.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2 — SAP LeanIX Platform Architecture · Enterprise Architecture Intelligence · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">Live Application Portfolio</span>
+        <span class="tag tag-navy">Business Capability Mapping</span>
+        <span class="tag tag-green">AI-Assisted Rationalization</span>
+        <span class="tag tag-gold">Transformation Scenario Modeling</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">40<span>%</span></div>
+          <div class="stat-label">Reduction in enterprise architecture maintenance effort reported by LeanIX customers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">25<span>%</span></div>
+          <div class="stat-label">Average application portfolio reduction identified within 12 months of LeanIX deployment</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3<span>x</span></div>
+          <div class="stat-label">Faster technology roadmap development vs. manual architecture planning processes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1<span>,200+</span></div>
+          <div class="stat-label">Enterprise customers globally running LeanIX as their system of record for architecture</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think of LeanIX as Google Maps for your technology landscape. Google Maps doesn't just show you where things are — it shows you how they connect, flags road closures and construction zones, and lets you model different routes before you start driving. LeanIX does the same for your enterprise architecture. It shows every application, how it connects to others, which ones are approaching end-of-life, and what the safest route looks like from your current technology state to your target state. You wouldn't navigate a complex city without a live map. You shouldn't navigate a complex transformation without one either.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 03 — WHAT -->
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Changes When Architecture Becomes a Strategic Asset, Not an IT Artifact</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from SAP LeanIX arrive across three dimensions that collectively redefine the role of enterprise architecture in organizational decision-making. The first is cost transparency. Organizations that deploy LeanIX consistently discover application redundancy they didn't know existed — duplicate tools performing the same function across business units, shadow IT subscriptions that bypassed procurement, legacy systems consuming licenses for capabilities that have been replaced. The rationalization opportunity identified in the first year of LeanIX deployment typically represents 20–30% of the application portfolio — and the cost savings from eliminating that redundancy frequently deliver a compelling standalone ROI.</p>
+      <p>The second dimension is transformation confidence. When a technology roadmap is built on LeanIX data — grounded in an accurate, current picture of what exists, what it costs, and how it connects — the quality of that roadmap is fundamentally different from one built on stakeholder interviews and outdated documentation. Implementation teams encounter fewer surprises. Dependency conflicts surface in planning rather than execution. Migration sequences are optimized against real architectural constraints rather than assumed ones. The third dimension is strategic credibility — the ability of technology leaders to present boards and executive committees with data-driven investment cases that connect architecture decisions to business outcomes in language that finance and operations can evaluate and approve. That credibility, built on LeanIX's analytical foundation, transforms the CIO from a cost center manager into a strategic transformation partner.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">Before and After SAP LeanIX · The Architecture Intelligence Transformation</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">📉</div>
+          <div>
+            <div class="diagram-row-title">Before — Architecture Managed by Memory</div>
+            <div class="diagram-row-body">Application inventory lives in spreadsheets that are outdated within weeks of publication. Enterprise architects spend 60–70% of their time collecting and validating data rather than analyzing it. Transformation roadmaps are built on incomplete information and encounter expensive surprises mid-execution. Technology investment cases rely on estimates that finance teams challenge and procurement committees delay. The CIO cannot confidently answer the question: "What technology do we have, what does it cost us, and what should we change first?"</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">📈</div>
+          <div>
+            <div class="diagram-row-title">After — Architecture as a Live Intelligence Platform</div>
+            <div class="diagram-row-body">A continuously updated application portfolio connects every system to its business capabilities, costs, health status, and strategic alignment. Enterprise architects spend their time on analysis and strategy rather than data collection. Transformation roadmaps are grounded in architectural reality and encounter fewer mid-execution surprises. Technology investment cases are built on data that finance can verify independently. The CIO walks into board meetings with a credible, current picture of the technology landscape and a data-backed rationale for every investment decision.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🏆</div>
+          <div>
+            <div class="diagram-row-title">The Strategic Gain — IT as a Transformation Partner</div>
+            <div class="diagram-row-body">Organizations with LeanIX at the center of their architecture practice graduate from reactive technology management to proactive strategic planning. When the business asks "can our technology landscape support this new capability?" the answer comes from data, not from weeks of discovery. When the board asks "are we managing technology risk effectively?" the answer comes from a live dashboard, not a quarterly report. That shift — from IT as a cost center to IT as a strategic partner — is what LeanIX ultimately enables.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3 — LeanIX Transformation Impact · Before &amp; After · Enterprise Architecture Intelligence · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-green">20–30% Application Portfolio Reduction</span>
+        <span class="tag tag-gold">Transformation Risk Reduced</span>
+        <span class="tag tag-navy">Board-Level Architecture Credibility</span>
+        <span class="tag tag-green">40% Less Architecture Maintenance Effort</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The CIOs who earn a seat at the strategy table are not the ones who manage technology the most efficiently. They are the ones who can connect technology decisions to business outcomes with data that the CFO and CEO can evaluate, challenge, and ultimately trust.</div>
+        <div class="callout-source">SAP LeanIX Customer Research · CIO Strategic Impact Series · 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is a question worth taking to your next architecture review: if your CEO asked you today to show them — in 30 minutes — every application your organization runs, what it costs, which business capabilities it supports, and which systems are approaching end-of-life risk, could you do it? If the honest answer is no — or not without a week of preparation — that gap is exactly what SAP LeanIX closes. And in a world where technology investment decisions are being made at board level and scrutinized by CFOs who want data not estimates, the ability to answer that question in real time is not a nice-to-have. It is a leadership capability.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOOD NEWS -->
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">The Integration Story</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">☁️</div>
+        <div class="gn-card-title">Deployment Model</div>
+        <div class="gn-card-body">SAP LeanIX is a cloud-native SaaS platform with a rapid time-to-value deployment model. Pre-built integrations with major IT service management, software asset management, and cloud infrastructure platforms mean organizations can populate an initial application inventory within weeks — not months — of deployment initiation.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">SAP Ecosystem Integration</div>
+        <div class="gn-card-body">Deep native integration with SAP S/4HANA, SAP BTP, and SAP's RISE with SAP transformation program. LeanIX is SAP's recommended enterprise architecture platform for S/4HANA migration planning — connecting process intelligence from Signavio with architecture intelligence from LeanIX to create a complete transformation foundation. SAP Solution Manager and Cloud ALM integrations are also available.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Non-SAP Compatibility</div>
+        <div class="gn-card-body">Pre-built connectors for ServiceNow, Jira, AWS, Azure, Google Cloud, Salesforce, and hundreds of enterprise applications via LeanIX's open API and integration marketplace. Organizations running hybrid multi-cloud, multi-vendor technology landscapes — the vast majority — are a well-supported and common deployment pattern.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🏭</div>
+        <div class="gn-card-title">Industry &amp; Size Fit</div>
+        <div class="gn-card-body">Highest value in any large organization with a complex, multi-vendor technology landscape planning or executing transformation — particularly financial services, manufacturing, healthcare, telecommunications, and public sector. Best suited to organizations with 200+ applications in their portfolio where architectural opacity is creating measurable planning and cost management challenges.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">Plan It Right. Then Execute With Confidence.</div>
+    <div class="bottom-line-text">
+      <p>Last week, SAP Signavio showed us that the foundation of any successful transformation is an accurate understanding of how business processes actually work. This week, SAP LeanIX adds the second dimension of that foundation — an accurate understanding of the technology landscape those processes run on. Together, these two platforms give transformation leaders something that is surprisingly rare in enterprise programs of any scale: a clear, data-grounded picture of both the operational reality and the architectural reality they are working with.</p>
+      <p>The organizations that get enterprise transformation right are not the ones with the largest budgets or the most ambitious roadmaps. They are the ones that invest in understanding their current state before designing their future state — and that maintain that understanding continuously, not just at the start of a program. SAP LeanIX is the platform that makes continuous architectural intelligence operationally feasible, turning what was once a periodic, expensive consulting exercise into a live organizational capability.</p>
+      <p>Next week in Issue 005, our Business Transformation Trilogy concludes with SAP WalkMe — the digital adoption platform that answers the final and most human question in any transformation: now that we have built the right system, how do we ensure our people actually use it and change how they work? The 1-2-3 punch lands next Wednesday. Don't miss it.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — What to Track This Quarter</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Your application count and confidence level:</strong> Ask your enterprise architecture team for the current application inventory count and — critically — how confident they are in its completeness and currency. Any answer below "very confident, updated in the last 30 days" quantifies the LeanIX opportunity in a single question.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>SAP ECC end-of-life exposure in your portfolio:</strong> LeanIX's technology risk tracking is particularly valuable for organizations still running SAP ECC. The platform surfaces exactly which business capabilities depend on ECC, what the migration sequencing should look like, and what the risk profile of delay actually is — in data your board can evaluate.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Application rationalization opportunity:</strong> If your organization has grown through acquisition or has operated with decentralized IT purchasing, the rationalization opportunity in your application portfolio is likely significant. LeanIX customers consistently identify 20–30% redundancy in their portfolios within the first year. That number, translated into annual licensing costs, typically builds a compelling standalone business case.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>LeanIX + Signavio combined deployment:</strong> SAP is actively promoting the combined deployment of Signavio and LeanIX as the foundation of its transformation methodology. Organizations that deploy both platforms together get a process-to-architecture intelligence layer that is significantly more powerful than either platform alone — and that directly accelerates S/4HANA migration planning timelines.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEXT UP TEASER -->
+  <div class="next-up">
+    <div class="next-up-label">🎯 The Business Transformation Trilogy · Final Chapter Next Week</div>
+    <div class="next-up-grid">
+      <div class="next-up-card done">
+        <div class="next-up-issue">ISSUE 003 ✓ PUBLISHED</div>
+        <div class="next-up-name">SAP Signavio</div>
+        <div class="next-up-desc">The process intelligence foundation. See how your business actually works before you transform it.</div>
+      </div>
+      <div class="next-up-card">
+        <div class="next-up-issue">ISSUE 005 · NEXT WEDNESDAY</div>
+        <div class="next-up-name">SAP WalkMe</div>
+        <div class="next-up-desc">The last mile of transformation. You built the right system. Now how do you make sure your people actually use it?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Product capabilities, statistics, and integration specifications referenced herein reflect publicly available SAP product documentation and industry research as of April 2026. Always consult your SAP account executive and qualified advisors before making technology or business strategy decisions. · SAP in 3 is an independent intelligence series.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 004 · April 29, 2026 · SAP LeanIX · Business Transformation Trilogy Part 2 of 3
+</footer>
+
+</body>
+</html>
