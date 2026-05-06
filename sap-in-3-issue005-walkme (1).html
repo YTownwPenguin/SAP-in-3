@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 005 · SAP WalkMe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628;
+      --navy-mid: #152035;
+      --navy-light: #1E2E47;
+      --gold: #C9A84C;
+      --gold-light: #E2C47A;
+      --gold-pale: #F5EDD5;
+      --cream: #FAF7F2;
+      --slate: #8497B0;
+      --red-accent: #C0392B;
+      --green-accent: #1A7C5C;
+      --text-body: #2C3E50;
+      --text-light: #5D6D7E;
+      --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+    .masthead { background: var(--navy); color: white; padding: 0; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* ── TRILOGY BANNER ───────────────────────────── */
+    .trilogy-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 16px 60px; }
+    .trilogy-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 0; }
+    .trilogy-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-right: 24px; white-space: nowrap; }
+    .trilogy-steps { display: flex; gap: 0; flex: 1; }
+    .trilogy-step { flex: 1; padding: 10px 16px; text-align: center; border: 1px solid rgba(201,168,76,0.2); }
+    .trilogy-step.active { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+    .trilogy-step.done { background: rgba(26,124,92,0.1); border-color: var(--green-accent); }
+    .trilogy-step-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 3px; }
+    .trilogy-step.done .trilogy-step-num { color: #4CAF82; }
+    .trilogy-step-name { font-family: 'Playfair Display', serif; font-size: 13px; color: white; font-weight: 700; }
+    .trilogy-step-tag { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--slate); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .trilogy-step.active .trilogy-step-tag { color: var(--gold-light); }
+    .trilogy-step.done .trilogy-step-tag { color: #4CAF82; }
+
+    /* ── TRILOGY COMPLETE BANNER ──────────────────── */
+    .trilogy-complete { background: linear-gradient(135deg, rgba(26,124,92,0.15), rgba(201,168,76,0.1)); border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; padding: 24px 32px; margin: 40px 0; display: flex; align-items: center; gap: 20px; }
+    .trilogy-complete-icon { font-size: 40px; flex-shrink: 0; }
+    .trilogy-complete-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .trilogy-complete-sub { font-family: 'Source Serif 4', serif; font-size: 14px; color: var(--text-light); font-style: italic; }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; color: var(--text-body); margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; }
+    .icon-alert { background: #FCE4EC; }
+    .icon-ok { background: #E8F5E9; }
+    .icon-blue { background: #E3F2FD; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); }
+    .tag-gold { background: #FDF5E4; color: #8B6914; }
+    .tag-green { background: #E8F5EF; color: var(--green-accent); }
+    .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── TRILOGY RECAP ────────────────────────────── */
+    .trilogy-recap { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .trilogy-recap-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .trilogy-recap-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; margin-bottom: 28px; }
+    .trilogy-recap-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .trilogy-recap-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 20px; }
+    .trilogy-recap-num { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: rgba(201,168,76,0.3); line-height: 1; margin-bottom: 8px; }
+    .trilogy-recap-product { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 6px; }
+    .trilogy-recap-tag { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: white; margin-bottom: 8px; }
+    .trilogy-recap-desc { font-family: 'Source Serif 4', serif; font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .trilogy-recap-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news, .trilogy-recap { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .trilogy-inner { flex-direction: column; gap: 12px; }
+      .trilogy-steps { flex-direction: column; }
+      .trilogy-banner { padding: 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · Business Transformation · Part 3 of 3</div>
+    <div class="masthead-issue">Issue 005 · May 6, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">You Built the Right System. Now Make Sure Your People Actually Use It.</div>
+    <div class="hero-deck">Why the last mile of every transformation is the most human one — and how SAP WalkMe ensures that technology investment translates into behavior change that actually sticks.</div>
+    <div class="hero-pull">
+      "Every transformation has a technology problem and a people problem. Organizations spend 95% of their budget solving the technology problem and then wonder why adoption is the reason the ROI never arrives."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>SAP WalkMe</strong>Business Transformation Series</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<!-- ═══ TRILOGY BANNER ════════════════════════════════ -->
+<div class="trilogy-banner">
+  <div class="trilogy-inner">
+    <div class="trilogy-label">🎯 The 1-2-3 Punch · Final Chapter</div>
+    <div class="trilogy-steps">
+      <div class="trilogy-step done">
+        <div class="trilogy-step-num">ISSUE 003 ✓</div>
+        <div class="trilogy-step-name">SAP Signavio</div>
+        <div class="trilogy-step-tag">① See It — Published</div>
+      </div>
+      <div class="trilogy-step done">
+        <div class="trilogy-step-num">ISSUE 004 ✓</div>
+        <div class="trilogy-step-name">SAP LeanIX</div>
+        <div class="trilogy-step-tag">② Plan It — Published</div>
+      </div>
+      <div class="trilogy-step active">
+        <div class="trilogy-step-num">ISSUE 005</div>
+        <div class="trilogy-step-name">SAP WalkMe</div>
+        <div class="trilogy-step-tag">③ Land It — This Week</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BODY ════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- TRILOGY COMPLETE BANNER -->
+  <div class="trilogy-complete">
+    <div class="trilogy-complete-icon">🏆</div>
+    <div>
+      <div class="trilogy-complete-text">The 1-2-3 Punch Trilogy — Final Chapter</div>
+      <div class="trilogy-complete-sub">Three weeks. Three products. One complete transformation framework. This is where the punch lands.</div>
+    </div>
+  </div>
+
+  <!-- INTRODUCTION -->
+  <div class="intro-text">
+    <p class="drop-cap">Over the past three weeks, the Business Transformation Trilogy has built a complete framework for getting enterprise transformation right. In Issue 003, SAP Signavio answered the first question: do we actually understand how our business processes work today? In Issue 004, SAP LeanIX answered the second: do we have the right technology landscape to support where we need to go? Both of those answers matter enormously. But they are answers about systems and architecture. They say nothing about the most complex variable in any transformation — the people who will be asked to change how they work when the new system goes live.</p>
+    <p>This is where most transformations quietly fail. Not in the technology. Not in the architecture. In the gap between go-live and genuine adoption — the weeks and months after a new system is deployed when usage is inconsistent, workarounds reappear, training is forgotten, and the ROI that was promised in the business case starts to look optimistic. SAP WalkMe was built specifically to close that gap. As the final chapter of our trilogy, this issue explains why adoption is the most underinvested phase of transformation, how WalkMe works, and what the final punch of the 1-2-3 actually delivers when it lands.</p>
+  </div>
+
+  <!-- FINDING 01 — WHY -->
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">The Adoption Gap — Where Transformation ROI Goes to Die</div>
+    </div>
+    <div class="finding-body">
+      <p>There is a pattern that plays out in enterprise transformation programs with remarkable consistency. The technology is deployed on time and within budget. The go-live is celebrated. The project team moves on. And then, three to six months later, a quiet reckoning begins. Usage metrics show that significant portions of the user base are still working around the new system rather than in it. Key features that were central to the business case are being used by a fraction of the intended population. Support ticket volumes are higher than expected. And the productivity improvements that were supposed to materialize after go-live are delayed, diluted, or simply absent.</p>
+      <p>This pattern has a name in enterprise technology circles: the adoption gap. And it is far more prevalent than most organizations acknowledge. Research consistently shows that between 40% and 70% of enterprise software implementations fail to achieve their intended adoption levels within the first year. The causes are well understood — inadequate training that doesn't translate to day-to-day workflow, change fatigue from multiple concurrent transformation programs, inconsistent usage across business units, and the natural human tendency to revert to familiar habits under pressure. What has been missing, until recently, is a platform specifically designed to address those causes systematically — in the flow of work, rather than in a classroom or a help document. That platform is SAP WalkMe.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">The Adoption Gap · Why Technology Investment Fails to Deliver ROI</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">🔴</div>
+          <div>
+            <div class="diagram-row-title">The Training Decay Problem — Knowledge That Doesn't Stick</div>
+            <div class="diagram-row-body">Research on learning retention shows that people forget approximately 70% of new information within 24 hours and 90% within a week without reinforcement. Traditional classroom and e-learning training for enterprise software — delivered once before go-live — is structurally misaligned with how humans actually retain knowledge. Users who completed training three weeks before go-live arrive at the new system having forgotten most of what they learned, with no mechanism to recover that knowledge in the moment they need it.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🟡</div>
+          <div>
+            <div class="diagram-row-title">The Workaround Persistence Problem — Old Habits Die Hard</div>
+            <div class="diagram-row-body">When users encounter friction in a new system — a workflow they don't understand, a process that feels counterintuitive, a feature they can't find — they do not consult the user manual. They find a workaround. They use a spreadsheet. They ask a colleague. They revert to the old process. Each workaround that goes unaddressed becomes a habit, and each habit that persists represents a direct reduction in the ROI the transformation was designed to deliver. Without real-time guidance embedded in the system itself, friction defaults to avoidance.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">✅</div>
+          <div>
+            <div class="diagram-row-title">The Measurement Gap — Adoption Invisible to Leadership</div>
+            <div class="diagram-row-body">Most organizations cannot answer basic adoption questions with data: what percentage of users completed the new purchase order workflow correctly last week? Which user populations are consistently bypassing the new approval process? Which features have the highest drop-off rates? Without that visibility, transformation leaders cannot identify where adoption is breaking down, cannot target interventions precisely, and cannot demonstrate to the board whether the transformation is delivering its intended behavioral change. SAP WalkMe closes all three gaps simultaneously.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — The Enterprise Adoption Gap · Digital Transformation ROI Research · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-red">40–70% of Implementations Miss Adoption Targets</span>
+        <span class="tag tag-gold">70% of Training Forgotten Within 24 Hours</span>
+        <span class="tag tag-navy">Adoption ROI Invisible Without Data</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The question every transformation leader should be asking six months after go-live is not "did we deploy the system?" It is "did we change how people work?" Those are very different questions — and only one of them measures whether the investment actually succeeded.</div>
+        <div class="callout-source">SAP WalkMe Digital Adoption Research · Enterprise Transformation · 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about the last time you learned to drive in a new city. The map app didn't give you a three-hour training session before you left. It gave you turn-by-turn guidance exactly when you needed it — at the moment of each decision, in real time, with context-aware instructions that adapted to where you actually were. SAP WalkMe does the same thing for enterprise software. Instead of training people before they use the system and hoping they remember, WalkMe guides them through the system in real time — at the moment they need help, in the workflow where they need it, without interrupting what they're trying to accomplish.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 02 — HOW -->
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP WalkMe Turns Go-Live Into Genuine Adoption — In the Flow of Work</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP WalkMe is a digital adoption platform that sits as an intelligent layer on top of SAP applications — delivering contextual guidance, automated assistance, and behavioral analytics directly within the software environment where users work. The core principle is elegantly simple: instead of asking users to learn a system before they use it, WalkMe supports them as they use it — with step-by-step guidance that appears exactly when needed, automated processes that complete complex workflows on the user's behalf, and smart alerts that surface the right information at the right moment.</p>
+      <p>What makes WalkMe strategically significant in the SAP ecosystem is the depth of its integration with SAP's application suite. WalkMe is not a generic overlay — it has purpose-built content and deep behavioral analytics for SAP S/4HANA, SAP SuccessFactors, SAP Ariba, and the broader SAP application landscape. This means that organizations deploying WalkMe alongside a major SAP transformation get a platform that understands SAP workflows natively, can identify SAP-specific adoption patterns, and can deliver SAP-specific guidance that a generic adoption tool simply cannot match.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How SAP WalkMe Works · The Five Core Capabilities</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🧭</div>
+          <div>
+            <div class="diagram-row-title">Walk-Thrus — Step-by-Step In-App Guidance</div>
+            <div class="diagram-row-body">Interactive, step-by-step guidance overlays that appear directly on the SAP application screen — highlighting exactly where to click, what to enter, and what each step means. Walk-Thrus activate contextually based on what the user is doing, not on a fixed schedule. A user who pauses on a complex workflow or navigates to an unfamiliar screen receives immediate, relevant guidance without leaving the system or opening a help document.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">⚡</div>
+          <div>
+            <div class="diagram-row-title">SmartTips &amp; Contextual Alerts</div>
+            <div class="diagram-row-body">Intelligent tooltips and alerts that surface critical information at the exact moment it's relevant — data validation warnings before errors are submitted, policy reminders at approval decision points, compliance notifications when regulatory requirements apply to the current workflow. SmartTips eliminate the "I didn't know" error category that generates the highest support ticket volumes in post-go-live SAP environments.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🤖</div>
+          <div>
+            <div class="diagram-row-title">Automation — Completing Tasks on Behalf of Users</div>
+            <div class="diagram-row-body">For high-frequency, repetitive tasks that users perform consistently, WalkMe can automate the execution entirely — completing multi-step workflows automatically once the user initiates the process. This eliminates the error-prone manual execution of complex SAP workflows that generates the most rework, the most support escalations, and the most user frustration in the early months after go-live.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">📊</div>
+          <div>
+            <div class="diagram-row-title">Adoption Analytics &amp; Insights</div>
+            <div class="diagram-row-body">Real-time dashboards showing exactly how users are interacting with SAP applications — which workflows are completed correctly, where drop-offs occur, which user populations are struggling, and which features are being underutilized. For the first time, transformation leaders have data-driven visibility into adoption behavior rather than relying on anecdotal feedback and support ticket volume as proxies for engagement quality.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🎯</div>
+          <div>
+            <div class="diagram-row-title">Targeted Engagement &amp; Communications</div>
+            <div class="diagram-row-body">Segment users by role, geography, business unit, or adoption behavior and deliver targeted in-app communications — announcements for new features, reminders for compliance deadlines, nudges for users showing low engagement patterns. Replaces the spray-and-pray mass email approach to change communication with precision-targeted messaging that reaches the right users with the right message at the right moment.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2 — SAP WalkMe Platform Capabilities · Digital Adoption Architecture · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">In-App Guidance at Point of Need</span>
+        <span class="tag tag-navy">Real-Time Adoption Analytics</span>
+        <span class="tag tag-green">Workflow Automation</span>
+        <span class="tag tag-gold">SAP-Native Integration</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">50<span>%</span></div>
+          <div class="stat-label">Reduction in support tickets reported by SAP WalkMe customers post go-live</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3<span>x</span></div>
+          <div class="stat-label">Faster time-to-proficiency for new users on SAP applications with WalkMe guidance</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">30<span>%</span></div>
+          <div class="stat-label">Improvement in process completion rates within 90 days of WalkMe deployment</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">$270<span>B</span></div>
+          <div class="stat-label">Estimated annual cost of poor software adoption across enterprise organizations globally</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Imagine hiring a brilliant new employee and on their first day giving them a three-hour training session, then sending them to their desk to figure out the rest on their own. That's how most organizations handle enterprise software go-lives. Now imagine instead that brilliant employee had a knowledgeable colleague sitting next to them — not doing the work for them, but available to give a precise answer to every question exactly when it arises, without interrupting the flow of work. That's SAP WalkMe. It's not a training replacement. It's a permanent, always-available, context-aware guide that gets every user to proficiency faster and keeps them there.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 03 — WHAT -->
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Changes When Adoption Becomes a Measurable Outcome, Not an Assumption</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from SAP WalkMe arrive in three waves that together close the gap between technology deployment and transformation value realization. The first wave is immediate and operational: support ticket reduction, faster time-to-proficiency for new users, lower error rates in critical workflows, and measurable improvement in process completion rates. Organizations consistently report 50% reductions in post-go-live support volumes and 30% improvements in process completion rates within the first 90 days. These are outcomes that directly reduce the operational cost of transformation and accelerate the timeline to productive utilization.</p>
+      <p>The second wave is financial — the recovery of ROI that was budgeted in the transformation business case but delayed or lost to adoption failure. When users are completing SAP workflows correctly, consistently, and at the rate the business case assumed, the productivity gains, process efficiency improvements, and data quality benefits that justified the transformation investment actually materialize. This connection — between adoption quality and financial return — is one that most transformation leaders intuitively understand but have historically been unable to demonstrate with data. WalkMe's adoption analytics make that connection visible and measurable for the first time. The third wave is organizational: the confidence to move faster. Organizations with WalkMe in their transformation toolkit can accelerate rollout timelines, deploy new SAP features more aggressively, and drive continuous improvement initiatives knowing that the adoption infrastructure is in place to land each change effectively.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">Before and After SAP WalkMe · The Adoption Transformation</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">📉</div>
+          <div>
+            <div class="diagram-row-title">Before — The Adoption Gap in Action</div>
+            <div class="diagram-row-body">Go-live is celebrated but usage is inconsistent. Support ticket volumes spike in the first 90 days. Users revert to familiar workarounds under deadline pressure. Key features promised in the business case are adopted by 30–40% of the intended user base — not the 80–90% that the ROI calculation assumed. Training materials become outdated and unused. Leadership has no data on adoption behavior and relies on anecdotal feedback. The business case ROI is delayed by 12–18 months or never fully realized.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">📈</div>
+          <div>
+            <div class="diagram-row-title">After — Adoption as a Managed Outcome</div>
+            <div class="diagram-row-body">Users receive contextual guidance at every point of friction — reducing errors, reducing support escalations, and accelerating time-to-proficiency. Adoption analytics give transformation leaders real-time visibility into usage patterns, enabling targeted interventions before adoption gaps become adoption failures. Process completion rates improve measurably within the first quarter. The ROI timeline compresses. And for the first time, leadership can demonstrate to the board not just that the system was deployed — but that behavior actually changed.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🏆</div>
+          <div>
+            <div class="diagram-row-title">The Strategic Gain — Transformation Velocity</div>
+            <div class="diagram-row-body">Organizations with WalkMe embedded in their SAP landscape gain something beyond any single deployment: the institutional confidence to move faster. Every new SAP feature, every process update, every compliance change can be deployed knowing that the adoption infrastructure will land it effectively. The gap between "we deployed it" and "people are using it correctly" compresses from months to weeks. Transformation becomes a continuous organizational capability, not a periodic and painful project.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3 — SAP WalkMe Adoption Impact Model · Before &amp; After · Customer Data · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-green">50% Support Ticket Reduction</span>
+        <span class="tag tag-gold">ROI Timeline Compressed</span>
+        <span class="tag tag-navy">Adoption Measurable for First Time</span>
+        <span class="tag tag-green">3x Faster User Proficiency</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The organizations that get the most from their SAP investments are not the ones that deployed the best technology. They are the ones that ensured their people actually changed how they work — and had the data to prove it.</div>
+        <div class="callout-source">SAP WalkMe Customer Research · Digital Adoption Impact · 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is the most honest question in enterprise transformation: when did you last check whether the people using your SAP system are actually using it the way it was designed? Not whether training was completed. Not whether the system went live on schedule. Whether the workflows that were central to your ROI calculation are being executed correctly, consistently, by the users who were supposed to change their behavior. If the honest answer is "we're not sure" — that uncertainty is exactly what SAP WalkMe eliminates. And it's worth knowing the answer before your next board update on transformation progress.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOOD NEWS -->
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">The Integration Story</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">☁️</div>
+        <div class="gn-card-title">Deployment Model</div>
+        <div class="gn-card-body">SAP WalkMe deploys as a cloud-based overlay that sits on top of existing SAP applications — requiring no changes to the underlying system architecture. Implementation is non-invasive and rapid, with organizations able to deploy initial Walk-Thrus and SmartTips within weeks of engagement initiation. No SAP system downtime, no code changes, no infrastructure investment required.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">SAP Ecosystem Integration</div>
+        <div class="gn-card-body">Purpose-built for SAP — with pre-built content libraries, deep behavioral analytics, and native integration for SAP S/4HANA, SAP SuccessFactors, SAP Ariba, SAP Concur, and SAP Customer Experience. WalkMe is SAP's strategic digital adoption platform, embedded as a recommended component of the RISE with SAP and Grow with SAP transformation programs.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Non-SAP Compatibility</div>
+        <div class="gn-card-body">WalkMe supports any web-based application — meaning organizations can extend adoption guidance and analytics across their entire digital landscape, not just SAP applications. Salesforce, ServiceNow, Workday, Microsoft 365, and hundreds of other enterprise applications are supported within the same WalkMe deployment — making it an enterprise-wide digital adoption platform, not just an SAP tool.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🏭</div>
+        <div class="gn-card-title">Industry &amp; Size Fit</div>
+        <div class="gn-card-body">Highest value in any organization deploying or recently deployed SAP applications at scale — particularly those with large, geographically distributed user populations, high staff turnover in SAP-using roles, or complex SAP workflows with significant compliance and data quality requirements. Particularly powerful in financial services, healthcare, manufacturing, and professional services where process adherence is a regulatory requirement, not just a performance objective.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">The Punch Has Landed. Now What?</div>
+    <div class="bottom-line-text">
+      <p>Three weeks ago, we opened the Business Transformation Trilogy with a simple premise: most enterprise transformations fail not because of bad technology, but because organizations don't understand their current processes, don't have visibility into their technology landscape, and don't measure whether their people ever actually changed how they work. SAP Signavio addressed the first gap. SAP LeanIX addressed the second. SAP WalkMe addresses the third — and in doing so, completes a framework that gives transformation leaders an end-to-end capability for getting transformation right, from the diagnostic foundation to the adoption measurement that closes the ROI loop.</p>
+      <p>The 1-2-3 punch works because each product addresses a different failure mode of transformation — and because together they cover the complete journey from current-state understanding through architectural planning to behavioral change at scale. Organizations that deploy all three have something genuinely rare in enterprise technology: a transformation capability that is grounded in data at every stage, measurable at every stage, and continuously improvable because the evidence of what is and isn't working is always visible.</p>
+      <p>SAP in 3 will be back next week with a new product and a new set of insights. If this trilogy resonated with you — share it with the transformation leaders, CIOs, and change managers in your network who are navigating these exact challenges right now. The conversation around transformation quality is one the industry needs more of. And if you have not yet subscribed, now is the time. There is more to come. 🚀</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — What to Track This Quarter</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Your post-go-live adoption metrics:</strong> If you deployed SAP S/4HANA, SAP SuccessFactors, or any major SAP application in the last 18 months, pull your actual usage data. Compare it to the adoption assumptions in your original business case. The gap between those two numbers is your WalkMe opportunity — quantified in business case language your CFO can evaluate.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Support ticket volume by workflow:</strong> Your post-go-live support data is a direct map of where users are struggling. The workflows generating the highest ticket volumes are the highest-priority candidates for WalkMe Walk-Thru deployment. That prioritization analysis takes hours with WalkMe — not the weeks of consulting engagement it would otherwise require.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>The trilogy combination business case:</strong> SAP is actively promoting Signavio, LeanIX, and WalkMe as a combined transformation foundation — with joint pricing and deployment accelerators for organizations that deploy all three. If Business Transformation Management is a priority in your organization's SAP roadmap, the combined business case is worth building before your next planning cycle begins.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>WalkMe AI roadmap:</strong> SAP is embedding generative AI into WalkMe — including AI-generated Walk-Thru content creation, predictive identification of adoption risk based on behavioral signals, and conversational in-app assistance. Organizations deploying WalkMe now will receive these capabilities as platform updates throughout 2026 — significantly reducing the content creation overhead that has historically been the primary deployment friction point.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRILOGY RECAP -->
+  <div class="trilogy-recap">
+    <div class="trilogy-recap-label">🎯 The 1-2-3 Punch — Complete Series Recap</div>
+    <div class="trilogy-recap-title">The Business Transformation Trilogy · All Three Issues</div>
+    <div class="trilogy-recap-grid">
+      <div class="trilogy-recap-card">
+        <div class="trilogy-recap-num">01</div>
+        <div class="trilogy-recap-product">Issue 003 · SAP Signavio</div>
+        <div class="trilogy-recap-tag">① See It</div>
+        <div class="trilogy-recap-desc">Process intelligence that shows how your business actually works — before you try to change it. The diagnostic foundation every transformation needs.</div>
+      </div>
+      <div class="trilogy-recap-card">
+        <div class="trilogy-recap-num">02</div>
+        <div class="trilogy-recap-product">Issue 004 · SAP LeanIX</div>
+        <div class="trilogy-recap-tag">② Plan It</div>
+        <div class="trilogy-recap-desc">Enterprise architecture intelligence that maps every application, its costs, its dependencies, and its strategic alignment. The planning foundation every transformation needs.</div>
+      </div>
+      <div class="trilogy-recap-card">
+        <div class="trilogy-recap-num">03</div>
+        <div class="trilogy-recap-product">Issue 005 · SAP WalkMe</div>
+        <div class="trilogy-recap-tag">③ Land It</div>
+        <div class="trilogy-recap-desc">Digital adoption that ensures people actually change how they work — with measurable proof. The execution layer that closes the ROI loop every transformation needs.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Product capabilities, statistics, and integration specifications referenced herein reflect publicly available SAP product documentation and industry research as of May 2026. Always consult your SAP account executive and qualified advisors before making technology or business strategy decisions. · SAP in 3 is an independent intelligence series.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 005 · May 6, 2026 · SAP WalkMe · Business Transformation Trilogy — Final Chapter
+</footer>
+
+</body>
+</html>
