@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX – AI Performance & Excellence Index | SAP</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--dark:#0C1920;--panel:#172432;--border:#1E3044;--gold:#F0AB00;--gold-lt:#FFCC44;--blue:#0070F2;--white:#FFFFFF;--t1:#EDF2F7;--t2:#8FA3B1;--t3:#4A6275;--r:12px;--rl:20px;--ease:all .3s cubic-bezier(.4,0,.2,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;font-family:'IBM Plex Sans',sans-serif;background:var(--dark);color:var(--t1)}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(0,112,242,.07) 0,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(240,171,0,.06) 0,transparent 55%);pointer-events:none;z-index:0}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;overflow-y:auto;padding:32px 20px 60px;opacity:0;transform:translateY(18px);transition:var(--ease);pointer-events:none;z-index:1}
+.screen.active{opacity:1;transform:none;pointer-events:all}
+.screen.out{opacity:0;transform:translateY(-18px)}
+#ph{position:fixed;top:0;left:0;right:0;z-index:200;display:none;align-items:center;gap:16px;padding:14px 28px;background:rgba(12,25,32,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.ph-logo{font-family:'Sora',sans-serif;font-weight:800;font-size:17px;color:var(--gold);white-space:nowrap;flex-shrink:0}
+.ph-bar{flex:1;height:3px;background:var(--border);border-radius:99px;overflow:hidden}
+.ph-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));border-radius:99px;transition:width .5s ease}
+.ph-lbl{font-family:'Sora',sans-serif;font-size:11px;font-weight:600;color:var(--t3);white-space:nowrap}
+.btn{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:none;border-radius:99px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:var(--ease)}
+.btn-gold{background:var(--gold);color:#0C1920;padding:14px 40px}.btn-gold:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 8px 24px rgba(240,171,0,.35)}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--border);padding:13px 28px}.btn-ghost:hover{border-color:var(--t2);color:var(--white)}
+.btn-pdf{background:var(--blue);color:#fff;padding:14px 36px}.btn-pdf:hover{background:#0058c4;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,112,242,.35)}
+.btn-pdf.loading{opacity:.7;cursor:wait}
+#s-welcome .si{text-align:center;max-width:820px;margin:auto}
+.sap-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(240,171,0,.1);border:1px solid rgba(240,171,0,.28);color:var(--gold);font-family:'Sora',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:6px 18px;border-radius:99px;margin-bottom:36px}
+.apex-icon{width:76px;height:76px;background:linear-gradient(140deg,var(--gold) 0%,#E07B00 100%);border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 12px 40px rgba(240,171,0,.38);font-size:34px}
+.apex-wm{font-family:'Sora',sans-serif;font-size:clamp(56px,10vw,96px);font-weight:800;letter-spacing:-.04em;color:var(--white);line-height:1}
+.apex-sub{font-family:'Sora',sans-serif;font-size:clamp(12px,1.8vw,15px);letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin:10px 0 28px}
+.tagline{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:44px}
+.tagline span{font-family:'Sora',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.tagline .dot{width:4px;height:4px;border-radius:50%;background:var(--t3)}
+.w-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:44px;text-align:left}
+.w-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.w-card-ico{font-size:22px;margin-bottom:10px}
+.w-card-ttl{font-family:'Sora',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:6px}
+.w-card-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.presenter{margin-top:28px;font-size:13px;color:var(--t3)}
+.presenter strong{color:var(--t2)}
+#s-info .si{max-width:540px;width:100%;margin:auto}
+.eyebrow{font-family:'Sora',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.scrn-ttl{font-family:'Sora',sans-serif;font-size:clamp(24px,4vw,36px);font-weight:700;color:var(--white);line-height:1.2;margin-bottom:10px}
+.scrn-desc{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:36px}
+.fcard{background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:32px}
+.fg{margin-bottom:18px}.fg:last-child{margin-bottom:0}
+.fl{display:block;font-family:'Sora',sans-serif;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:7px}
+.fi{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:12px 15px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--white);outline:none;transition:var(--ease);-webkit-appearance:none}
+.fi:focus{border-color:var(--gold);background:rgba(240,171,0,.04)}
+.fi::placeholder{color:var(--t3)}
+.nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:28px}
+.mod-inner{width:100%;max-width:780px;margin:auto;padding-top:76px}
+.mod-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(240,171,0,.09);border:1px solid rgba(240,171,0,.22);border-radius:99px;padding:6px 14px;margin-bottom:16px}
+.mod-badge-txt{font-family:'Sora',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.mod-ttl{font-family:'Sora',sans-serif;font-size:clamp(22px,3.5vw,32px);font-weight:700;color:var(--white);margin-bottom:8px}
+.mod-ctx{font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:28px;padding:12px 16px;background:rgba(0,112,242,.06);border-left:3px solid rgba(0,112,242,.4);border-radius:0 8px 8px 0}
+.qcard{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;margin-bottom:14px;transition:border-color .25s}
+.qcard:hover{border-color:rgba(240,171,0,.18)}
+.qnum{font-family:'Sora',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.qtxt{font-family:'Sora',sans-serif;font-size:15px;font-weight:500;color:var(--white);line-height:1.5;margin-bottom:18px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:13px;padding:13px 16px;background:rgba(255,255,255,.05);border:1.5px solid rgba(100,140,180,.35);border-radius:10px;cursor:pointer;transition:var(--ease)}
+.opt:hover{background:rgba(240,171,0,.08);border-color:rgba(240,171,0,.5);transform:translateX(2px)}
+.opt input{display:none}
+.opt-dot{width:20px;height:20px;border-radius:50%;border:2.5px solid rgba(140,170,200,.7);flex-shrink:0;margin-top:1px;transition:var(--ease);position:relative;background:rgba(255,255,255,.04)}
+.opt-dot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--dark);opacity:0;transition:var(--ease)}
+.opt input:checked~.opt-dot{border-color:var(--gold);background:var(--gold);box-shadow:0 0 0 3px rgba(240,171,0,.2)}
+.opt input:checked~.opt-dot::after{opacity:1}
+.opt:has(input:checked){background:rgba(240,171,0,.1);border-color:var(--gold)}
+.opt-lvl{font-family:'Sora',sans-serif;font-size:10px;font-weight:800;color:rgba(160,190,220,.8);flex-shrink:0;margin-top:3px;width:22px;letter-spacing:.02em}
+.opt-txt{font-size:14px;color:#C8D8E8;line-height:1.6;flex:1;font-weight:400}
+.opt:has(input:checked) .opt-txt{color:var(--white);font-weight:500}
+.opt:has(input:checked) .opt-lvl{color:var(--gold)}
+#s-calc .si{text-align:center;margin:auto}
+.spinner{width:72px;height:72px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 32px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#s-results .si{max-width:960px;padding-top:32px;margin:auto}
+.res-co{font-family:'Sora',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:6px}
+.res-ttl{font-family:'Sora',sans-serif;font-size:clamp(28px,4.5vw,46px);font-weight:800;color:var(--white);text-align:center;margin-bottom:6px}
+.res-sub{font-size:14px;color:var(--t2);text-align:center;margin-bottom:40px}
+.score-row{display:grid;grid-template-columns:1fr 1.1fr;gap:22px;margin-bottom:26px}
+.big-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:38px 32px;text-align:center;position:relative;overflow:hidden}
+.big-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-lt))}
+.slbl{font-family:'Sora',sans-serif;font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin-bottom:14px}
+.snum{font-family:'Sora',sans-serif;font-size:86px;font-weight:800;color:var(--gold);line-height:1}
+.smax{font-size:17px;color:var(--t3)}
+.mat-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 20px;border-radius:99px;margin:18px 0 14px;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.mat-desc{font-size:13px;color:var(--t2);line-height:1.65;text-align:left}
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--rl);padding:28px;display:flex;flex-direction:column}
+.card-ttl{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--white);margin-bottom:16px}
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:28px}
+.msc{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.msc-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.msc-name{font-family:'Sora',sans-serif;font-size:12.5px;font-weight:600;color:var(--white);display:flex;align-items:center;gap:7px}
+.msc-val{font-family:'Sora',sans-serif;font-size:22px;font-weight:800}
+.mpbar{height:5px;background:var(--border);border-radius:99px;overflow:hidden}
+.mpfill{height:100%;border-radius:99px;transition:width 1s ease .3s}
+.sec-ttl{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--white);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.rec-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.rec-hdr{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;cursor:pointer;transition:background .2s}
+.rec-hdr:hover{background:rgba(255,255,255,.02)}
+.rec-left{display:flex;align-items:center;gap:10px}
+.rec-pri{font-family:'Sora',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.pri-h{background:rgba(231,76,60,.15);color:#E74C3C}
+.pri-m{background:rgba(243,156,18,.15);color:#F39C12}
+.pri-l{background:rgba(46,204,113,.15);color:#2ECC71}
+.rec-mname{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--white)}
+.rec-chev{color:var(--t3);font-size:16px;transition:transform .3s}
+.rec-card.open .rec-chev{transform:rotate(180deg)}
+.rec-body{max-height:0;overflow:hidden;transition:max-height .6s ease,padding .3s}
+.rec-card.open .rec-body{max-height:2400px;padding:0 18px 18px}
+.rec-list{list-style:none}
+.rec-item{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--border);font-size:13.5px;color:#C8D8E8;line-height:1.65}
+.rec-bul{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:7px}
+.sap-svc-panel{margin-top:16px;border-top:1px solid var(--border);padding-top:14px}
+.sap-svc-ttl{font-family:'Sora',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.sap-svc-ttl::before{content:'';display:inline-block;width:3px;height:14px;background:var(--blue);border-radius:2px}
+.svc-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.svc-card{background:rgba(0,112,242,.06);border:1px solid rgba(0,112,242,.2);border-radius:9px;padding:12px 14px}
+.svc-card-name{font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.svc-card-ico{font-size:13px}
+.svc-card-desc{font-size:12px;color:var(--t2);line-height:1.55}
+.print-footer{display:flex;align-items:center;justify-content:space-between;padding:24px 0;border-top:1px solid var(--border);margin-top:28px;gap:12px;flex-wrap:wrap}
+.powered{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--t3)}
+.sap-wm{font-family:'Sora',sans-serif;font-weight:800;font-size:19px;color:#009EDE}
+.lv1{background:rgba(231,76,60,.14);color:#E74C3C}
+.lv2{background:rgba(243,156,18,.14);color:#F39C12}
+.lv3{background:rgba(52,152,219,.14);color:#3498DB}
+.lv4{background:rgba(155,89,182,.14);color:#9B59B6}
+.lv5{background:rgba(46,204,113,.14);color:#2ECC71}
+/* Autonomous Finance maturity — CSS unchanged, labels updated in LEVELS data */
+.pdf-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--border);border-radius:99px;padding:12px 24px;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--t1);z-index:999;display:none;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.pdf-toast.show{display:flex}
+/* Email capture */
+.capture-value-row{display:flex;flex-direction:column;gap:8px;margin-top:18px}
+.cv-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(240,171,0,.05);border:1px solid rgba(240,171,0,.15);border-radius:8px}
+.cv-ico{font-size:16px;flex-shrink:0}
+.cv-txt{font-size:13px;color:var(--t1);font-weight:500}
+/* Booking modal */
+.booking-val{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px}
+.bv-ico{font-size:20px;flex-shrink:0;margin-top:1px}
+.bv-ttl{font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--white);margin-bottom:2px}
+.bv-desc{font-size:11.5px;color:var(--t2);line-height:1.5}
+/* Results booking banner */
+.book-banner{background:linear-gradient(135deg,rgba(0,112,242,.15) 0%,rgba(240,171,0,.1) 100%);border:1px solid rgba(0,112,242,.35);border-radius:var(--rl);padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;position:relative;overflow:hidden}
+.book-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,rgba(240,171,0,.05));pointer-events:none}
+.book-banner-left{flex:1;min-width:260px}
+.book-banner-tag{font-family:'Sora',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.book-banner-tag::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.book-banner-ttl{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:6px;line-height:1.3}
+.book-banner-desc{font-size:13px;color:var(--t2);line-height:1.65}
+.book-banner-right{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.btn-book{background:linear-gradient(135deg,var(--blue),#0058c4);color:#fff;padding:14px 32px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:none;border-radius:99px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:var(--ease);box-shadow:0 4px 20px rgba(0,112,242,.4)}
+.btn-book:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,112,242,.55)}
+.book-presenter{font-size:11.5px;color:var(--t3);text-align:right}
+.book-presenter strong{color:var(--t2)}
+@media(max-width:640px){.w-cards{grid-template-columns:1fr}.score-row{grid-template-columns:1fr}.apex-wm{font-size:56px}.book-banner{flex-direction:column}.book-banner-right{align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<div id="ph">
+  <div class="ph-logo">⚡ APEX</div>
+  <div class="ph-bar"><div class="ph-fill" id="ph-fill" style="width:0%"></div></div>
+  <div class="ph-lbl" id="ph-lbl">Module 1 of 7</div>
+</div>
+
+<div class="pdf-toast" id="pdf-toast"><span id="pdf-toast-icon">⏳</span><span id="pdf-toast-msg">Building your APEX PDF report…</span></div>
+
+<!-- WELCOME -->
+<div class="screen active" id="s-welcome">
+<div class="si">
+  <div class="sap-pill">⚡ SAP Global Value Advisory · Lance Senoyuit · Sapphire 2025</div>
+  <div class="apex-icon">⚡</div>
+  <div class="apex-wm">APEX</div>
+  <div class="apex-sub">AI Performance &amp; Excellence Index</div>
+  <div class="tagline"><span>People Direct</span><div class="dot"></div><span>Assistants Orchestrate</span><div class="dot"></div><span>Agents Execute</span></div>
+  <div class="w-cards">
+    <div class="w-card"><div class="w-card-ico">⚡</div><div class="w-card-ttl">Built on SAP Autonomous Finance</div><div class="w-card-desc">Grounded in SAP's 4-step path and the full Joule Work & agent portfolio revealed at Sapphire 2025. Purpose-built for the insurance CFO office.</div></div>
+    <div class="w-card"><div class="w-card-ico">🎯</div><div class="w-card-ttl">7 Capability Modules · 20 Min</div><div class="w-card-desc">Benchmark your CFO office from data harmonization to Joule-orchestrated autonomous agent networks — and receive your personalized maturity level on SAP's path.</div></div>
+    <div class="w-card"><div class="w-card-ico">📄</div><div class="w-card-ttl">Executive PDF + Book a Meeting</div><div class="w-card-desc">Download a full executive PDF with benchmarks, recommendations, and SAP Autonomous Finance next steps — then book your complimentary Executive First Meeting with Industry Advisory.</div></div>
+  </div>
+  <button class="btn btn-gold" onclick="goTo('s-info')">Begin My Assessment →</button>
+  <div class="presenter">Presented by <strong>Lance Senoyuit</strong> · SAP Global Value Advisory · Sapphire 2025</div>
+</div>
+</div>
+
+<!-- INFO -->
+<div class="screen" id="s-info">
+<div class="si">
+  <div class="eyebrow">Before We Begin</div>
+  <div class="scrn-ttl">About Your Organization</div>
+  <div class="scrn-desc">This personalizes your APEX report and calibrates recommendations to your insurance context.</div>
+  <div class="fcard">
+    <div class="fg"><label class="fl">Company Name *</label><input class="fi" id="f-co" type="text" placeholder="e.g. Acme Insurance Group"></div>
+    <div class="fg"><label class="fl">Your Name *</label><input class="fi" id="f-name" type="text" placeholder="e.g. Jane Smith"></div>
+    <div class="fg"><label class="fl">Your Title</label><input class="fi" id="f-title" type="text" placeholder="e.g. Chief Financial Officer"></div>
+    <div class="fg"><label class="fl">Annual Premium Volume</label>
+      <select class="fi" id="f-size"><option value="" style="background:#172432">Select range</option><option value="small" style="background:#172432">Under $500M</option><option value="mid" style="background:#172432">$500M – $5B</option><option value="large" style="background:#172432">$5B – $25B</option><option value="enterprise" style="background:#172432">Over $25B</option></select>
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="goTo('s-welcome')">← Back</button>
+    <button class="btn btn-gold" onclick="startAssessment()">Start Assessment →</button>
+  </div>
+</div>
+</div>
+
+<div id="mod-screens"></div>
+
+<!-- CALCULATING -->
+<div class="screen" id="s-calc">
+<div class="si">
+  <div class="spinner"></div>
+  <div class="eyebrow">Processing Your Responses</div>
+  <div class="scrn-ttl" style="font-family:'Sora',sans-serif;font-size:28px;font-weight:700;color:var(--white);margin-bottom:10px">Calculating Your APEX Score</div>
+  <div class="scrn-desc" style="color:var(--t2)">Benchmarking against insurance industry best practices…</div>
+</div>
+</div>
+
+<!-- EMAIL CAPTURE -->
+<div class="screen" id="s-capture">
+<div class="si" style="max-width:520px;margin:auto;text-align:center">
+  <div style="width:64px;height:64px;background:linear-gradient(140deg,var(--gold),#E07B00);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:28px;box-shadow:0 10px 32px rgba(240,171,0,.35)">📬</div>
+  <div class="eyebrow">Your APEX Report Is Ready</div>
+  <div class="scrn-ttl" style="font-size:28px">Where Should We Send It?</div>
+  <div class="scrn-desc">Enter your details below to receive your personalized APEX PDF report and unlock a complimentary Executive First Meeting with SAP Industry Advisory — your dedicated Sherpa for the AI transformation journey.</div>
+  <div class="fcard" style="text-align:left">
+    <div class="fg"><label class="fl">Work Email *</label><input class="fi" id="c-email" type="email" placeholder="you@company.com"></div>
+    <div class="fg"><label class="fl">Phone (optional)</label><input class="fi" id="c-phone" type="tel" placeholder="+1 (555) 000-0000"></div>
+    <div class="capture-value-row">
+      <div class="cv-item"><div class="cv-ico">📊</div><div class="cv-txt">Your full APEX PDF report</div></div>
+      <div class="cv-item"><div class="cv-ico">🗓️</div><div class="cv-txt">Book a free expert review session</div></div>
+      <div class="cv-item"><div class="cv-ico">🎯</div><div class="cv-txt">Personalized AI roadmap with SAP</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--t3);margin-top:16px;line-height:1.6">By submitting you agree to be contacted by SAP regarding your APEX results and AI transformation opportunities. Your data is handled per SAP's Privacy Policy.</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
+    <button class="btn btn-gold" style="justify-content:center;width:100%;font-size:15px;padding:16px" onclick="submitCapture()">Get My Report & Book a Meeting →</button>
+    <button class="btn btn-ghost" style="justify-content:center;width:100%;font-size:13px" onclick="skipCapture()">Skip — view results without booking</button>
+  </div>
+</div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div id="booking-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(8,16,22,.92);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:24px;width:100%;max-width:680px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 32px 80px rgba(0,0,0,.6)">
+    <div style="padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div class="eyebrow" style="margin-bottom:4px">SAP Industry Advisory</div>
+        <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--white)">Book Your Executive First Meeting</div>
+        <div style="font-size:13px;color:var(--t2);margin-top:3px">With Lance Senoyuit · SAP Global Value Advisory</div>
+      </div>
+      <button onclick="closeBooking()" style="background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--t2);border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+    </div>
+    <div style="padding:20px 28px;flex:1;overflow-y:auto">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+        <div class="booking-val"><div class="bv-ico">⏱️</div><div><div class="bv-ttl">45 Minutes</div><div class="bv-desc">Executive briefing + APEX results walkthrough</div></div></div>
+        <div class="booking-val"><div class="bv-ico">🎯</div><div><div class="bv-ttl">Tailored to Your Score</div><div class="bv-desc">We review your results before the call</div></div></div>
+        <div class="booking-val"><div class="bv-ico">🗺️</div><div><div class="bv-ttl">AI Roadmap Draft</div><div class="bv-desc">Walk away with a 90-day action plan</div></div></div>
+        <div class="booking-val"><div class="bv-ico">🤝</div><div><div class="bv-ttl">No Obligation</div><div class="bv-desc">Pure advisory value, no sales pressure</div></div></div>
+      </div>
+      <div style="background:rgba(240,171,0,.07);border:1px solid rgba(240,171,0,.22);border-radius:12px;padding:16px 18px;margin-bottom:20px">
+        <div style="font-family:'Sora',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:6px">Your APEX Context</div>
+        <div id="modal-score-summary" style="font-size:13px;color:var(--t2);line-height:1.65"></div>
+      </div>
+      <!-- Calendly embed placeholder -->
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+        <div id="calendly-inline" style="min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center">
+          <div style="font-size:40px;margin-bottom:16px">🗓️</div>
+          <div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--white);margin-bottom:8px">Select a Time That Works For You</div>
+          <div style="font-size:13px;color:var(--t2);margin-bottom:24px;max-width:320px">Click below to open our scheduling page and pick a slot with Lance and the SAP Industry Advisory team.</div>
+          <a id="calendly-link" href="https://calendly.com/lance-senoyuit-sap/apex-executive-meeting" target="_blank" class="btn btn-gold" style="text-decoration:none;justify-content:center">Open Scheduling Page →</a>
+          <div style="margin-top:16px;font-size:12px;color:var(--t3)">Or email directly: <a href="mailto:lance.senoyuit@sap.com" style="color:var(--blue);text-decoration:none">lance.senoyuit@sap.com</a></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div style="font-size:12px;color:var(--t3)">SAP Industry Advisory · Lance Senoyuit · Sapphire 2025</div>
+      <button onclick="closeBooking()" class="btn btn-ghost" style="font-size:12px;padding:10px 20px">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="s-results">
+<div class="si" id="res-content" style="max-width:960px;padding-top:32px;margin:auto"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   DATA — SAP AUTONOMOUS FINANCE FRAMEWORK
+   Built on SAP's 4-step path to Autonomous Finance:
+   1. Modernize & Harmonize Data
+   2. Automate the Core
+   3. Add Agentic Intelligence (Joule Work)
+   4. Defend & Reduce Risk
+   "People direct. Assistants orchestrate. Agents execute."
+   Source: SAP Autonomous Financial Management — Sapphire 2025
+═══════════════════════════════════════════════════════════════════ */
+const MODS=[
+{id:'strategy',name:'Autonomous Finance Vision & Strategy',w:.10,icon:'⚡',
+ ctx:'SAP defines Autonomous Finance as AI-driven processes that help companies measurably improve key finance objectives. This module evaluates whether your CFO office has a clear vision aligned to the Autonomous Finance model — where people direct, Joule assistants orchestrate, and AI agents execute across the financial enterprise.',
+ qs:[
+  {t:'How aligned is your CFO with SAP\'s Autonomous Finance vision — where AI fundamentally repositions the CFO from financial steward to enterprise value architect?',
+   o:['The CFO has not engaged with Autonomous Finance concepts; finance runs on traditional manual processes and reporting cycles',
+      'The CFO is aware of AI in finance but views it as an IT initiative; no formal Autonomous Finance strategy or vision exists',
+      'The CFO has a general AI vision for finance but it is not structured around the Autonomous Finance framework of assistants orchestrating agents',
+      'The CFO has sponsored a formal Autonomous Finance roadmap aligned to SAP\'s four-step path: modernize data, automate the core, add agentic intelligence, defend risk',
+      'The CFO actively champions Autonomous Finance as a board-level strategic priority; the office operates on continuous financial intelligence with the CFO directing Joule Work to orchestrate finance agents across the enterprise']},
+  {t:'How does your organization understand the relationship between Joule Work, Finance Assistants, and AI Agents in the Autonomous Finance architecture?',
+   o:['No awareness of Joule Work or the assistant-agent architecture; AI tools if used are standalone and disconnected',
+      'Awareness exists at IT level only; finance leadership has not been introduced to Joule Work or the Autonomous Finance agent portfolio',
+      'Finance leadership understands the concept of AI assistants but has not yet connected this to SAP\'s Joule Work orchestration model or the specific Finance Assistants and Agents available',
+      'The CFO office understands the three-layer model — Joule Work as the engagement layer where people set intent, Finance Assistants as orchestrators, and specialist Agents that execute — and has begun activating select assistants',
+      'The full Joule Work model is operational: the CFO expresses intent through Joule Work, Finance Assistants orchestrate tasks across domains, and a network of deployed Agents executes autonomously across SAP\'s Autonomous Suite']},
+  {t:'How is investment in Autonomous Finance structured within your organization?',
+   o:['No dedicated investment in Autonomous Finance; any AI spend is ad hoc and uncoordinated',
+      'Finance AI investment is managed by IT with minimal CFO involvement; no business-case discipline exists',
+      'Finance has a defined AI budget but it is not explicitly mapped to the Autonomous Finance domains — FP&A, Close, Treasury, Revenue, Tax, GRC',
+      'Autonomous Finance investment is tied to measurable outcomes: productivity gains, cycle time reduction, and cost-to-serve improvement against SAP benchmark targets',
+      'Investment is dynamically optimized based on deployed agent performance; value is tracked against SAP-benchmarked outcomes including 60% faster forecasts, 80% touchless processing, and continuous close from 20 hours to under 2']}
+]},
+{id:'data',name:'Data & Semantic Foundation',w:.15,icon:'📊',
+ ctx:'SAP\'s Autonomous Finance is built on semantically rich business data — comprehensive, clean, and well-governed financial data from general ledger, accounts payable, accounts receivable, and treasury. SAP\'s Knowledge Graph contains 7.3 million data fields of encoded business process expertise, delivering 3.5x higher prediction quality than generic LLMs. This module assesses your data readiness for Autonomous Finance.',
+ qs:[
+  {t:'How unified and harmonized is your financial data model across general ledger, AP, AR, treasury, and insurance-specific systems?',
+   o:['Financial data is deeply siloed across systems with no unified data model; reconciliation is manual and time-consuming',
+      'Some data integration exists but the financial data model is fragmented; a single source of financial truth does not exist',
+      'A largely unified financial data model exists in SAP S/4HANA covering core GL, AP, and AR; insurance-specific systems remain partially integrated',
+      'One common data model spans the entire finance system landscape including actuarial, claims, and policy administration; driving instant insights as demonstrated by DSM\'s elimination of 75% of operational financial reports',
+      'A fully unified semantic financial data model powers real-time AI inference; SAP\'s Knowledge Graph context enriches every agent decision with deep process and industry knowledge, eliminating hallucination risk']},
+  {t:'How AI-ready is your financial data — in terms of cleanliness, completeness, governance, and real-time accessibility for SAP Joule and Finance Agents?',
+   o:['Financial data quality is poor; significant manual effort is required to produce reliable reports; AI cannot reliably operate on this data',
+      'Data quality is improving but inconsistent; AI tools produce unreliable outputs due to data gaps and reconciliation issues',
+      'Core financial data is clean and accessible for analytics and BI; real-time data feeds are emerging but not yet wired to AI agents',
+      'Financial data is clean, governed, and flowing in real-time to SAP AI systems; Joule Work can surface live KPIs, risk indicators, and anomaly alerts without manual data preparation',
+      'Comprehensive, clean, and well-governed financial data — meeting SAP\'s standard for semantic richness — enables Finance Agents to autonomously access, query, reason, and act across all financial domains without human data preparation']},
+  {t:'How are financial insights and anomalies surfaced to the CFO and finance leadership today?',
+   o:['Static, manually-produced reports delivered on a scheduled basis; the CFO operates on retrospective data, often weeks old',
+      'BI dashboards are available but require significant manual navigation and interpretation; variance analysis is done by analysts, not AI',
+      'Predictive analytics are available for select use cases; some automated alerts exist but the CFO still spends significant time navigating data',
+      'AI-generated insights are embedded in finance workflows; Joule Work surfaces live finance KPIs, risk indicators, and exception alerts in a personalized CFO dashboard with drill-down narrative',
+      'The CFO operates with continuous financial intelligence; Joule proactively answers questions like "What drove Q3 variance in APAC OpEx?" with instant narrative and detailed drill-down — shifting the office from retrospective reporting to real-time steering']}
+]},
+{id:'close',name:'Accounting, Close & Core Automation',w:.15,icon:'🔄',
+ ctx:'SAP Autonomous Finance targets 80% touchless processing, a 20-30% increase in GL and closing productivity, and reduction of the financial close from 20 hours to under 2 hours — moving from a discrete month-end event to a continuous close. The Financial Close Assistant and AP/AR Assistants orchestrate agents including the Consolidation Agent, Receivables/Payables Clearing Agent, and Journal Entry Agents to make this possible.',
+ qs:[
+  {t:'How automated is your Accounting & Financial Close process today, measured against SAP\'s target of 80% touchless processing and a continuous close cycle?',
+   o:['The financial close is entirely manual requiring two or more weeks; significant analyst time is consumed in reconciliation, journal entries, and intercompany matching',
+      'Spreadsheet automation and some system tools reduce cycle time to 7-10 days; manual intervention remains the dominant mode of operation',
+      'Partial automation reduces the close to 3-5 days; some AI-assisted reconciliation is in place but the Financial Close Assistant has not been deployed',
+      'SAP\'s Financial Close Assistant is active, orchestrating the Consolidation Agent, AP/AR Clearing Agents, and Journal Entry Agents; the close cycle runs in 1-2 days with exception-based human oversight',
+      'A continuous close model is operational; Joule Work monitors the close sequence in real-time, agents execute automatically, and the CFO is alerted only on genuine exceptions — delivering the SAP benchmark of sub-2-hour close with full audit readiness']},
+  {t:'How deployed are SAP\'s AP and AR Assistants and their agent networks in your insurance finance function?',
+   o:['No AP or AR assistants or agents are deployed; invoice capture, payment processing, and collections are entirely manual or rely on legacy RPA',
+      'Basic RPA handles some AP/AR repetitive tasks; the SAP AP Assistant and AR Assistant have not been deployed or evaluated',
+      'The AP Assistant or AR Assistant is in pilot for select processes such as invoice capture or dunning; agent deployment is limited to one or two specific workflows',
+      'Both AP and AR Assistants are deployed, orchestrating agents including Payment Risk Agent, Dunning Insights Agent, Dispute Resolution Agent, and Payables Clearing Agent; human intervention is the exception not the rule',
+      'The full AP/AR agent network is live: Capture Vendor Invoice, Generate Payment Proposals, Manage Disputes, Collect Cash, Clear Open Items, Credit Risk Analysis — all executing autonomously with fraud detection and anomaly alerting built in']},
+  {t:'How integrated is your insurance-specific financial processing — reserving, actuarial, regulatory reporting — with SAP\'s Autonomous Finance automation layer?',
+   o:['Insurance-specific financial processes are entirely manual with long cycle times and heavy specialist dependency; no integration with SAP automation exists',
+      'Spreadsheet automation with manual data feeds from policy and claims systems; SAP is not yet the orchestration layer for insurance financial processing',
+      'Partial system integration exists between SAP and actuarial or claims platforms; some reporting is automated but human review remains significant',
+      'AI-assisted insurance financial processing is active: automated data collection, preliminary actuarial calculations, and IFRS 17 regulatory reporting are handled with minimal manual effort',
+      'AI agents handle end-to-end insurance financial processing — loss reserving, actuarial model updates, IFRS 17 disclosures, and NAIC filings — fully integrated through SAP\'s Autonomous Finance orchestration layer']}
+]},
+{id:'orchestration',name:'Joule Work & Agent Orchestration',w:.25,icon:'⚙️',
+ ctx:'This is the defining capability of Autonomous Finance. Joule Work is SAP\'s one-stop finance workspace where finance teams express intent and Joule surfaces insights, detects risks, simulates scenarios, and coordinates AI Agents across systems. The model: People direct. Assistants orchestrate. Agents execute. SAP currently manages over 55,000 AI agents across customers through the AI Agent Hub.',
+ qs:[
+  {t:'How is Joule Work deployed as the primary interface through which your CFO and finance team direct the Autonomous Finance operation?',
+   o:['Joule Work is not deployed; the CFO and finance team interact with financial systems through traditional ERP navigation and manual reporting workflows',
+      'Joule has been introduced for basic chat-based queries; it is not yet configured as a finance orchestration workspace with live KPI displays, risk alerts, and agent coordination',
+      'Joule Work is in use for select queries and document generation; it surfaces some financial insights but has not been configured as the CFO\'s primary command interface for directing Finance Agents',
+      'Joule Work is the CFO\'s primary finance interface: displaying live KPIs, risk indicators, and alerts in a personalized view; the CFO triggers actions conversationally and Joule monitors execution in real-time with exception alerts',
+      'Joule Work is fully operational as the Autonomous Finance command center: the CFO expresses intent, Joule surfaces insights, simulates scenarios, coordinates agents across all six finance domains — FP&A, Close, Treasury, Revenue, Tax, GRC — and alerts on exceptions as they occur']},
+  {t:'Which of SAP\'s Finance Assistants are deployed and actively orchestrating specialist AI Agents in your CFO office?',
+   o:['No Finance Assistants are deployed; finance workflows are executed manually or through traditional ERP transactions without AI orchestration',
+      'One Finance Assistant has been evaluated or piloted but is not yet in production orchestrating agents across financial workflows',
+      'One or two Finance Assistants are in production — for example the Financial Close Assistant or AP Assistant — orchestrating agents within a specific domain but not yet connected across domains',
+      'Three or more Finance Assistants are active — Close, Planning, Treasury, AP, or AR — each orchestrating domain-specific agents; cross-domain agent coordination through Joule Work is emerging',
+      'The full portfolio of Finance Assistants is deployed: Financial Close, Financial Planning, Cash and Treasury, AP, AR, Tax and Compliance, Consolidation, and Governance Assistants — all orchestrated through Joule Work with agents executing continuously across every finance domain']},
+  {t:'How sophisticated is your multi-agent coordination across finance domains — including handoffs, shared context, and cross-domain execution?',
+   o:['No multi-agent coordination exists; any AI tools in use operate independently with no shared context, memory, or task handoffs',
+      'Some point-to-point integrations exist between AI tools via APIs or scheduled data transfers; agents cannot share context or coordinate dynamically',
+      'Within individual finance domains, some agent coordination exists — for example, close agents passing state to consolidation agents — but cross-domain orchestration has not been achieved',
+      'Cross-domain agent coordination is active: Treasury agents inform FP&A forecasting, Close agents trigger Governance alerts, AR agents feed Revenue Management insights — all coordinated through Joule Work',
+      'A fully dynamic multi-agent network operates across all finance domains; Joule Work assigns, coordinates, and reallocates agents in real-time based on business priority, with the entire operation governed by the AI Agent Hub and fully visible to the CFO']},
+  {t:'What is the governance and control architecture for AI Agents operating autonomously in your CFO office?',
+   o:['No governance exists for AI agent actions; agent authority boundaries, approval thresholds, and escalation protocols have not been defined',
+      'Manual oversight is required for all agent outputs; no automated controls, audit trails, or defined authority boundaries are in place for autonomous execution',
+      'Basic guardrails are defined: spending limits, approval thresholds, and access restrictions are in place; agents are deployed in supervised mode with human sign-off required for significant actions',
+      'Automated monitoring is operational with defined human-in-the-loop controls for exception handling; agents operate with full authority within defined boundaries and escalate automatically outside them',
+      'Enterprise-grade governance is embedded in process orchestration per SAP\'s GRC architecture: team-defined guardrails enforce corporate policies and regulatory requirements; lifecycle management, security, and policy enforcement are built in; every agent action is audit-ready with immutable trails']}
+]},
+{id:'fpa',name:'Financial Planning & Intelligence',w:.15,icon:'📈',
+ ctx:'SAP\'s Autonomous Finance delivers 40-60% more time for analysis and 60% reduction in time for reporting and forecasts through the Financial Planning Assistant, Forecasting Agent, Variance Analysis Agent, Conversational Planning Agent, and Market Sentiment Analysis Agent. This module evaluates the maturity of your FP&A function in the Autonomous Finance model.',
+ qs:[
+  {t:'How is financial forecasting conducted in your organization today, benchmarked against SAP\'s target of 60% reduction in forecast cycle time through the Forecasting Agent and Financial Planning Assistant?',
+   o:['Manual, spreadsheet-based forecasting requiring significant analyst time; forecast cycles are monthly or quarterly and take days to complete',
+      'BI tools support historical analysis; forecasting remains manual and periodic with significant analyst effort spent on data gathering rather than analysis',
+      'Statistical models generate baseline forecasts with manual review and override; the Financial Planning Assistant and Forecasting Agent have not been deployed',
+      'The Financial Planning Assistant is active, with the Forecasting Agent generating rolling forecasts automatically; the Variance Analysis Agent identifies and explains deviations without manual analyst effort',
+      'Continuous AI-driven forecasting is operational: the Forecasting Agent refreshes projections in real-time, the Market Sentiment Analysis Agent incorporates external signals, the Conversational Planning Agent allows the CFO to run scenarios through natural language — delivering SAP\'s benchmark of 60% faster forecast cycles']},
+  {t:'How does your organization conduct scenario planning, sensitivity analysis, and "what-if" modeling today?',
+   o:['Scenario planning is manual and infrequent; Excel models require significant analyst time to build and are outdated as soon as they are produced',
+      'Some scenario modeling capability exists in planning tools but is disconnected from live financial data; scenarios are prepared for specific events rather than continuously available',
+      'Scenario analysis is available through SAP planning tools with some AI-assisted baseline generation; ad hoc "what-if" analysis requires analyst setup and is not conversational',
+      'The Financial Planning Assistant enables the CFO to run scenario simulations conversationally; the Conversational Planning Agent adjusts models in real-time based on CFO direction with immediate financial impact visualization',
+      'Full autonomous scenario intelligence is operational: the CFO asks Joule Work a question, the Planning and Forecasting Agents instantly simulate outcomes across scenarios, and the results surface in the CFO\'s personalized Joule Work dashboard with narrative explanation — no analyst required']},
+  {t:'How does your CFO access, query, and act on financial performance intelligence in real time?',
+   o:['The CFO receives scheduled financial reports; real-time performance visibility requires manual data requests and analyst preparation',
+      'Management dashboards provide some real-time visibility but the CFO cannot query them conversationally or drill into variance drivers without analyst support',
+      'AI-generated financial commentary is available for select reports; the CFO can perform limited self-service analytics but significant manual interpretation remains',
+      'Joule Work provides the CFO with a live finance command view: real-time KPIs, risk indicators, and automated variance narrative; the CFO can query Joule conversationally for instant financial insight',
+      'The CFO operates in a fully continuous intelligence environment: Joule proactively surfaces anomalies, the Variance Analysis Agent delivers instant narrative on any performance deviation, and the CFO can trigger planning or close actions directly from the insight — transforming the office from retrospective reporting to continuous financial intelligence']}
+]},
+{id:'governance',name:'GRC, Compliance & AI Governance',w:.10,icon:'🛡️',
+ ctx:'SAP\'s Autonomous Finance embeds GRC in the process orchestration layer, not as a separate control. SAP is the only enterprise AI platform with ISO/IEC 42001 certification for AI governance, aligned with the EU AI Act, NIST Tier 3, and the 3R Principles — Responsible, Reliable, Relevant. The Governance Assistant, Audit Agent, Tax & Compliance Assistant, and continuous controls monitoring replace periodic checks with real-time risk intelligence.',
+ qs:[
+  {t:'How embedded is continuous controls monitoring in your finance function — benchmarked against SAP\'s model of automated controls replacing periodic manual checks?',
+   o:['Controls are entirely periodic and manual; audit preparation requires significant effort and retrospective data assembly; continuous monitoring does not exist',
+      'Some automated controls exist in SAP but they are point-in-time checks; the Governance Assistant and Audit Agent have not been deployed; controls are not continuous',
+      'Automated controls monitoring is in place for select financial processes; the Governance Assistant is being evaluated; compliance reporting is partially automated',
+      'The Governance Assistant is active, monitoring exceptions in real-time and resolving issues proactively; the Audit Agent provides continuous audit-readiness as demonstrated by Pfizer\'s reduction in audit testing effort and controls monitoring across 300+ organizations',
+      'Continuous controls are fully operational per SAP\'s GRC architecture: the Governance Assistant monitors all financial processes, the Audit Agent generates audit-ready evidence continuously, and the Tax & Compliance Assistant automates regulatory submissions — eliminating the audit sprint entirely']},
+  {t:'How aligned is your organization\'s AI governance with enterprise-grade standards — including ISO/IEC 42001, EU AI Act, and SAP\'s 3R Principles of Responsible, Reliable, and Relevant AI?',
+   o:['No formal AI governance framework exists for the finance function; AI tools are deployed without model risk assessment, explainability requirements, or regulatory alignment',
+      'Standard IT security policies apply but have not been adapted for AI-specific risks; SAP\'s ISO 42001-certified AI platform governance capabilities have not been activated',
+      'An AI Acceptable Use Policy exists for the CFO office; model risk management covers key financial AI models; SAP\'s 3R Principles have been introduced but not yet operationalized',
+      'AI governance in finance is formally aligned to SAP\'s enterprise-grade standards: ISO 27001, SOC 2, GDPR, and authorization-aware AI via HANA Vector Engine; explainability documentation is available to regulators on demand',
+      'Full enterprise AI governance is embedded in the process orchestration layer: ISO/IEC 42001 certified, EU AI Act aligned, NIST Tier 3, tenant isolation with zero-trust security, encryption end-to-end — AI governance is a system property not a manual control process']},
+  {t:'How are insurance-specific regulatory requirements — IFRS 17, NAIC, state commissioner AI expectations — addressed within your AI-powered finance function?',
+   o:['No formal approach exists to regulatory compliance for AI in insurance finance; regulatory reporting is manual and high-risk; shadow AI creates unmanaged regulatory exposure',
+      'Traditional compliance processes handle regulatory reporting; AI tools in finance are not formally assessed for regulatory compliance; exposure from uncontrolled AI adoption is not quantified',
+      'Key regulatory reporting processes have been assessed for AI compliance; IFRS 17 reporting is being automated; an AI regulatory exposure assessment has been completed',
+      'Regulatory reporting is significantly automated through the Tax & Compliance Assistant; IFRS 17, NAIC filings, and state regulatory submissions are handled with AI-assisted preparation and human review for submission',
+      'End-to-end regulatory automation is operational: the Tax & Compliance Assistant orchestrates the E-Invoicing Setup Agent, Tax Posting Agent, Statutory Report Analysis Agent, and Regulatory Document Mapping Explainer Agent — delivering automated compliance across all jurisdictions with SAP\'s GRC for HANA 2026 platform']}
+]},
+{id:'talent',name:'Finance Talent & Transformation',w:.10,icon:'👥',
+ ctx:'SAP\'s vision for Autonomous Finance is that "AI does the busy work, so people do their best work." The CFO office of the future has finance teams directing Joule Work, interpreting agent outputs, and making strategic decisions — not performing manual reconciliations. This module assesses whether your organization is building the human capabilities to thrive in the Autonomous Finance era.',
+ qs:[
+  {t:'How would you characterize the AI fluency of your finance team — specifically their ability to direct Joule Work, work alongside Finance Assistants, and govern deployed AI Agents?',
+   o:['Little to no AI awareness or practical skills exist within the finance team; the team is not prepared to work alongside AI agents or direct Joule Work for financial outcomes',
+      'A few individuals are independently experimenting with AI tools; Joule has not been introduced to the finance team in a structured way and Finance Assistants are not yet part of team workflows',
+      'A structured AI literacy program exists for the finance team; key members understand Joule Work basics and are learning to work alongside deployed Finance Assistants and interpret agent outputs',
+      'Most of the finance team can effectively direct Joule Work, interpret Finance Assistant outputs, govern agent exceptions, and build simple Joule Studio agents for their specific finance domain',
+      'The finance team operates as proficient Autonomous Finance directors: they set intent through Joule Work, manage the Finance Assistant portfolio, govern the agent network, and spend their time on analysis, strategy, and value creation — not manual processing']},
+  {t:'How is the organization managing the cultural and change dimension of the transition from traditional finance to Autonomous Finance?',
+   o:['No change management exists for AI adoption in finance; resistance to AI tools is significant and unaddressed; finance staff perceive AI as a threat to their roles',
+      'Ad hoc communication is provided as AI tools are introduced; the cultural shift from manual process ownership to AI direction and governance has not been formally addressed',
+      'A formal change management plan exists for Autonomous Finance adoption; finance leadership communicates the vision clearly and the message that AI elevates finance roles rather than replacing them is being delivered',
+      'Continuous change management is operational: finance leaders role-model Joule Work usage, success stories from Finance Assistant deployment are shared widely, and the team understands that autonomous processing frees them for higher-value work',
+      'The CFO is the cultural champion of Autonomous Finance; the entire finance organization understands and embraces the model where AI does the busy work so people do their best work; talent retention has improved as finance roles become more strategic and analytically demanding']},
+  {t:'How is your organization building the talent strategy needed to sustain and grow Autonomous Finance capabilities over time?',
+   o:['No AI-specific talent strategy exists for the finance function; finance roles have not been redefined for the Autonomous Finance era',
+      'General IT resources are relied upon for AI support in finance; no finance-specific AI roles have been created; talent development for Autonomous Finance is not formalized',
+      'Finance-specific AI roles have been created — AI Finance Analyst, Automation Lead — with defined responsibilities; a structured upskilling program is in place for existing finance staff',
+      'A comprehensive Autonomous Finance talent strategy is in place: career paths are redefined, finance staff are trained to govern and direct AI agents, and the organization is actively recruiting for AI-fluent finance talent',
+      'The CFO office is an employer of choice for finance AI talent; SAP partnerships, academic alliances, and internal Joule Studio certification tracks sustain continuous capability growth; the finance talent strategy is explicitly built for the Autonomous Finance operating model']}
+]}
+];
+
+const LEVELS=[
+  {min:0,max:20,label:'Manual Finance',cls:'lv1',rgb:[231,76,60],
+   step:'Pre-Transformation',
+   desc:'Your finance function operates primarily on manual processes, disconnected systems, and retrospective reporting. Autonomous Finance has not yet begun. This is the starting point — and the most important moment to act, as the gap between manual and autonomous finance organizations is widening rapidly.'},
+  {min:21,max:40,label:'Modernizing',cls:'lv2',rgb:[243,156,18],
+   step:'Step 1: Modernize & Harmonize Your Data',
+   desc:'Data harmonization is underway and your SAP foundation is being unified. This is SAP\'s first step on the path to Autonomous Finance. Joule and Finance Assistants are being introduced. The focus now is building the semantically rich, clean, governed financial data that every subsequent capability depends on.'},
+  {min:41,max:60,label:'Automating',cls:'lv3',rgb:[52,152,219],
+   step:'Step 2: Automate the Core',
+   desc:'Core financial processes are being automated — close cycles are shortening, AP/AR assistants are deployed, and touchless processing is increasing. This is SAP\'s second step. The finance function is reducing manual burden and building confidence in AI-executed workflows before scaling to full orchestration.'},
+  {min:61,max:80,label:'Orchestrating',cls:'lv4',rgb:[155,89,182],
+   step:'Step 3: Add Agentic Intelligence',
+   desc:'Joule Work is active. Finance Assistants are orchestrating specialist AI Agents across multiple domains. The CFO is directing financial intelligence through natural language. This is SAP\'s third step — the most transformative phase, where the CFO office begins operating as a continuous financial intelligence engine.'},
+  {min:81,max:100,label:'Autonomous',cls:'lv5',rgb:[46,204,113],
+   step:'Step 4: Defend & Reduce Risk at Scale',
+   desc:'Autonomous Finance is fully operational. People direct. Assistants orchestrate. Agents execute. The CFO has been repositioned from financial steward to enterprise value architect — with continuous financial intelligence, 80% touchless processing, sub-2-hour close cycles, and GRC embedded in every process. This is the destination.'}
+];
+
+const RECS={
+  strategy:{
+    lo:['The Autonomous Finance journey begins with a single executive decision: to treat finance AI not as an IT project but as a strategic reimagination of how the CFO office operates. Before any technology conversation, the CFO needs to own a clear, simple answer to: "What does Autonomous Finance mean for our organization, and what does it enable us to do that we cannot do today?" SAP\'s framework — people direct, assistants orchestrate, agents execute — is the vocabulary that makes this conversation concrete.',
+        'Request an Executive First Meeting with SAP Industry Advisory to introduce the Autonomous Finance vision to your CFO and finance leadership. This is a structured, complimentary session where the IA team presents SAP\'s four-step path — modernize data, automate the core, add agentic intelligence, defend risk — and maps it to your specific insurance finance context. It is the right starting point before any technology evaluation.',
+        'Identify one specific, high-volume, rule-based finance process where automation is unambiguous — invoice processing, bank reconciliation, or intercompany matching — and commit to eliminating human intervention from it within 90 days. A focused first win builds the internal credibility and organizational confidence that funds and justifies the broader Autonomous Finance journey.'],
+    md:['Formalize your Autonomous Finance roadmap against SAP\'s four-step path with funded initiatives, defined owners, and outcome metrics tied to SAP\'s published benchmarks: 60% faster forecasts, 80% touchless processing, 20-30% close productivity improvement, and 50-70% cash cycle time reduction. Vague AI strategies do not get funded — specific, benchmarked financial outcomes do.',
+        'Accelerate CFO activation on Joule Work. The CFO\'s personal fluency with Joule — using it to query financial performance, run scenario questions, and direct Finance Assistants — is the highest-leverage demonstration of Autonomous Finance\'s value to the rest of the organization. Executive behavior drives organizational behavior.',
+        'Establish a quarterly Autonomous Finance business review cadence with your SAP account team and Industry Advisory, tracking progression through the four-step maturity path and benchmarking your scores against insurance CFO peers.'],
+    hi:['Evolve from a static Autonomous Finance roadmap to a dynamic AI portfolio — continuously reprioritizing agent investments based on measured business impact against SAP\'s value benchmarks and emerging insurance industry use cases.',
+        'Establish an Autonomous Finance Center of Excellence anchored in the CFO office to govern the growing agent network, share best practices across business units, and accelerate the deployment of new Finance Assistants as SAP releases them.',
+        'Publish Autonomous Finance ROI metrics to the board and C-suite on a quarterly basis: touchless processing rates, close cycle time, forecast accuracy, and cash management efficiency gains. Make the financial return on the Autonomous Finance investment visible, attributable, and compounding.']},
+  data:{
+    lo:['The semantically rich business data that powers SAP\'s Finance Agents does not happen automatically — it requires deliberate investment in data quality, unification, and governance. Before any agent deployment, conduct an honest audit of your core financial data: where it lives, how clean it is, whether it is accessible in real time, and whether it meets the standard for AI inference. This audit is the foundation of everything that follows.',
+        'Begin with a single financial data domain — the general ledger and financial close — and build a unified, clean, real-time data layer for that domain within SAP S/4HANA. One well-governed, semantically rich dataset is more valuable for Autonomous Finance than ten siloed ones. DSM\'s achievement of one common data model driving instant insights across their entire finance landscape started exactly this way.',
+        'Activate SAP\'s Knowledge Graph context for your financial processes. SAP\'s 7.3 million data fields of encoded business process expertise deliver 3.5x higher prediction quality than generic AI models and dramatically reduce hallucination risk. This is a structural AI advantage that only exists when your financial data is properly unified within SAP\'s platform.'],
+    md:['Expand your unified financial data model to cover all six Autonomous Finance domains: FP&A, Accounting & Close, Cash & Treasury, Revenue Management, Tax & Trade, and GRC. Each domain\'s Finance Assistant depends on clean, real-time data from its domain — and cross-domain Joule Work orchestration requires that all domains share a consistent data model.',
+        'Implement AI-specific data governance: model lineage tracking, explainability documentation for AI-generated financial outputs, and role-based access controls aligned to SAP\'s authorization-aware AI architecture using the HANA Vector Engine. Regulatory scrutiny of AI in insurance finance is increasing — governance built now is exponentially cheaper than governance retrofitted after a finding.',
+        'Wire real-time financial data feeds to Joule Work so the CFO\'s personalized dashboard displays live KPIs, cash positions, risk indicators, and close status without manual data preparation. The shift from scheduled reports to continuous financial intelligence begins with real-time data infrastructure.'],
+    hi:['Invest in a fully semantic financial data fabric spanning SAP\'s Autonomous Suite and your insurance-specific systems — actuarial, claims, policy administration — enabling Finance Agents to access, query, reason, and act on live operational and financial data without human intermediation.',
+        'Automate data quality monitoring and embed AI-driven anomaly detection directly into financial data pipelines — moving from reactive data fixes to proactive data assurance. The Autonomous Finance model cannot sustain 80% touchless processing without automated data quality as a foundational capability.',
+        'Extend the SAP Knowledge Graph to encode your organization\'s specific insurance financial processes, regulatory requirements, and actuarial models — giving Finance Agents domain-specific context that further reduces hallucination risk and improves decision quality beyond SAP\'s already-published benchmark.']},
+  close:{
+    lo:['The financial close is the highest-visibility, highest-effort process in most insurance CFO offices — and it is the most compelling first target for Autonomous Finance automation. Map your current close process step by step: every manual journal entry, every reconciliation, every intercompany match. This mapping is the prerequisite for the Financial Close Assistant deployment and will surface the specific agents — Consolidation Agent, Clearing Agent, Accruals Agent — that will eliminate manual steps.',
+        'SAP\'s target is sub-2-hour continuous close, down from the industry average of 20 hours. You do not get there in one step. The first milestone is eliminating the most manual, highest-volume reconciliation step in your current close — typically bank clearing or intercompany matching — using SAP\'s AP/AR Clearing Agents. One agent in production delivers more organizational learning than a year of planning.',
+        'Evaluate your AP and AR processes against SAP\'s Autonomous Finance benchmark of 80% touchless processing. Most insurance finance functions are processing fewer than 20% of transactions without human touch. The AP Assistant — orchestrating Capture Vendor Invoice, Generate Payment Proposals, and Payables Clearing agents — is the fastest path to measurable touchless processing improvement.'],
+    md:['Deploy the Financial Close Assistant to begin orchestrating your close sequence: journal entries, accruals, intercompany reconciliation, and consolidation. The assistant monitors execution in real-time, surfaces exceptions immediately, and eliminates the manual close coordination that currently consumes finance team capacity. DSM reduced manual interventions significantly and improved intercompany profitability transparency using exactly this approach.',
+        'Activate the full AP and AR Agent networks. The AP Assistant orchestrates: Capture Vendor Invoice, Prevent Fraud, Generate Payment Proposals, Optimize Invoice Discounts, and Payables Clearing. The AR Assistant orchestrates: Manage Aging Invoices, Clear Open Items, Dunning Insights, Dispute Resolution, and Credit Risk Analysis. Deploy both and measure the improvement in touchless processing rates against SAP\'s 80% benchmark target.',
+        'Begin integrating your insurance-specific financial processing — loss reserve calculations, actuarial model updates, and IFRS 17 disclosures — with SAP\'s Autonomous Finance automation layer. This integration is the path to eliminating the most resource-intensive and highest-risk manual processes in your insurance finance function.'],
+    hi:['Achieve continuous close: eliminate the financial close as a discrete month-end event and replace it with an ongoing background process executed by the Financial Close Assistant and its agent network, with the CFO monitoring through Joule Work and intervening only on genuine exceptions.',
+        'Target 80% touchless processing across all AP and AR workflows, matching SAP\'s Autonomous Finance benchmark and reducing finance headcount cost-to-serve significantly while freeing team capacity for the strategic analysis and decision support the CFO office should be providing.',
+        'Integrate AI-driven loss reserving, actuarial model refresh, and regulatory reporting into the Autonomous Finance orchestration layer — making insurance-specific financial processing as automated, auditable, and continuous as core accounting and close.']},
+  orchestration:{
+    lo:['Most insurance CFO offices are in the very early stages of Autonomous Finance — and that means the most important first step is not deploying an agent, it is understanding the architecture. Request a Joule Work demonstration from SAP Industry Advisory and see the three-layer model in action: the CFO expresses intent through Joule Work, Finance Assistants orchestrate the work, and specialist Agents execute. Seeing this end-to-end is what makes the Autonomous Finance vision concrete and fundable.',
+        'Before any agent deployment, define the governance architecture: what authority will agents have, what requires human approval, what triggers escalation, and how will you audit agent actions. SAP\'s enterprise-grade governance embeds guardrails in the process orchestration layer — team-defined, policy-enforced, lifecycle-managed. Your governance design must be complete before your first agent goes live in a production insurance finance environment.',
+        'Evaluate SAP\'s existing Finance Agent portfolio against your highest-priority CFO-office pain points. SAP currently manages over 55,000 AI agents across customers through the AI Agent Hub — there are pre-built, tested agents for virtually every core finance workflow. Running one pre-built SAP agent in production teaches your organization more about Autonomous Finance than a year of strategy planning.'],
+    md:['Activate Joule Work as the CFO\'s primary finance interface. Configure the personalized dashboard to display live finance KPIs, risk indicators, and close status. Enable conversational query so the CFO can ask "What drove Q3 variance in APAC OpEx?" and receive instant narrative. This single change — making Joule Work the CFO\'s daily finance interface — is the most visible and culturally powerful step in the Autonomous Finance journey.',
+        'Deploy three or more Finance Assistants — prioritizing Financial Close, AP, and Financial Planning — and connect them through Joule Work to enable cross-domain agent coordination. The power of Autonomous Finance multiplies as agents share context across domains: Treasury positions informing FP&A forecasts, Close exceptions triggering GRC alerts, AR dynamics influencing Revenue Management.',
+        'Establish SAP AI Agent Hub as your agent governance command center. This gives the CFO complete visibility into every deployed agent, its current tasks, performance metrics, and exception rates — enabling enterprise-wide AI agent governance without requiring technical involvement in individual agent operations.'],
+    hi:['Build toward the fully autonomous CFO office: the CFO expresses intent through Joule Work, Finance Assistants orchestrate the response across all six domains, and the full agent network executes — with continuous monitoring, real-time exception alerting, and immutable audit trails as system properties not manual processes.',
+        'Implement Joule Studio to build custom finance agents and workflow apps specifically for your insurance finance context — enabling your team to extend SAP\'s standard agent portfolio with insurance-specific capabilities such as loss ratio monitoring agents, reserve adequacy alerting, or regulatory filing agents.',
+        'Achieve the Autonomous Finance vision articulated by SAP: the CFO repositioned from financial steward to enterprise value architect — with the Autonomous Finance system continuously sensing, predicting, and executing while the CFO focuses on strategic direction, capital allocation, and enterprise value creation.']},
+  fpa:{
+    lo:['FP&A is where Autonomous Finance delivers its most visible CFO-level value — 40-60% more time for analysis and 60% reduction in forecast cycle time. But most early-stage organizations are still spending the majority of FP&A capacity on data gathering, reconciliation, and report production. The first step is to measure exactly how much analyst time is consumed on data work versus actual analysis, and then commit to a 60-day pilot of SAP\'s Financial Planning Assistant to demonstrate the reallocation.',
+        'Replace your next planning cycle\'s manual scenario modeling with the Conversational Planning Agent. Have the CFO ask a specific scenario question through Joule Work — "What is our capital position if catastrophe losses are 20% above plan?" — and measure the difference in response time, analyst effort, and decision quality. This single demonstration often becomes the most compelling internal case for Autonomous Finance investment.',
+        'Implement AI-powered rolling forecasts to replace your static quarterly budget cycle. The Forecasting Agent continuously updates projections as new data arrives — eliminating the cycle of stale forecasts that force the CFO to make strategic decisions on outdated information. KWS achieved enhanced alignment to corporate plans with automated forecasting in far shorter timeframes using exactly this approach.'],
+    md:['Deploy the full Financial Planning Assistant and its agent network — Forecasting Agent, Variance Analysis Agent, Conversational Planning Agent, and Market Sentiment Analysis Agent — as an integrated FP&A intelligence system. The target is that the CFO can walk into any meeting and answer any financial performance question from Joule Work in real time without analyst preparation.',
+        'Wire the Variance Analysis Agent to your management reporting cycle: every performance report should include an AI-generated variance narrative that explains what drove the deviation, what the run-rate implies, and what decisions are indicated. Watco achieved this — enhanced alignment to corporate plans with intelligent insights for real-time adjustments — eliminating the manual variance commentary process entirely.',
+        'Connect FP&A agent outputs to Close and Treasury agent inputs: forecast revisions should automatically inform cash positioning, Close results should automatically update rolling forecasts, and Treasury risk analysis should automatically surface in the FP&A planning view. Cross-domain agent coordination in FP&A is where the compounding value of Autonomous Finance becomes clear.'],
+    hi:['Achieve continuous financial intelligence: the CFO operates with a live, always-current financial picture surfaced by Joule Work — not a scheduled report, not a prepared presentation, but a continuous stream of AI-generated insight, anomaly detection, and decision recommendation derived from real-time agent execution across all finance domains.',
+        'Build Autonomous Finance\'s most advanced FP&A capability: the CFO directs the Conversational Planning Agent through Joule Work to run multi-scenario simulations across the full financial model, incorporating market sentiment signals, insurance loss dynamics, and macroeconomic indicators — and receives a ranked set of strategic options with financial impact quantified in minutes.',
+        'Position the FP&A function as the enterprise intelligence center for the entire insurance organization — delivering continuous financial guidance to underwriting, claims, investment, and distribution leaders through Joule Work — transforming FP&A from a back-office reporting function to the strategic intelligence engine of the enterprise.']},
+  governance:{
+    lo:['The most urgent governance priority for early-stage organizations is not building a framework — it is taking stock of what AI is already in use in your finance function without formal approval. Shadow AI in insurance finance creates regulatory exposure that compounds silently. A simple AI inventory — what tools are being used, by whom, for what decisions, with what oversight — is the necessary first step and costs nothing beyond an afternoon of honest conversations.',
+        'SAP\'s Autonomous Finance platform is the only enterprise AI platform with ISO/IEC 42001 certification for AI management systems, aligned with the EU AI Act, and operating under the 3R Principles — Responsible, Reliable, Relevant. Understanding what this certification means for your regulatory posture — and how it differs from deploying uncertified AI tools in your finance function — is a conversation your Chief Risk Officer and General Counsel need to have before your AI footprint grows further.',
+        'Develop an AI Acceptable Use Policy for the CFO office that establishes: which AI tools and agents are approved for use in financial processes, what financial decisions AI may inform versus what it may execute autonomously, how agent outputs are reviewed and audited, and who is accountable when an agent makes an error that affects a financial statement or regulatory filing.'],
+    md:['Activate SAP\'s Governance Assistant and Audit Agent to move from periodic manual controls to continuous controls monitoring. The Pfizer case demonstrates what this enables: reduction in audit testing effort, elimination of manual controls execution, and centralized review-by-exception across more than 300 organizations with over 10,000 annual controls executions — all through continuous AI-powered monitoring rather than periodic audit cycles.',
+        'Align your AI governance framework explicitly to SAP\'s enterprise-grade standards: ISO 27001, SOC 2, GDPR compliance, authorization-aware AI through the HANA Vector Engine, and tenant isolation with zero-trust architecture. For an insurance finance function, these standards are not optional extras — they are the foundation of regulatory credibility with state commissioners and the NAIC.',
+        'Deploy the Tax & Compliance Assistant and its agent network — E-Invoicing Setup Agent, Tax Posting Agent, Statutory Report Analysis Agent, Legal Change Agent — to automate regulatory compliance processing. For IFRS 17 specifically, automation of the measurement models, disclosure calculations, and regulatory submissions represents one of the highest-value GRC automation opportunities in insurance finance.'],
+    hi:['Achieve GRC embedded in process orchestration per SAP\'s Autonomous Finance architecture: every finance agent action is governed by team-defined guardrails that enforce corporate policies and regulatory requirements in real time — governance is a system property, not a periodic manual process overlaid on top of operations.',
+        'Implement SAP GRC for HANA 2026 — the unified, HANA-native, AI-powered GRC platform with GA in Q3 2026 and support through 2040 — as the integrated continuous controls, risk intelligence, and regulatory compliance layer for your Autonomous Finance operation.',
+        'Establish board-level AI governance reporting for the finance function: a quarterly Autonomous Finance GRC dashboard covering deployed agent activity, controls performance, regulatory alignment status, and model risk metrics — positioning your organization at the frontier of responsible AI governance in insurance financial management.']},
+  talent:{
+    lo:['The Autonomous Finance vision is explicit: AI does the busy work so people do their best work. But realizing this requires helping your finance team understand that Autonomous Finance elevates their roles — it does not eliminate them. The most important first talent investment is a direct, honest conversation from the CFO about what Autonomous Finance means for finance careers: less manual processing, more strategic analysis, more decision authority, more interesting work.',
+        'Identify the finance team members who are naturally curious about AI — they exist in almost every organization — and give them structured access to Joule Work and one or two Finance Assistants as early adopters. Their peer-to-peer advocacy, grounded in real usage rather than theoretical promise, is more credible and more effective than any formal training program.',
+        'Commission SAP Industry Advisory to deliver an executive-level "Art of the Possible" session for your CFO and direct reports — a structured introduction to Autonomous Finance using insurance-specific scenarios and real customer examples including DSM, Pfizer, KWS, and Watco. Executive conviction, built on peer evidence, is the cultural foundation that makes everything else possible.'],
+    md:['Launch a structured Autonomous Finance upskilling program: executive AI vision sessions for CFO and finance leaders focused on directing Joule Work and governing the agent network; hands-on Finance Assistant practitioner training for FP&A analysts, close managers, and treasury teams; and a Joule Studio introduction for finance technologists who will build custom agents.',
+        'Redefine finance role profiles for the Autonomous Finance era. Every finance role — from FP&A analyst to financial controller to treasury manager — needs an updated job description that reflects AI-direction, agent governance, and exception management as core competencies, not future considerations. The talent market for AI-fluent finance professionals is competitive; organizations that redefine roles attract the right people.',
+        'Build a change management program that directly measures and addresses AI adoption anxiety. Use Joule Work adoption rates, Finance Assistant usage frequency, and agent exception resolution speed as leading indicators of cultural readiness — and address resistance directly through visible CFO leadership, early wins, and transparent communication about what Autonomous Finance means for every finance role.'],
+    hi:['Build a finance function where every team member is a proficient Autonomous Finance director: they set intent through Joule Work, manage Finance Assistant portfolios, govern the agent network, and spend their available capacity on strategic analysis, business partnership, and decision-making — the work that creates genuine enterprise value and cannot be automated.',
+        'Create an Autonomous Finance internal certification program — Joule Work Director, Finance Agent Governor, Autonomous Finance Architect — with defined competency levels, practical assessments, and career advancement tied to demonstrated AI capability. These certifications make Autonomous Finance skill visible, valued, and self-reinforcing within the organization.',
+        'Position your CFO office as the talent destination for finance AI professionals in the insurance industry — through visible thought leadership, participation in SAP\'s Industry Advisory community, and a demonstrated commitment to building the most advanced Autonomous Finance capability in the sector. The organizations that attract the best finance AI talent will accelerate past their peers at compounding speed.']}
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   SAP SERVICES — Grounded in IA Role Card, FDE model,
+   and SAP Autonomous Finance portfolio (April 2026 deck)
+═══════════════════════════════════════════════════════════════ */
+const IA_FIRST={
+  name:'Your First Step: Executive First Meeting with SAP Industry Advisory',
+  desc:'The Industry Advisory (IA) team sits at the tip of the spear of the SAP customer relationship. Before any solution, service, or product conversation, the IA team conducts a complimentary Executive First Meeting — presenting the Autonomous Finance vision to your CFO and finance leadership, reviewing your APEX results in full, aligning on your strategic vision and desired outcomes, and co-creating the Case for Change that grounds every recommendation in your specific insurance context. This is a formal CVJ deliverable — free, typically 45-90 minutes, and the natural next step from your APEX assessment.'
+};
+
+const FDE_DESC='SAP\'s Forward Deployed Engineering (FDE) is a co-innovation model that works directly with SAP\'s most strategic customers on high-impact AI scenarios. The process: (1) Nominate — strategic customers are identified and evaluated; (2) Discover — high-value AI scenarios are prioritized through a collaborative discovery workshop; (3) Qualify & Execute — Forward Deployed Product Teams deliver a live AI solution within approximately 90 days together with the customer; (4) Productize — validated capabilities are transitioned into SAP\'s standard AI portfolio. Customer value: measurable business impact from a live AI scenario, early access to innovative SAP AI capabilities, and the opportunity to directly influence SAP product development. FDE customers serve as reference organizations as solutions are refined and scaled across the SAP portfolio.';
+
+const SAP_SVCS={
+  strategy:[
+    {ico:'🎯',name:'Industry Advisory — Autonomous Finance Vision & Executive First Meeting',
+     desc:`${IA_FIRST.desc} For strategy specifically, the IA team will introduce SAP\'s four-step Autonomous Finance path — Modernize Data, Automate the Core, Add Agentic Intelligence, Defend Risk — and map it to your insurance organization\'s specific context, priorities, and SAP landscape. The session produces an aligned vision, a prioritized set of starting points, and a clear Case for Change that connects Autonomous Finance investment to measurable financial outcomes.`},
+    {ico:'🧠',name:'Industry Advisory — Autonomous Finance Roadmap & Case for Change',
+     desc:'Following the Executive First Meeting, the IA team leads a structured benchmarking and value analysis engagement to build your Autonomous Finance business case — grounding the investment decision in SAP\'s published value benchmarks: 40-60% more analysis time through FP&A automation, 80% touchless processing in AP/AR, 50-70% cash cycle time reduction in Treasury, and 20-30% close productivity improvement. The output is a sequenced Autonomous Finance roadmap aligned to your SAP landscape and insurance business model.'}
+  ],
+  data:[
+    {ico:'🎯',name:'Industry Advisory — Data Readiness Assessment',
+     desc:'The IA team conducts a structured data readiness assessment as part of the Executive First Meeting sequence — evaluating your financial data model against SAP\'s requirements for Autonomous Finance: unified general ledger data, real-time AP/AR feeds, treasury data integration, and insurance-specific data pipelines from actuarial and claims systems. The output is a prioritized data readiness roadmap that identifies the shortest path to activating SAP\'s Knowledge Graph advantage — 7.3M data fields, 3.5x prediction quality, minimal hallucination risk.'},
+    {ico:'🔧',name:'Forward Deployed Engineering (FDE) — Semantic Data Foundation Build',
+     desc:`For strategically nominated customers, ${FDE_DESC} In the data domain, FDE engagements for insurance CFO offices have built unified financial data models in SAP S/4HANA spanning GL, AP, AR, treasury, and insurance-specific operational data — delivering the semantic richness that enables Finance Agents to operate with 3.5x higher prediction quality than generic AI. DSM\'s achievement of one common data model eliminating 75% of operational financial reports was built on exactly this kind of semantic data foundation.`}
+  ],
+  close:[
+    {ico:'🎯',name:'Industry Advisory — Close & Automation Scenario Discovery',
+     desc:'The IA team conducts a process discovery session to map your current Accounting & Close workflow against SAP\'s Autonomous Finance benchmarks — identifying the specific agents (Financial Close Assistant, Consolidation Agent, AP/AR Clearing Agents, Journal Entry Agents) that address your highest-pain manual steps. The session produces a close automation roadmap with estimated impact against SAP\'s published targets: 20-30% GL and closing productivity improvement and reduction from the 20-hour industry average to SAP\'s sub-2-hour continuous close benchmark.'},
+    {ico:'🔧',name:'Forward Deployed Engineering (FDE) — Continuous Close Implementation',
+     desc:`For strategically nominated customers, ${FDE_DESC} In the close domain, FDE has delivered continuous close implementations for insurance finance functions — deploying the Financial Close Assistant with its full agent network (Consolidation Agent, Clearing Agents, Intercompany Matching, Accruals) to eliminate the discrete month-end close event. DSM\'s implementation reduced manual financial interventions significantly and improved intercompany profitability transparency — and the solution is now part of SAP\'s standard Autonomous Finance offering.`}
+  ],
+  orchestration:[
+    {ico:'🎯',name:'Industry Advisory — Joule Work Activation & Agent Architecture Design',
+     desc:'The IA team\'s most impactful engagement for CFO offices in the Orchestrating phase is a structured Joule Work activation session — configuring the CFO\'s personalized Joule Work dashboard with live finance KPIs, risk indicators, and agent status monitoring; enabling conversational financial queries; and designing the Finance Assistant portfolio deployment sequence. The IA team also facilitates the governance design session that defines agent authority boundaries, approval thresholds, and escalation protocols — the prerequisites for confident autonomous agent deployment in an insurance finance environment.'},
+    {ico:'🔧',name:'Forward Deployed Engineering (FDE) — Autonomous Finance Orchestration Build',
+     desc:`${FDE_DESC} Joule Work and multi-agent orchestration are FDE\'s highest-impact engagement for insurance CFO offices. FDE teams design and deploy the full Finance Assistant network — Close, Planning, Treasury, AP, AR, Tax & Compliance, Governance — orchestrated through Joule Work with specialist agents executing across SAP\'s Autonomous Suite. The CFO receives a live, production-grade Autonomous Finance orchestration system within approximately 90 days, becomes a reference customer, and co-shapes SAP\'s Autonomous Finance product roadmap.`},
+    {ico:'🛠️',name:'AI Agent Hub — Enterprise Agent Governance',
+     desc:'SAP\'s AI Agent Hub provides enterprise-wide command and control for your deployed Finance Agent network — giving the CFO complete visibility into every active agent, its current tasks, performance metrics, exception rates, and audit trails. With over 55,000 agents currently managed across SAP customers, the Agent Hub is the enterprise-grade governance layer that makes Autonomous Finance scalable, auditable, and regulatorily defensible in an insurance context.'}
+  ],
+  fpa:[
+    {ico:'🎯',name:'Industry Advisory — FP&A Intelligence Scenario Discovery',
+     desc:'The IA team conducts an FP&A intelligence discovery session that maps your current planning, forecasting, and scenario modeling workflows against SAP\'s Autonomous Finance FP&A benchmarks — 40-60% more analysis time, 60% faster forecast cycles, and always-current rolling projections from the Financial Planning Assistant, Forecasting Agent, Variance Analysis Agent, and Conversational Planning Agent. The session identifies the two or three FP&A workflows where Autonomous Finance delivers the fastest CFO-visible impact, using Watco\'s achievement of enhanced corporate alignment with automated forecasting as a reference point.'},
+    {ico:'🔧',name:'Forward Deployed Engineering (FDE) — Autonomous FP&A Build',
+     desc:`For strategically nominated customers, ${FDE_DESC} In the FP&A domain, FDE engagements have deployed the Financial Planning Assistant with its full agent network for insurance CFO offices — delivering continuous rolling forecasts, conversational scenario modeling through Joule Work, and AI-generated variance narrative that eliminates manual commentary production. The CFO walks into every leadership meeting with a current, AI-generated financial intelligence brief rather than a prepared deck built on yesterday\'s data.`}
+  ],
+  governance:[
+    {ico:'🎯',name:'Industry Advisory — AI Governance & Regulatory Readiness Assessment',
+     desc:'The IA team brings deep insurance regulatory knowledge to AI governance — covering NAIC model governance guidelines, state commissioner expectations for AI in financial decision-making, IFRS 17 explainability requirements, and the implications of SAP\'s ISO/IEC 42001 certification and EU AI Act alignment for your regulatory posture. The governance readiness assessment identifies your current exposure from uncontrolled AI adoption in finance and produces an insurance-specific AI governance framework aligned to SAP\'s 3R Principles: Responsible, Reliable, Relevant.'},
+    {ico:'🔧',name:'Forward Deployed Engineering (FDE) — Continuous Controls Implementation',
+     desc:`For strategically nominated customers, ${FDE_DESC} In the GRC domain, FDE has implemented the Governance Assistant, Audit Agent, and Tax & Compliance Assistant network for insurance finance functions — moving from periodic manual controls to continuous automated monitoring. Pfizer\'s implementation demonstrates the benchmark: reduction in audit testing effort and manual execution inconsistencies, controls monitoring across 300+ organizations with 10,000+ annual controls executions, all managed through continuous AI monitoring rather than periodic audit cycles. SAP GRC for HANA 2026, GA Q3 2026, is the integrated platform for these capabilities.`}
+  ],
+  talent:[
+    {ico:'🎯',name:'Industry Advisory — Autonomous Finance Enablement & Change Management',
+     desc:'The IA team serves as both strategic advisor and internal enabler for the Autonomous Finance talent transformation. As part of the ongoing engagement following the Executive First Meeting, the IA team delivers executive "Art of the Possible" sessions — introducing the CFO and finance leadership to Autonomous Finance using real insurance customer examples — and facilitates the cultural change conversation about what Autonomous Finance means for finance careers. The IA team also enables your internal SAP account team to support the Autonomous Finance journey with industry-specific tools, content, and customer references.'},
+    {ico:'🛠️',name:'SAP Autonomous Finance Learning Portfolio',
+     desc:'SAP offers a structured portfolio of Autonomous Finance learning experiences for insurance finance teams: executive sessions on directing Joule Work and governing the Finance Agent network; hands-on Finance Assistant practitioner workshops for FP&A, Close, and Treasury teams; and Joule Studio technical sessions for finance technologists building custom agents. These sessions are tailored to your APEX score profile — addressing the specific capability gaps your assessment identifies and grounding every training scenario in insurance finance context.'}
+  ]
+};
+
+
+/* ═══════════════ STATE ═══════════════ */
+const S={cur:'s-welcome',modIdx:0,ans:{},co:'',name:'',title:'',scores:null,overall:0,lv:null};
+
+/* ═══════════════ NAV ═══════════════ */
+function goTo(id){
+  const f=document.getElementById(S.cur),t=document.getElementById(id);
+  if(!t)return;
+  f.classList.add('out');
+  setTimeout(()=>{f.classList.remove('active','out');t.classList.add('active');t.scrollTop=0;S.cur=id;},280);
+}
+
+/* ═══════════════ START ═══════════════ */
+function startAssessment(){
+  S.co=document.getElementById('f-co').value||'Your Organization';
+  S.name=document.getElementById('f-name').value||'Respondent';
+  S.title=document.getElementById('f-title').value||'';
+  buildMods();loadMod(0);
+}
+function loadMod(i){
+  document.getElementById('ph').style.display='flex';S.modIdx=i;
+  document.getElementById('ph-fill').style.width=(i/MODS.length*100)+'%';
+  document.getElementById('ph-lbl').textContent=`Module ${i+1} of ${MODS.length}`;
+  goTo('s-mod-'+i);
+}
+
+/* ═══════════════ BUILD MODULES ═══════════════ */
+function buildMods(){
+  const wrap=document.getElementById('mod-screens');wrap.innerHTML='';
+  MODS.forEach((m,mi)=>{
+    const div=document.createElement('div');div.className='screen';div.id='s-mod-'+mi;
+    div.innerHTML=`<div class="mod-inner">
+      <div class="mod-badge"><span>${m.icon}</span><span class="mod-badge-txt">Module ${mi+1} of ${MODS.length} · ${m.name}</span></div>
+      <div class="mod-ttl">${m.name}</div>
+      <div class="mod-ctx">${m.ctx}</div>
+      ${m.qs.map((q,qi)=>`<div class="qcard" id="qc-${mi}-${qi}">
+        <div class="qnum">Question ${qi+1} of ${m.qs.length}</div>
+        <div class="qtxt">${q.t}</div>
+        <div class="opts">${q.o.map((o,oi)=>`<label class="opt"><input type="radio" name="q${mi}_${qi}" value="${oi+1}" ${S.ans[mi+'_'+qi]===oi+1?'checked':''}><div class="opt-dot"></div><div class="opt-lvl">L${oi+1}</div><div class="opt-txt">${o}</div></label>`).join('')}</div>
+      </div>`).join('')}
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="prevMod()">← Back</button>
+        <button class="btn btn-gold" onclick="nextMod()">${mi<MODS.length-1?'Next Module →':'Generate My APEX Report ⚡'}</button>
+      </div>
+    </div>`;
+    wrap.appendChild(div);
+  });
+}
+
+/* ═══════════════ MODULE NAV ═══════════════ */
+function nextMod(){
+  const mi=S.modIdx,m=MODS[mi];let ok=true;
+  m.qs.forEach((q,qi)=>{
+    const sel=document.querySelector(`input[name="q${mi}_${qi}"]:checked`);
+    const card=document.getElementById(`qc-${mi}-${qi}`);
+    if(!sel){ok=false;card.style.borderColor='rgba(231,76,60,.55)';setTimeout(()=>{card.style.borderColor=''},2200);}
+    else{S.ans[mi+'_'+qi]=parseInt(sel.value);}
+  });
+  if(!ok)return;
+  mi<MODS.length-1?loadMod(mi+1):calcResults();
+}
+function prevMod(){
+  if(S.modIdx>0){loadMod(S.modIdx-1);}
+  else{document.getElementById('ph').style.display='none';goTo('s-info');}
+}
+
+/* ═══════════════ CALCULATE ═══════════════ */
+function calcResults(){
+  document.getElementById('ph').style.display='none';goTo('s-calc');
+  setTimeout(()=>{
+    const scores=MODS.map((m,mi)=>{
+      let tot=0;m.qs.forEach((_,qi)=>tot+=(S.ans[mi+'_'+qi]||1));
+      return {...m,score:Math.round(((tot/m.qs.length)-1)/4*100)};
+    });
+    const overall=Math.round(scores.reduce((a,m)=>a+m.score*m.w,0));
+    const lv=LEVELS.find(l=>overall>=l.min&&overall<=l.max)||LEVELS[0];
+    S.scores=scores;S.overall=overall;S.lv=lv;
+    // Go to email capture before showing results
+    goTo('s-capture');
+  },2600);
+}
+
+/* ═══════════════ CAPTURE & BOOKING ═══════════════ */
+function submitCapture(){
+  const email=document.getElementById('c-email').value.trim();
+  if(!email||!email.includes('@')){
+    document.getElementById('c-email').style.borderColor='#E74C3C';
+    setTimeout(()=>{document.getElementById('c-email').style.borderColor='';},2000);
+    return;
+  }
+  S.email=email;
+  S.phone=document.getElementById('c-phone').value.trim();
+  // In production: POST to your CRM / webhook here
+  // e.g. fetch('/api/leads', {method:'POST', body: JSON.stringify({email, phone, score:S.overall, company:S.co, name:S.name, ...})})
+  renderResults(S.scores,S.overall,S.lv);
+  goTo('s-results');
+  // Auto-open booking modal after short delay for captured leads
+  setTimeout(()=>openBooking(),1200);
+}
+
+function skipCapture(){
+  S.email='';
+  renderResults(S.scores,S.overall,S.lv);
+  goTo('s-results');
+}
+
+function openBooking(){
+  // Populate the score summary in the modal
+  const lv=S.lv;
+  document.getElementById('modal-score-summary').innerHTML=
+    `<strong style="color:var(--white)">${S.co}</strong> scored <strong style="color:var(--gold)">${S.overall}/100</strong> — <strong style="color:var(--white)">${lv.label}</strong> maturity level. `+
+    `Your lowest-scoring capability is <strong style="color:var(--white)">${[...S.scores].sort((a,b)=>a.score-b.score)[0].name}</strong> (${[...S.scores].sort((a,b)=>a.score-b.score)[0].score}/100). `+
+    `Our Industry Advisory team will have reviewed your full profile before the meeting.`;
+  // Pre-fill Calendly URL with name and email if available
+  const base='https://calendly.com/lance-senoyuit-sap/apex-executive-meeting';
+  const params=new URLSearchParams();
+  if(S.name)params.set('name',S.name);
+  if(S.email)params.set('email',S.email);
+  document.getElementById('calendly-link').href=base+(params.toString()?'?'+params.toString():'');
+  document.getElementById('booking-modal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeBooking(){
+  document.getElementById('booking-modal').style.display='none';
+  document.body.style.overflow='';
+}
+
+/* ═══════════════ HELPERS ═══════════════ */
+function mColor(s){return s>=70?'#2ECC71':s>=40?'#F0AB00':'#E74C3C';}
+function priCls(s){return s>=70?'pri-l':s>=40?'pri-m':'pri-h';}
+function priLbl(s){return s>=70?'Optimize':s>=40?'Priority':'Critical';}
+function recs(id,s){const r=RECS[id];return s>=70?r.hi:s>=40?r.md:r.lo;}
+
+/* ═══════════════ RENDER RESULTS ═══════════════ */
+function renderResults(scores,overall,lv){
+  const el=document.getElementById('res-content');
+  const modCards=scores.map(m=>{const c=mColor(m.score);return `<div class="msc"><div class="msc-hdr"><div class="msc-name">${m.icon} ${m.name}</div><div class="msc-val" style="color:${c}">${m.score}</div></div><div class="mpbar"><div class="mpfill" style="width:${m.score}%;background:${c}"></div></div></div>`;}).join('');
+
+  const recCards=scores.map(m=>{
+    const svcs=SAP_SVCS[m.id]||[];
+    // For early-stage modules, show a prominent "start here" IA banner at top
+    const showFirstStep = m.score < 41;
+    const firstStepHtml = showFirstStep ? `
+      <div style="background:linear-gradient(135deg,rgba(0,112,242,.1),rgba(0,112,242,.05));border:1.5px solid rgba(0,112,242,.35);border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start">
+        <div style="font-size:22px;flex-shrink:0">🗓️</div>
+        <div>
+          <div style="font-family:'Sora',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:5px">Your First Step · SAP Industry Advisory</div>
+          <div style="font-size:13px;color:#C8D8E8;line-height:1.65;margin-bottom:10px">${IA_FIRST.desc}</div>
+          <button onclick="openBooking()" style="background:var(--blue);color:#fff;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border:none;border-radius:99px;padding:8px 18px;cursor:pointer">Book Executive First Meeting →</button>
+        </div>
+      </div>` : '';
+    const svcHtml=svcs.length?`
+      <div class="sap-svc-panel">
+        <div class="sap-svc-ttl">How SAP Can Help</div>
+        <div class="svc-cards">${svcs.map(s=>`
+          <div class="svc-card">
+            <div class="svc-card-name"><span class="svc-card-ico">${s.ico}</span>${s.name}</div>
+            <div class="svc-card-desc">${s.desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>`:'';
+    return `<div class="rec-card" onclick="this.classList.toggle('open')">
+      <div class="rec-hdr">
+        <div class="rec-left">
+          <span class="rec-pri ${priCls(m.score)}">${priLbl(m.score)}</span>
+          <span class="rec-mname">${m.icon} ${m.name} — ${m.score}/100</span>
+        </div>
+        <span class="rec-chev">⌄</span>
+      </div>
+      <div class="rec-body">
+        ${firstStepHtml}
+        <ul class="rec-list">${recs(m.id,m.score).map(r=>`<li class="rec-item"><div class="rec-bul"></div><div>${r}</div></li>`).join('')}</ul>
+        ${svcHtml}
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`<div class="res-co">${S.co} · APEX Assessment Results</div>
+    <div class="res-ttl">Your AI Maturity Report</div>
+    <div class="res-sub">Completed by ${S.name}${S.title?', '+S.title:''} · Powered by SAP Global Value Advisory</div>
+
+    <div class="book-banner">
+      <div class="book-banner-left">
+        <div class="book-banner-tag">SAP Industry Advisory · Executive First Meeting</div>
+        <div class="book-banner-ttl">Ready to turn your APEX score into a transformation roadmap?</div>
+        <div class="book-banner-desc">Book a complimentary 45-minute session with Lance Senoyuit and the SAP Industry Advisory team. We'll review your results, identify your highest-impact opportunities, and serve as your Sherpa for the AI journey ahead.</div>
+      </div>
+      <div class="book-banner-right">
+        <button class="btn-book" onclick="openBooking()">🗓️ Book My Executive Meeting</button>
+        <div class="book-presenter">With <strong>Lance Senoyuit</strong> · SAP Global Value Advisory<br>Complimentary · 45 min · No obligation</div>
+      </div>
+    </div>
+
+    <div class="score-row">
+      <div class="big-card"><div class="slbl">Overall APEX Score</div><div class="snum" id="animscore">0</div><div class="smax">/ 100</div><div class="mat-pill ${lv.cls}">${lv.label}</div><div style="font-family:'Sora',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:8px">${lv.step}</div><div class="mat-desc">${lv.desc}</div></div>
+      <div class="chart-card"><div class="card-ttl">Capability Radar · vs. Industry Average</div><canvas id="radar" style="max-height:290px"></canvas></div>
+    </div>
+    <div class="sec-ttl">Module Scores</div>
+    <div class="mod-grid">${modCards}</div>
+    <div class="sec-ttl">Recommendations & SAP Services by Capability</div>
+    ${recCards}
+    <div class="print-footer">
+      <div class="powered"><span class="sap-wm">SAP</span><span>APEX · SAP Global Value Advisory · Lance Senoyuit · Sapphire 2025</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="restart()">Retake</button>
+        <button class="btn-book" style="font-size:13px;padding:13px 24px" onclick="openBooking()">🗓️ Book a Meeting</button>
+        <button class="btn btn-pdf" id="pdf-btn" onclick="generatePDF()">⬇ Download PDF Report</button>
+      </div>
+    </div>`;
+  setTimeout(()=>{animateNum(overall);drawRadar(scores);},350);
+}
+
+function animateNum(t){const el=document.getElementById('animscore');let n=0;const s=t/55;const iv=setInterval(()=>{n=Math.min(n+s,t);el.textContent=Math.round(n);if(n>=t)clearInterval(iv);},18);}
+
+function drawRadar(scores){
+  const ctx=document.getElementById('radar');if(!ctx||typeof Chart==='undefined')return;
+  new Chart(ctx,{type:'radar',data:{
+    labels:scores.map(m=>m.name.split(' ').slice(0,3).join(' ')),
+    datasets:[
+      {label:S.co||'You',data:scores.map(m=>m.score),borderColor:'#F0AB00',backgroundColor:'rgba(240,171,0,.11)',borderWidth:2,pointBackgroundColor:'#F0AB00',pointRadius:4},
+      {label:'Insurance Avg.',data:[34,31,28,22,33,38,35],borderColor:'rgba(0,112,242,.55)',backgroundColor:'rgba(0,112,242,.04)',borderWidth:1.5,borderDash:[5,5],pointBackgroundColor:'#0070F2',pointRadius:3},
+      {label:'Top 25%',data:[68,62,64,55,66,72,60],borderColor:'rgba(46,204,113,.5)',backgroundColor:'rgba(46,204,113,.03)',borderWidth:1,borderDash:[3,3],pointBackgroundColor:'#2ECC71',pointRadius:2}
+    ]},
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{labels:{color:'#8FA3B1',font:{family:'IBM Plex Sans',size:10},boxWidth:10,padding:8}}},
+      scales:{r:{min:0,max:100,ticks:{display:false,stepSize:25},grid:{color:'rgba(255,255,255,.06)'},angleLines:{color:'rgba(255,255,255,.08)'},pointLabels:{color:'#8FA3B1',font:{family:'IBM Plex Sans',size:10}}}}}});
+}
+
+function restart(){S.ans={};S.modIdx=0;S.email='';document.getElementById('ph').style.display='none';goTo('s-welcome');}
+
+/* ═══════════════════════════════════════════════════════
+   PDF GENERATION
+═══════════════════════════════════════════════════════ */
+async function generatePDF(){
+  const btn=document.getElementById('pdf-btn');
+  const toast=document.getElementById('pdf-toast');
+  const toastMsg=document.getElementById('pdf-toast-msg');
+  const toastIco=document.getElementById('pdf-toast-ico');
+
+  btn.classList.add('loading');btn.textContent='Building PDF…';
+  toast.classList.add('show');toastMsg.textContent='Building your APEX PDF report…';
+
+  await new Promise(r=>setTimeout(r,100));
+
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF('p','mm','a4');
+    const W=210,H=297,today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    const scores=S.scores,overall=S.overall,lv=S.lv;
+
+    // Color helpers
+    const sf=(r,g,b)=>doc.setFillColor(r,g,b);
+    const st=(r,g,b)=>doc.setTextColor(r,g,b);
+    const sd=(r,g,b)=>doc.setDrawColor(r,g,b);
+    const R=(x,y,w,h,s='F')=>doc.rect(x,y,w,h,s);
+    const wrap=(txt,w)=>doc.splitTextToSize(txt,w);
+
+    const DARK=[12,25,32],PANEL=[20,36,52],BORDER=[30,48,68];
+    const GOLD=[240,171,0],GOLD2=[255,204,68],WHITE=[255,255,255];
+    const LTXT=[143,163,177],DTXT=[40,60,80],MUTED=[100,120,140];
+    const GREEN=[46,204,113],AMBER=[243,156,18],RED=[231,76,60],BLUE=[0,112,242],PURPLE=[155,89,182];
+    const lvRgb=lv.rgb;
+    const IAVG=[34,31,28,22,33,38,35],TOP25=[62,58,54,48,60,65,58];
+
+    function scoreColor(s){return s>=70?GREEN:s>=40?AMBER:RED;}
+
+    // PDF-safe labels — jsPDF cannot render emoji glyphs
+    const PDF_TAG={
+      strategy:'[VISION]', data:'[DATA]', close:'[CLOSE]',
+      orchestration:'[JOULE]', fpa:'[FP&A]', governance:'[GRC]', talent:'[TALENT]'
+    };
+    // Draw a small colored tag box + label, returns x offset used
+    function pdfTag(id,x,y,mc){
+      const tag=PDF_TAG[id]||'[ ]';
+      sf(...mc);doc.roundedRect(x,y-4,doc.getTextWidth(tag)+4,6,1,1,'F');
+      st(...WHITE);doc.setFont('helvetica','bold');doc.setFontSize(6.5);
+      doc.text(tag,x+2,y);
+      return doc.getTextWidth(tag)+8;
+    }
+    function pdfModLine(m,x,y,maxW){
+      const mc=scoreColor(m.score);
+      const tag=PDF_TAG[m.id]||'';
+      sf(...mc);doc.roundedRect(x,y-4,doc.getTextWidth(tag)+4,6,1,1,'F');
+      st(...WHITE);doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.text(tag,x+2,y);
+      const tx=x+doc.getTextWidth(tag)+7;
+      st(...DTXT);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+      doc.text(wrap(m.name,maxW-doc.getTextWidth(tag)-10),tx,y);
+    }
+
+    // ─── PAGE 1: COVER ──────────────────────────────────────────
+    toastMsg.textContent='Designing cover page…';await new Promise(r=>setTimeout(r,50));
+
+    sf(...DARK);R(0,0,W,H);
+    // Left gold stripe
+    sf(...GOLD);R(0,0,7,H);
+    // Subtle circle decorations
+    sd(...BORDER);doc.setLineWidth(0.3);
+    doc.circle(175,65,75,'S');doc.circle(175,65,50,'S');
+    // Top-right accent
+    sf(20,40,60);R(W-50,0,50,50);
+
+    // APEX wordmark
+    st(...GOLD);doc.setFont('helvetica','bold');doc.setFontSize(72);
+    doc.text('APEX',22,88);
+
+    // AI icon symbol (simple geometric)
+    sf(...GOLD);R(22,58,6,3);R(30,55,3,6);R(35,56,3,4);
+
+    // Subtitle
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(11.5);
+    doc.text('AI PERFORMANCE & EXCELLENCE INDEX',22,99);
+
+    // Divider
+    sf(...GOLD);R(22,104,58,0.6);
+
+    // Company info
+    st(...WHITE);doc.setFont('helvetica','bold');doc.setFontSize(20);
+    const coName=S.co.length>32?S.co.substring(0,30)+'…':S.co;
+    doc.text(coName,22,124);
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(10.5);
+    doc.text(`${S.name}${S.title?' · '+S.title:''}`,22,133);
+    doc.text(today,22,140);
+
+    // Score circle
+    sf(...PANEL);doc.circle(158,128,32,'F');
+    sd(...GOLD);doc.setLineWidth(1.5);doc.circle(158,128,32,'S');
+    st(...GOLD);doc.setFont('helvetica','bold');doc.setFontSize(32);
+    doc.text(String(overall),158,126,{align:'center'});
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(9);
+    doc.text('/100',158,134,{align:'center'});
+    doc.text('APEX SCORE',158,141,{align:'center'});
+
+    // Maturity badge
+    sf(...PANEL);R(22,152,110,18);sd(...GOLD);doc.setLineWidth(0.4);R(22,152,110,18,'S');
+    sf(...lvRgb);R(22,152,4,18);
+    st(...LTXT);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('MATURITY LEVEL',30,160);
+    st(...WHITE);doc.setFontSize(11);doc.text(lv.label.toUpperCase(),30,168);
+
+    // About box
+    sf(...PANEL);R(22,180,166,62);sd(...BORDER);doc.setLineWidth(0.3);R(22,180,166,62,'S');
+    sf(...GOLD);R(22,180,4,62);
+    st(...GOLD);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('ABOUT THIS ASSESSMENT',30,189);
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+    const about='APEX is a structured AI maturity assessment engineered for insurance CFO offices. It evaluates seven capability dimensions — from AI strategy and data foundation to autonomous agent orchestration — providing finance leaders with a clear view of their current position, a benchmark against industry peers, and the highest-priority actions to accelerate their AI transformation journey.';
+    doc.text(wrap(about,152),30,197);
+
+    // What's inside
+    sf(...PANEL);R(22,248,166,28);sd(...BORDER);R(22,248,166,28,'S');
+    sf(...BLUE);R(22,248,4,28);
+    st(...LTXT);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text('THIS REPORT INCLUDES',30,256);
+    const includes='Executive Summary  ·  Capability Scores & Radar  ·  Industry Benchmarks  ·  Strategic Recommendations  ·  Next Steps';
+    st(180,200,220);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(includes,30,263);
+    doc.text('Pages 2–5  ·  Confidential — For Internal Use Only',30,270);
+
+    // Footer
+    sf(8,18,26);R(0,H-20,W,20);sf(...GOLD);R(0,H-20,W,0.5);
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+    doc.text('SAP Global Value Advisory · Sapphire 2025',22,H-12);
+    doc.text('Presented by Lance Senoyuit',22,H-7);
+    st(...GOLD);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text('SAP',W-18,H-10,{align:'right'});
+
+    // ─── PAGE 2: EXECUTIVE SUMMARY ──────────────────────────────
+    toastMsg.textContent='Writing executive summary…';await new Promise(r=>setTimeout(r,50));
+    doc.addPage();
+
+    // Header band
+    sf(...DARK);R(0,0,W,32);sf(...GOLD);R(0,0,W,3);
+    st(...WHITE);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text('Executive Summary',18,20);
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(`${S.co} · APEX AI Maturity Assessment`,W-18,20,{align:'right'});
+
+    // White body
+    sf(250,252,255);R(0,32,W,H-47);
+
+    let y=44;
+
+    // Score + level cards
+    sf(...WHITE);R(15,y,82,32);sd(210,220,230);doc.setLineWidth(0.3);R(15,y,82,32,'S');
+    sf(...lvRgb);R(15,y,3,32);
+    st(...DTXT);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text('OVERALL APEX SCORE',21,y+8);
+    st(...GOLD);doc.setFontSize(26);doc.text(String(overall),21,y+22);
+    st(...MUTED);doc.setFontSize(10);doc.text('/100',21+doc.getTextWidth(String(overall))+2,y+22);
+
+    sf(...WHITE);R(102,y,93,32);sd(210,220,230);R(102,y,93,32,'S');
+    sf(...lvRgb);R(102,y,3,32);
+    st(...DTXT);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text('MATURITY LEVEL',108,y+8);
+    st(...lvRgb);doc.setFontSize(16);doc.text(lv.label,108,y+21);
+    st(...MUTED);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text(`Score range: ${lv.min}–${lv.max}`,108,y+28);
+
+    y+=40;
+
+    // Maturity description
+    sf(...WHITE);const descL=wrap(lv.desc,170);const descH=descL.length*5+14;
+    R(15,y,180,descH);sd(210,220,230);R(15,y,180,descH,'S');sf(...lvRgb);R(15,y,3,descH);
+    st(...DTXT);doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.text('What This Means',21,y+8);
+    st(60,80,100);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(descL,21,y+15);
+    y+=descH+10;
+
+    // Key findings
+    st(...DTXT);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text('Key Findings',15,y);y+=8;
+    const sorted=[...scores].sort((a,b)=>b.score-a.score);
+    const strengths=sorted.slice(0,3),opps=sorted.slice(-3).reverse();
+
+    // Strengths
+    sf(240,253,244);R(15,y,86,68);sd(46,204,113,0.3);R(15,y,86,68,'S');sf(...GREEN);R(15,y,3,68);
+    st(20,120,60);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text('STRENGTHS',22,y+8);
+    strengths.forEach((m,i)=>{
+      pdfModLine(m,22,y+17+i*18,72);
+      st(...GREEN);doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.text(String(m.score),87,y+17+i*18,{align:'right'});
+      sf(200,235,215);R(22,y+21+i*18,72,2.5);sf(...GREEN);R(22,y+21+i*18,Math.max(1,72*m.score/100),2.5);
+    });
+
+    // Opportunities
+    sf(255,250,240);R(109,y,86,68);sd(243,156,18,0.3);R(109,y,86,68,'S');sf(...AMBER);R(109,y,3,68);
+    st(150,80,0);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text('PRIORITY OPPORTUNITIES',116,y+8);
+    opps.forEach((m,i)=>{
+      const oc=m.score<30?RED:AMBER;
+      pdfModLine(m,116,y+17+i*18,72);
+      st(...oc);doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.text(String(m.score),194,y+17+i*18,{align:'right'});
+      sf(235,220,200);R(116,y+21+i*18,72,2.5);sf(...oc);R(116,y+21+i*18,Math.max(1,72*m.score/100),2.5);
+    });
+    y+=78;
+
+    // Benchmark callout
+    sf(235,245,255);R(15,y,180,24);sd(180,200,230);R(15,y,180,24,'S');sf(...BLUE);R(15,y,3,24);
+    st(...BLUE);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text('SAP AUTONOMOUS FINANCE — INDUSTRY BENCHMARK CONTEXT',22,y+8);
+    st(40,60,100);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+    doc.text(wrap('SAP Autonomous Finance targets: 80% touchless processing, 60% faster forecast cycles, 20-30% GL & close productivity improvement, and 50-70% cash cycle time reduction (source: KPMG & SAP Value Engineering). The average insurance CFO office scores 36/100 on APEX. The highest-weighted module — Agentic Intelligence & Joule Work — averages 26/100, reflecting that most insurance finance organizations are still in Steps 1-2 of SAP\'s 4-step path. Top-quartile organizations score 62+ and are actively orchestrating Joule assistants and finance agents.',170),22,y+15);
+    y+=32;
+
+    // Recommended next steps
+    st(...DTXT);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text('Recommended Next Steps',15,y);y+=8;
+    const nexts=[
+      `Review module-level recommendations in detail on pages 4–5 of this report with your AI transformation team.`,
+      `Focus your initial Autonomous Finance investment on "${opps[0].name}" — your lowest-scoring capability and the highest-leverage starting point based on your APEX profile.`,
+      `Engage SAP Global Value Advisory to co-develop a 90-day AI acceleration roadmap tailored to your insurance financial architecture.`,
+      `Schedule a follow-up APEX assessment in 6–12 months to track maturity progression and validate ROI on AI investments.`
+    ];
+    nexts.forEach((ns,i)=>{
+      const nsL=wrap(ns,165);const nsH=nsL.length*5+10;
+      sf(...WHITE);R(15,y,180,nsH);sd(215,225,235);R(15,y,180,nsH,'S');
+      sf(...GOLD);R(15,y+nsH/2-4,8,8);
+      st(...DARK);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(String(i+1),19,y+nsH/2+1);
+      st(...DTXT);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(nsL,28,y+8);
+      y+=nsH+4;
+    });
+
+    // Footer
+    sf(240,243,248);R(0,H-15,W,15);sd(200,210,225);doc.setLineWidth(0.3);R(0,H-15,W,0.3,'S');
+    st(...MUTED);doc.setFont('helvetica','normal');doc.setFontSize(7);
+    doc.text('SAP Global Value Advisory · APEX AI Maturity Assessment · Confidential',15,H-8);
+    doc.text(`${S.co} · ${today} · Lance Senoyuit`,W-15,H-8,{align:'right'});
+    st(...DTXT);doc.text('2',W/2,H-8,{align:'center'});
+
+    // ─── PAGE 3: CAPABILITY SCORES ──────────────────────────────
+    toastMsg.textContent='Building capability scores…';await new Promise(r=>setTimeout(r,50));
+    doc.addPage();
+
+    sf(...DARK);R(0,0,W,32);sf(...GOLD);R(0,0,W,3);
+    st(...WHITE);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text('Capability Assessment Overview',18,20);
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(`${S.co} · APEX AI Maturity Assessment`,W-18,20,{align:'right'});
+    sf(250,252,255);R(0,32,W,H-47);
+
+    y=44;
+    // Column headers
+    st(...MUTED);doc.setFont('helvetica','bold');doc.setFontSize(7);
+    doc.text('CAPABILITY MODULE',15,y);doc.text('SCORE',97,y,{align:'right'});
+    doc.text('IND. AVG',122,y,{align:'right'});doc.text('TOP 25%',147,y,{align:'right'});doc.text('WEIGHT',195,y,{align:'right'});
+    y+=3;sf(200,210,225);R(15,y,180,0.4);y+=5;
+
+    scores.forEach((m,i)=>{
+      const sc=m.score,mc=scoreColor(sc);
+      sf(i%2===0?248:252,i%2===0?250:253,i%2===0?255:255);R(15,y,180,20);
+      pdfModLine(m,18,y+8,90);
+      // Bar
+      const bx=18,by_=y+13,bw=85,bh=2.8;
+      sf(210,220,230);R(bx,by_,bw,bh);
+      sf(...mc);R(bx,by_,Math.max(1,bw*sc/100),bh);
+      // Industry avg line
+      sd(...BLUE);doc.setLineWidth(0.8);
+      const ax=bx+bw*IAVG[i]/100;doc.line(ax,by_-1.5,ax,by_+bh+1.5);
+      // Top 25% line
+      sd(155,89,182);doc.setLineWidth(0.6);
+      const tx=bx+bw*TOP25[i]/100;doc.line(tx,by_-1,tx,by_+bh+1);
+      // Numbers
+      st(...mc);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text(String(sc),97,y+9,{align:'right'});
+      st(...MUTED);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+      doc.text(String(IAVG[i]),122,y+9,{align:'right'});
+      doc.text(String(TOP25[i]),147,y+9,{align:'right'});
+      // Weight
+      sf(230,235,245);R(170,y+3,22,10);
+      st(...MUTED);doc.setFontSize(7);doc.text(`Wt: ${Math.round(m.w*100)}%`,181,y+9,{align:'right'});
+      y+=22;
+    });
+
+    // Legend
+    y+=4;
+    sd(...BLUE);doc.setLineWidth(0.8);doc.line(15,y+3,26,y+3);
+    st(...BLUE);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.text('Industry Average',28,y+5);
+    sd(...PURPLE);doc.setLineWidth(0.6);doc.line(72,y+3,83,y+3);
+    st(...PURPLE);doc.text('Top 25%',85,y+5);
+    sf(...GREEN);R(115,y+1,8,4);st(...DTXT);doc.text('Strong (70+)',126,y+5);
+    sf(...AMBER);R(160,y+1,8,4);doc.text('Developing (40-69)',171,y+5);
+    y+=14;
+
+    // Radar chart
+    st(...DTXT);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text('Capability Radar',15,y);
+    y+=6;
+    try{
+      const canvas=document.getElementById('radar');
+      if(canvas){
+        // Draw on a temp white canvas for PDF readability
+        const tmp=document.createElement('canvas');
+        tmp.width=canvas.width;tmp.height=canvas.height;
+        const ctx2=tmp.getContext('2d');
+        ctx2.fillStyle='#ffffff';ctx2.fillRect(0,0,tmp.width,tmp.height);
+        ctx2.drawImage(canvas,0,0);
+        doc.addImage(tmp.toDataURL('image/png',1.0),'PNG',15,y,98,85);
+      }
+    }catch(e){console.warn('Radar capture:',e);}
+
+    // Maturity scale on right
+    const gx=118;
+    st(...DTXT);doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.text('Maturity Scale Reference',gx,y);
+    let gy=y+8;
+    const lvRgbs=[[231,76,60],[243,156,18],[52,152,219],[155,89,182],[46,204,113]];
+    LEVELS.forEach((lev,i)=>{
+      sf(...lvRgbs[i]);R(gx,gy,4,10);
+      st(...lvRgbs[i]);doc.setFont('helvetica','bold');doc.setFontSize(8);
+      doc.text(`${lev.min}–${lev.max}`,gx+6,gy+5);
+      doc.text(lev.label,gx+6,gy+10);
+      st(...MUTED);doc.setFont('helvetica','normal');doc.setFontSize(7);
+      doc.text(wrap(lev.desc,74).slice(0,2),gx+6,gy+15);
+      gy+=24;
+    });
+
+    // Footer
+    sf(240,243,248);R(0,H-15,W,15);sd(200,210,225);doc.setLineWidth(0.3);R(0,H-15,W,0.3,'S');
+    st(...MUTED);doc.setFont('helvetica','normal');doc.setFontSize(7);
+    doc.text('SAP Global Value Advisory · APEX AI Maturity Assessment · Confidential',15,H-8);
+    doc.text(`${S.co} · ${today} · Lance Senoyuit`,W-15,H-8,{align:'right'});
+    st(...DTXT);doc.text('3',W/2,H-8,{align:'center'});
+
+    // ─── PAGE 4+: RECOMMENDATIONS ───────────────────────────────
+    toastMsg.textContent='Compiling recommendations…';await new Promise(r=>setTimeout(r,50));
+    doc.addPage();let pageNum=4;
+
+    const pageHeader=(title)=>{
+      sf(...DARK);R(0,0,W,32);sf(...GOLD);R(0,0,W,3);
+      st(...WHITE);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text(title,18,20);
+      st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(`${S.co} · APEX AI Maturity Assessment`,W-18,20,{align:'right'});
+      sf(250,252,255);R(0,32,W,H-47);
+    };
+    const pageFooter=(n)=>{
+      sf(240,243,248);R(0,H-15,W,15);sd(200,210,225);doc.setLineWidth(0.3);R(0,H-15,W,0.3,'S');
+      st(...MUTED);doc.setFont('helvetica','normal');doc.setFontSize(7);
+      doc.text('SAP Global Value Advisory · APEX AI Maturity Assessment · Confidential',15,H-8);
+      doc.text(`${S.co} · ${today} · Lance Senoyuit`,W-15,H-8,{align:'right'});
+      st(...DTXT);doc.text(String(n),W/2,H-8,{align:'center'});
+    };
+
+    pageHeader('Strategic Recommendations');
+    y=44;
+    const sortedRecs=[...scores].sort((a,b)=>a.score-b.score);
+
+    for(let idx=0;idx<sortedRecs.length;idx++){
+      const m=sortedRecs[idx];
+      const sc=m.score,mc=scoreColor(sc);
+      const priLabel=sc>=70?'OPTIMIZE':sc>=40?'PRIORITY':'CRITICAL';
+      const recList=recs(m.id,sc);
+      const svcsLocal=SAP_SVCS[m.id]||[];
+      const allLines=recList.map(r=>wrap(r,160));
+      const recsH=allLines.reduce((s,l)=>s+l.length*5+7,0);
+      const svcsH=svcsLocal.reduce((a,s)=>{const dl=wrap(s.desc,152).length;return a+dl*4.5+16;},0)+(svcsLocal.length?14:0);
+      const totalH=recsH+svcsH+24;
+
+      if(y+totalH>H-22){
+        pageFooter(pageNum++);doc.addPage();pageHeader('Strategic Recommendations (cont.)');y=44;
+      }
+
+      sf(...WHITE);R(15,y,180,totalH);sd(215,225,235);doc.setLineWidth(0.3);R(15,y,180,totalH,'S');sf(...mc);R(15,y,4,totalH);
+
+      // Header row
+      sf(245,248,252);R(15,y,180,18);sd(215,225,235);R(15,y,180,18,'S');sf(...mc);R(15,y,4,18);
+      // PDF-safe tag + module name
+      const tagTxt=PDF_TAG[m.id]||'';
+      sf(...mc);doc.roundedRect(22,y+2,doc.getTextWidth(tagTxt)+4,7,1.5,1.5,'F');
+      st(...WHITE);doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.text(tagTxt,24,y+7.5);
+      const nameX=22+doc.getTextWidth(tagTxt)+8;
+      st(...DTXT);doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.text(m.name,nameX,y+9);
+      st(...mc);doc.setFontSize(11);doc.text(`${sc}/100`,W-18,y+8,{align:'right'});
+
+      // Priority badge bg
+      const bdgW=24,bdgX=W-50,bdgY=y+4;
+      sf(...mc.map(v=>Math.min(255,v+100)));
+      doc.roundedRect(bdgX,bdgY,bdgW,8,2,2,'F');
+      st(...mc);doc.setFontSize(6.5);doc.setFont('helvetica','bold');
+      doc.text(priLabel,bdgX+bdgW/2,bdgY+5.5,{align:'center'});
+
+      // Score bar
+      sf(210,220,230);R(22,y+14,140,2);sf(...mc);R(22,y+14,Math.max(1,140*sc/100),2);
+
+      let ry=y+22;
+      recList.forEach((rec,ri)=>{
+        const lines=wrap(rec,160);
+        sf(...GOLD);doc.circle(21,ry+1.5,1.2,'F');
+        st(60,80,100);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.text(lines,26,ry+2);
+        ry+=lines.length*5+7;
+      });
+
+      // SAP Services block in PDF
+      const svcs=SAP_SVCS[m.id]||[];
+      if(svcs.length){
+        ry+=3;
+        sf(...BLUE);R(22,ry,152,0.5);ry+=5;
+        st(...BLUE);doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.text('HOW SAP CAN HELP',22,ry);ry+=6;
+        svcs.forEach(svc=>{
+          const nameLines=wrap(`${svc.name}`,70);
+          const descLines=wrap(svc.desc,152);
+          sf(235,245,255);R(22,ry,152,descLines.length*4.5+nameLines.length*5+6);
+          sd(180,210,240);doc.setLineWidth(0.2);R(22,ry,152,descLines.length*4.5+nameLines.length*5+6,'S');
+          sf(...BLUE);R(22,ry,3,descLines.length*4.5+nameLines.length*5+6);
+          st(...BLUE);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(svc.name,27,ry+5.5);
+          st(40,65,100);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+          doc.text(descLines,27,ry+11);
+          ry+=descLines.length*4.5+nameLines.length*5+10;
+        });
+      }
+      y+=totalH+svcs.reduce((a,s)=>{const dl=wrap(s.desc,152).length;return a+dl*4.5+14;},0)+svcs.length*6+16;
+    }
+    pageFooter(pageNum++);
+
+    // ─── FINAL PAGE: NEXT STEPS ─────────────────────────────────
+    toastMsg.textContent='Finalising report…';await new Promise(r=>setTimeout(r,50));
+    doc.addPage();
+    sf(...DARK);R(0,0,W,H);sf(...GOLD);R(0,0,7,H);
+    sf(15,35,52);R(7,0,W-7,H);
+    sd(...BORDER);doc.setLineWidth(0.3);doc.circle(175,80,80,'S');doc.circle(175,80,55,'S');
+
+    st(...GOLD);doc.setFont('helvetica','bold');doc.setFontSize(34);doc.text('Next Steps',22,65);
+    sf(...GOLD);R(22,70,48,0.7);
+    st(...WHITE);doc.setFont('helvetica','normal');doc.setFontSize(11.5);doc.text('Ready to accelerate your AI transformation?',22,84);
+
+    const ctas=[
+      {t:'Request an APEX Deep Dive Session',d:'Work with a SAP Value Advisor to review your results in detail and co-design a tailored AI acceleration roadmap for your CFO office and broader insurance enterprise.'},
+      {t:'Explore SAP Business AI for Insurance Finance',d:'Discover how SAP\'s AI portfolio — including SAP Joule, S/4HANA AI agents, and embedded analytics — can directly address your identified capability gaps.'},
+      {t:'Retake APEX in 6–12 Months',d:'Track your maturity progression, validate ROI on AI investments, and identify emerging opportunities as the insurance AI landscape rapidly evolves.'},
+      {t:'Join the SAP Firestarters Community',d:'Connect with peer insurance CFO leaders navigating the same AI transformation journey. Share best practices and access exclusive thought leadership.'}
+    ];
+
+    let cy=98;
+    ctas.forEach((cta,i)=>{
+      sf(...PANEL);R(22,cy,166,30);sd(40,70,92);doc.setLineWidth(0.3);R(22,cy,166,30,'S');sf(...GOLD);R(22,cy,4,30);
+      st(...GOLD);doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.text(`${i+1}.  ${cta.t}`,30,cy+10);
+      st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+      doc.text(wrap(cta.d,152),30,cy+18);
+      cy+=37;
+    });
+
+    sf(...PANEL);R(22,cy+4,166,38);sd(40,70,92);R(22,cy+4,166,38,'S');sf(...BLUE);R(22,cy+4,4,38);
+    st(...GOLD);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text('CONTACT',30,cy+13);
+    st(...WHITE);doc.setFontSize(11);doc.text('Lance Senoyuit',30,cy+21);
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(9);
+    doc.text('SAP Global Value Advisory',30,cy+28);
+    doc.text('flash@sap.com  ·  valuemanagement.sap.com/flash',30,cy+35);
+
+    sf(8,18,26);R(0,H-20,W,20);sf(...GOLD);R(0,H-20,W,0.5);
+    st(...LTXT);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+    doc.text('© SAP SE or an SAP affiliate company. All rights reserved. This document is confidential.',22,H-12);
+    doc.text(`Generated: ${today}  ·  APEX AI Maturity Assessment`,22,H-7);
+
+    // Save
+    const filename=`APEX_Report_${S.co.replace(/[^a-zA-Z0-9]/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`;
+    doc.save(filename);
+
+    toastMsg.textContent='✅ PDF downloaded successfully!';
+    setTimeout(()=>toast.classList.remove('show'),3000);
+  }catch(err){
+    console.error('PDF error:',err);
+    toastMsg.textContent='❌ PDF generation failed — please try again.';
+    setTimeout(()=>toast.classList.remove('show'),3000);
+  }finally{
+    btn.classList.remove('loading');btn.textContent='⬇ Download PDF Report';
+  }
+}
+</script>
+</body>
+</html>
