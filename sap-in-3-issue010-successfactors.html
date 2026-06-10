@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3, Issue 010 · SAP SuccessFactors · The Most Human Question in the Autonomous Enterprise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628; --navy-mid: #152035; --navy-light: #1E2E47;
+      --gold: #C9A84C; --gold-light: #E2C47A; --gold-pale: #F5EDD5;
+      --cream: #FAF7F2; --slate: #8497B0; --red-accent: #C0392B;
+      --green-accent: #1A7C5C; --text-body: #2C3E50; --text-light: #5D6D7E; --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+
+    /* MASTHEAD */
+    .masthead { background: var(--navy); color: white; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* CONTEXT BANNER */
+    .context-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 14px 60px; }
+    .context-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+    .context-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+    .context-text { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--slate); font-style: italic; }
+
+    /* MILESTONE BANNER */
+    .milestone-banner { background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(26,124,92,0.1)); border-bottom: 1px solid rgba(201,168,76,0.3); padding: 14px 60px; text-align: center; }
+    .milestone-inner { max-width: 780px; margin: 0 auto; }
+    .milestone-text { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+
+    /* BODY */
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; } .icon-alert { background: #FCE4EC; } .icon-ok { background: #E8F5E9; } .icon-blue { background: #E3F2FD; } .icon-gold { background: #FDF5E4; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); } .tag-gold { background: #FDF5E4; color: #8B6914; } .tag-green { background: #E8F5EF; color: var(--green-accent); } .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* SCENARIO BOX */
+    .scenario-box { background: linear-gradient(135deg, rgba(11,22,40,0.04), rgba(201,168,76,0.06)); border: 1px solid rgba(201,168,76,0.25); border-left: 4px solid var(--gold); border-radius: 0 6px 6px 0; padding: 32px 36px; margin: 32px 0; }
+    .scenario-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .scenario-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+    .scenario-body { font-family: 'Source Serif 4', serif; font-size: 15px; line-height: 1.8; color: var(--text-body); }
+    .scenario-body p + p { margin-top: 14px; }
+
+    /* HUMAN SKILLS GRID */
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .skill-card { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--green-accent); border-radius: 0 0 6px 6px; padding: 20px; text-align: center; }
+    .skill-icon { font-size: 28px; margin-bottom: 10px; }
+    .skill-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--navy); margin-bottom: 8px; }
+    .skill-body { font-family: 'Source Serif 4', serif; font-size: 13px; line-height: 1.6; color: var(--text-light); }
+
+    /* HISTORY CALLOUT */
+    .history-box { background: var(--navy); border-radius: 6px; padding: 32px 36px; margin: 32px 0; }
+    .history-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+    .history-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+    .history-card { text-align: center; padding: 16px 12px; background: rgba(255,255,255,0.06); border-radius: 4px; border: 1px solid rgba(201,168,76,0.15); }
+    .history-era { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 6px; text-transform: uppercase; }
+    .history-fear { font-family: 'Source Serif 4', serif; font-size: 13px; color: rgba(255,255,255,0.6); font-style: italic; margin-bottom: 8px; line-height: 1.4; }
+    .history-outcome { font-family: 'DM Mono', monospace; font-size: 10px; color: #4CAF82; letter-spacing: 0.05em; }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .skills-grid, .history-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .context-banner, .milestone-banner { padding: 12px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ MILESTONE BANNER ══════════════════════════════ -->
+<div class="milestone-banner">
+  <div class="milestone-inner">
+    <div class="milestone-text">🏆 Issue 010 · Ten Weeks · A Milestone Worth Celebrating · Thank You to Every Subscriber Who Made This Possible</div>
+  </div>
+</div>
+
+<!-- ═══ CONTEXT BANNER ════════════════════════════════ -->
+<div class="context-banner">
+  <div class="context-inner">
+    <div class="context-label">🧭 The Human Chapter</div>
+    <div class="context-text">Every AI conversation eventually arrives at this question. Issue 010 answers it, with optimism, with evidence, and with the platform built to make it real.</div>
+  </div>
+</div>
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · Human Capital · The Autonomous Enterprise Series</div>
+    <div class="masthead-issue">Issue 010 · June 10, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">AI Does Not Replace Great People. It Finally Lets Them Be Great.</div>
+    <div class="hero-deck">The most human question in the Autonomous Enterprise story, what happens to your people, has a more optimistic answer than most organizations expect. SAP SuccessFactors is where that answer lives.</div>
+    <div class="hero-pull">
+      "Every generation that leaned into transformative technology came out ahead. The ones who resisted it did not stop progress, they just missed the ride. The Autonomous Enterprise is our generation's moment. SAP SuccessFactors is the platform that ensures your people lead it."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>SAP SuccessFactors</strong>Human Capital · Issue 010</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<!-- ═══ BODY ════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- INTRODUCTION -->
+  <div class="intro-text">
+    <p class="drop-cap">There is a question that travels with every conversation about AI in the enterprise. It does not always get asked out loud, but it is always in the room. Leaders hear it in the quiet after a Sapphire keynote. HR professionals wrestle with it over the workforce planning numbers. Employees feel it when they read headlines about autonomous agents executing the workflows that used to define their days. The question is simple and it is profound: what happens to my people?</p>
+    <p>The answer, when it is given honestly, with evidence, and with the long view that history affords, is far more optimistic than the question implies. Every generation has faced a technological inflection point that changed what work looked like. The introduction of electricity. The automobile. The personal computer. The internet. In every case, the loudest voices warned of displacement and loss. In every case, the organizations and individuals that leaned into the change discovered that technology does not eliminate the need for great people. It changes what great people are needed for. The Autonomous Enterprise is no different. And SAP SuccessFactors is the platform built to ensure your people are positioned to thrive in it, not just survive it.</p>
+  </div>
+
+  <!-- HISTORY BOX -->
+  <div class="history-box">
+    <div class="history-label">📜 Every Generation Had Its Naysayers. History Remembers the Builders.</div>
+    <div class="history-grid">
+      <div class="history-card">
+        <div class="history-era">1880s</div>
+        <div class="history-fear">"Electricity will put gas workers out of business"</div>
+        <div class="history-outcome">→ Created millions of new roles</div>
+      </div>
+      <div class="history-card">
+        <div class="history-era">1900s</div>
+        <div class="history-fear">"The automobile will destroy the horse trade"</div>
+        <div class="history-outcome">→ Built the modern economy</div>
+      </div>
+      <div class="history-card">
+        <div class="history-era">1980s</div>
+        <div class="history-fear">"Computers will eliminate office jobs"</div>
+        <div class="history-outcome">→ Created entire new industries</div>
+      </div>
+      <div class="history-card">
+        <div class="history-era">2026</div>
+        <div class="history-fear">"AI will replace enterprise workers"</div>
+        <div class="history-outcome">→ Your organization decides</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINDING 01, WHY -->
+  <section class="finding">
+    <div class="finding-label">Finding One, Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">Why the AI Era Creates the Greatest Human Opportunity in a Generation, If Organizations Are Ready</div>
+    </div>
+    <div class="finding-body">
+      <p>The fear that AI will eliminate human work misunderstands what AI actually does in enterprise environments. Joule Assistants, which we covered in Issue 007, execute transactional workflows. They process purchase orders, reconcile financial data, route approvals, track compliance deadlines, and monitor supply chain signals. These are tasks that have consumed enormous portions of human working time in enterprise organizations for decades. Tasks that are important, but that are not, if we are honest, the highest and best use of the human minds performing them.</p>
+      <p>When AI takes on transactional work, it does not eliminate the human capacity that was dedicated to it. It liberates it. The financial analyst who spent three days reconciling ledger entries can now spend those three days on the strategic analysis that actually informs executive decisions. The HR manager who tracked compliance training manually can now focus on the talent development conversations that change career trajectories. The relationship manager who compiled account reports for hours can now spend that time with clients, building the trust and understanding that no AI system will ever replicate. The question is not whether organizations will lose something when AI takes on transactional work. The question is whether they are prepared to redirect the human potential that AI frees up toward the work that matters most. That preparation, identifying, developing, and deploying human capability in the AI era, is precisely what SAP SuccessFactors is built to enable.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">The Human Opportunity in the Autonomous Enterprise · What AI Frees Up and What Fills the Space</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-gold">🔄</div>
+          <div>
+            <div class="diagram-row-title">What AI Takes On, The Transactional Layer</div>
+            <div class="diagram-row-body">Data processing, workflow routing, compliance tracking, report generation, approval management, anomaly detection, schedule coordination, status monitoring. These tasks consume between 40 and 60 percent of working time in typical enterprise roles. They are rule-based, repetitive, and high volume. They are exactly what AI agents do best, and exactly what humans are least fulfilled performing. When AI takes them on, this time does not disappear. It becomes available for something better.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🌟</div>
+          <div>
+            <div class="diagram-row-title">What Humans Do Better Than AI, The Irreplaceable Layer</div>
+            <div class="diagram-row-body">Strategic judgment, client relationships, creative problem solving, ethical reasoning, organizational leadership, mentorship, negotiation, empathy, cultural intelligence, and the ability to navigate ambiguous situations where context and human understanding matter more than data. These are the capabilities that create competitive advantage in the AI era, and the capabilities that organizations with SAP SuccessFactors are actively identifying, developing, and deploying in their people right now.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🚀</div>
+          <div>
+            <div class="diagram-row-title">The Readiness Gap, Why Most Organizations Are Not Prepared</div>
+            <div class="diagram-row-body">The challenge is not that organizations lack great people. It is that most organizations do not have a clear, data-driven picture of the human capabilities they currently possess, the capabilities the AI era will require, and the development pathway that bridges the two. Without that picture, which SAP SuccessFactors provides: the liberation of human potential that AI enables becomes a disorganized redistribution of effort rather than a strategic elevation of human capability.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1, The Human Opportunity Framework · AI Frees the Transactional Layer · Humans Elevate to the Irreplaceable Layer · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-green">AI Frees 40–60% of Transactional Work Time</span>
+        <span class="tag tag-gold">Human Potential Liberated, Not Eliminated</span>
+        <span class="tag tag-navy">Readiness Gap, The Strategic Challenge of 2026</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The organizations that will win in the AI era are not the ones that deploy the most agents. They are the ones that most effectively redirect the human potential those agents liberate toward the work that only humans can do.</div>
+        <div class="callout-source">SAP in 3 · SuccessFactors Analysis · Human Capital in the Autonomous Enterprise · June 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about what happened when the automobile replaced the horse and carriage. The people who feared the automobile were right that it changed their work. What they could not see was that it also created automotive mechanics, traffic engineers, urban planners, road construction workers, petroleum engineers, and entire new industries that employed far more people than the horse trade ever did. The naysayers did not stop transportation from evolving. They just missed the opportunity to shape it. The same pattern is playing out right now in enterprise AI, and SAP SuccessFactors is the platform that ensures your organization is in the group that shapes the future, not the group that watches it arrive.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 02, HOW -->
+  <section class="finding">
+    <div class="finding-label">Finding Two, How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP SuccessFactors Builds the Human Foundation the Autonomous Enterprise Requires</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP SuccessFactors is a cloud-native human capital management platform that covers the complete employee lifecycle, from talent acquisition and onboarding through performance management, learning and development, succession planning, and workforce analytics. What distinguishes it from a traditional HR system is its intelligence layer: the AI-powered capabilities that connect individual employee skills, development needs, and career aspirations to the strategic workforce requirements of the organization. In the context of the Autonomous Enterprise, this intelligence layer becomes critically important, because the transition to AI-augmented work requires organizations to understand their human capital with a precision that most have never achieved.</p>
+      <p>The platform's skills architecture is particularly central to the AI era conversation. SAP SuccessFactors maintains a dynamic skills inventory for every employee, mapping current capabilities, identifying development gaps, recommending learning pathways, and connecting individual skill profiles to the roles and projects where those skills create the most organizational value. When AI takes on transactional work and human capacity is freed for higher-value activities, the skills architecture is what ensures that freed capacity is directed intelligently, toward the right people, the right roles, and the right development investments. Without it, the transition from transactional to strategic work happens randomly and inefficiently. With it, it happens by design.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How SAP SuccessFactors Works · Six Core Capabilities for the AI Era</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🎯</div>
+          <div>
+            <div class="diagram-row-title">Skills Intelligence, Know What Your People Can Do</div>
+            <div class="diagram-row-body">A dynamic, AI-powered skills inventory that maps every employee's current capabilities against the evolving requirements of their role and the broader organization. SuccessFactors identifies skill gaps, recommends development pathways, and surfaces internal talent for opportunities that match their profile, giving talent leaders a real-time picture of human capability that was previously available only through periodic performance reviews and informal manager knowledge.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">📚</div>
+          <div>
+            <div class="diagram-row-title">Learning and Development, Build the Capabilities AI Cannot Replace</div>
+            <div class="diagram-row-body">Personalized learning pathways that adapt to each employee's skill profile, role requirements, and career aspirations, delivering the right development content at the right moment in the flow of work. In the AI era, continuous learning is not a benefit program. It is a strategic imperative. The organizations whose people are continuously developing the judgment, relationship, and leadership capabilities that AI cannot replicate will maintain a human advantage that compounds over time.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-gold">📊</div>
+          <div>
+            <div class="diagram-row-title">Performance Management, Measure What Actually Matters</div>
+            <div class="diagram-row-body">Continuous performance conversations that replace annual review cycles with ongoing feedback, goal alignment, and development dialogue. When AI handles transactional performance metrics, completion rates, processing times, accuracy scores, human performance management can focus entirely on the capabilities that require human judgment to assess: leadership quality, client impact, collaborative effectiveness, and the creative problem-solving that defines high-performer contribution in the AI era.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🔮</div>
+          <div>
+            <div class="diagram-row-title">Succession Planning, Prepare the Leaders the Future Requires</div>
+            <div class="diagram-row-body">Data-driven succession pipelines that identify high-potential employees, map development gaps against future role requirements, and ensure that critical leadership positions have qualified internal successors ready. In an era where the capabilities required for leadership are shifting rapidly, toward strategic judgment, human-AI collaboration, and organizational change navigation, succession planning grounded in skills data rather than tenure and politics becomes a genuine strategic differentiator.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">📈</div>
+          <div>
+            <div class="diagram-row-title">Workforce Analytics, Lead With Evidence</div>
+            <div class="diagram-row-body">Real-time workforce intelligence that connects people data to business outcomes, showing which talent investments are producing the highest returns, where flight risk is building before it becomes attrition, and how workforce composition is evolving relative to strategic requirements. In the AI era, HR leaders who can present boards with data-driven workforce strategy, rather than intuition-based headcount recommendations, occupy a fundamentally different and more influential role in organizational decision-making.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🤖</div>
+          <div>
+            <div class="diagram-row-title">Joule for HR, AI That Serves Your People</div>
+            <div class="diagram-row-body">SAP Joule embedded natively in SuccessFactors handles the administrative and transactional HR workflows, onboarding processes, compliance tracking, schedule management, benefits administration, policy queries, freeing HR professionals to focus entirely on the human conversations, development relationships, and strategic talent decisions that define the HR function's highest value. Joule does not replace HR. It elevates it.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2, SAP SuccessFactors Core Capabilities · Human Capital Management for the Autonomous Enterprise · 2026</div>
+      </div>
+
+      <!-- SCENARIO BOX -->
+      <div class="scenario-box">
+        <div class="scenario-label">📋 In Practice, A Wealth Management Scenario</div>
+        <div class="scenario-title">Building the Team That Wins the Client, and Keeps Them</div>
+        <div class="scenario-body">
+          <p>Consider a wealth management division serving a growing book of high-net-worth clients. At the center of every client relationship is a Relationship Manager: the trusted face the client calls first, responsible for the overall experience, the depth of the relationship, and ultimately the retention and expansion of every account they manage. Around that Relationship Manager sits a team: a Financial Planner developing the comprehensive wealth strategy, a Portfolio Manager executing the investment mandate, an Investment Analyst providing the research and market intelligence that keeps the portfolio performing, and an Estate Planning Advisor guiding the client through wealth transfer, legacy structures, and intergenerational planning.</p>
+          <p>That team, assembled thoughtfully, developed continuously, and aligned precisely to the complexity of each client portfolio, is the wealth management division's most valuable asset. It is also, in most organizations, managed almost entirely by institutional knowledge, informal relationships, and the judgment of individual leaders who may or may not have a complete picture of the talent available to them.</p>
+          <p>SAP SuccessFactors changes that picture entirely. Every Relationship Manager's client relationship skills, licensing status, and development trajectory are visible in real time. The Financial Planner's CFP credentials and continuing education requirements are monitored automatically, with personalized learning pathways triggered the moment a renewal deadline approaches, long before a lapse creates client or regulatory risk. The Portfolio Manager's CFA progress is tracked against the firm's advancement criteria, with the Investment Analyst beneath them developing toward the specializations that make the portfolio team most effective. The Estate Planning Advisor's JD credentials, estate law continuing education, and evolving expertise in trust structures are maintained in a living profile that updates as the regulatory and legal landscape changes.</p>
+          <p>When a high-value client's portfolio grows in complexity, a business sale, a generational wealth transfer, a sudden liquidity event: the Relationship Manager does not rely on who they happen to know to assemble the right team. They draw on a skills-matched view of available talent across the division, identifying the Financial Planner with the most relevant planning experience, the Portfolio Manager whose mandate history aligns to the client's new profile, and the Estate Planning Advisor whose expertise is most current for the structures the situation requires. The team is built by design, aligned to the client, assembled from evidence, and monitored continuously to ensure every member is developing toward the capabilities the relationship will require as it grows.</p>
+          <p>The result is not just better talent management. It is a measurably stronger client experience, because the right people, fully credentialed, continuously developed, and deliberately aligned to each client portfolio, deliver the kind of advice and relationship depth that drives retention, deepens trust, and creates the referrals and expansion opportunities that define a wealth management division's long-term growth.</p>
+        </div>
+      </div>
+
+      <!-- HUMAN SKILLS GRID -->
+      <p style="margin-bottom: 20px;">The capabilities that SAP SuccessFactors helps organizations identify, develop, and deploy are precisely the ones the AI era values most: the irreplaceable human skills that no autonomous agent will ever replicate:</p>
+
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-icon">🤝</div>
+          <div class="skill-title">Relationship Intelligence</div>
+          <div class="skill-body">The ability to build trust, read context, navigate complexity, and sustain the human connections that drive business outcomes no AI can replicate.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">⚖️</div>
+          <div class="skill-title">Strategic Judgment</div>
+          <div class="skill-body">The capacity to reason under ambiguity, weigh competing priorities, and make decisions where values, context, and consequence matter as much as data.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">💡</div>
+          <div class="skill-title">Creative Problem Solving</div>
+          <div class="skill-body">The imagination to see solutions that do not yet exist, connecting ideas across domains in ways that require human experience and intuition to generate.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🌍</div>
+          <div class="skill-title">Cultural Intelligence</div>
+          <div class="skill-body">The awareness and adaptability to operate effectively across cultures, communities, and organizational contexts where nuance determines outcomes.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🎓</div>
+          <div class="skill-title">Mentorship and Development</div>
+          <div class="skill-body">The commitment to growing other people's capabilities: the coaching, encouragement, and challenge that turns potential into performance over time.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🧭</div>
+          <div class="skill-title">Change Leadership</div>
+          <div class="skill-body">The ability to guide organizations through uncertainty, building the confidence, alignment, and resilience that transformation requires from the people living through it.</div>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">Dynamic Skills Architecture</span>
+        <span class="tag tag-navy">Personalized Learning Pathways</span>
+        <span class="tag tag-green">Joule for HR, Administrative AI</span>
+        <span class="tag tag-gold">Unified Workforce Analytics</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">10<span>K+</span></div>
+          <div class="stat-label">Organizations globally running SAP SuccessFactors across more than 200 countries and territories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">275<span>M+</span></div>
+          <div class="stat-label">Users managed on SAP SuccessFactors: the world's largest cloud HCM user base</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">40<span>%</span></div>
+          <div class="stat-label">Reduction in time-to-fill for internal roles reported by SuccessFactors customers using skills-based talent matching</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3<span>×</span></div>
+          <div class="stat-label">Higher employee engagement scores reported by organizations with continuous learning programs vs. annual training cycles</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think of SAP SuccessFactors as the system that answers the question every great leader eventually asks about their team: what can these people really do, and what do they need to become everything they are capable of? Most organizations answer that question with annual performance reviews, informal manager knowledge, and the occasional talent review meeting. SuccessFactors answers it with data, real-time, connected, comprehensive data that shows every employee's current skills, development trajectory, and potential contribution to the organization's most important priorities. In an era where the capabilities your people bring to work are your primary competitive advantage, knowing those capabilities with precision is not a nice-to-have. It is a strategic necessity.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 03, WHAT -->
+  <section class="finding">
+    <div class="finding-label">Finding Three, What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Changes When Your People Are Ready for the AI Era, Not Just Exposed to It</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from SAP SuccessFactors in the context of the Autonomous Enterprise arrive at three levels that together define what organizational readiness for the AI era actually looks like. The first level is operational: the immediate improvements in talent acquisition speed, internal mobility, skills visibility, compliance management, and HR administrative efficiency that SAP SuccessFactors delivers as baseline capabilities. These are measurable, well-documented, and consistently significant. But in 2026 they are table stakes, expected performance from a mature HCM platform rather than competitive differentiation.</p>
+      <p>The second level is strategic: the ability to align human capital development to the specific capabilities the AI era requires, with a precision and continuity that periodic talent reviews and annual learning programs cannot achieve. Organizations running SuccessFactors in an AI-augmented environment are developing their people's strategic judgment, relationship skills, and leadership capabilities continuously, not through periodic training events but through personalized development integrated into the daily flow of work. The third level is cultural, and it may be the most important of all. Organizations that demonstrate through action, through the investments they make in their people's development, the transparency they create around skills and opportunity, and the deliberate care they take in managing the human transition to AI-augmented work, create the trust and engagement that makes every other transformation initiative more likely to succeed.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">Before and After SAP SuccessFactors · The Human Capital Transformation</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">📉</div>
+          <div>
+            <div class="diagram-row-title">Before, Human Capital Managed by Assumption</div>
+            <div class="diagram-row-body">Skills inventories are informal and incomplete. Talent decisions are based on manager relationships and organizational tenure rather than verified capability data. Learning is event-based, periodic training programs that employees complete and largely forget. Succession pipelines exist on paper but are rarely grounded in objective skills assessment. HR spends the majority of its time on administrative processes. And when AI begins taking on transactional work, the organization has no clear mechanism for redirecting the freed human capacity toward higher-value activities.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">📈</div>
+          <div>
+            <div class="diagram-row-title">After, Human Capital Managed by Design</div>
+            <div class="diagram-row-body">A dynamic, organization-wide skills architecture gives talent leaders a real-time picture of human capability across every division and geography. Learning is continuous and personalized, integrated into the flow of work rather than scheduled in advance. Succession pipelines are grounded in skills data and updated continuously. Joule handles HR administrative workflows automatically. And as AI takes on transactional work across the organization, SuccessFactors ensures the freed human capacity is directed, by design, with data, and with individual employee development in mind, toward the strategic work that matters most.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🏆</div>
+          <div>
+            <div class="diagram-row-title">The Strategic Gain, The Unbeatable Combination</div>
+            <div class="diagram-row-body">The organizations that combine autonomous AI handling transactional work with highly developed human talent focused on strategic, relational, and creative work will achieve a level of organizational performance that neither AI alone nor human effort alone could produce. That combination, AI and human working at their respective highest levels, is what the Autonomous Enterprise actually looks like in practice. And SuccessFactors is the platform that ensures the human half of that combination is as powerful as the AI half.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3, SuccessFactors Human Capital Transformation · Before and After · The AI Era Readiness Model · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-green">AI Plus Human, The Unbeatable Combination</span>
+        <span class="tag tag-gold">Continuous Learning, Not Periodic Training</span>
+        <span class="tag tag-navy">Skills-Based Talent Decisions</span>
+        <span class="tag tag-green">Culture of Trust Through Demonstrated Investment</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The Autonomous Enterprise does not need fewer great people. It needs great people freed from transactional work, and developed for the strategic, relational, and creative contributions that define organizational leadership in the AI era. SAP SuccessFactors is how you build that workforce intentionally.</div>
+        <div class="callout-source">SAP in 3 · SuccessFactors · Human Capital in the Autonomous Enterprise · June 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is the most important question to bring to your next leadership conversation about AI. When your Joule Assistants take on the transactional work that currently consumes 40 to 60 percent of your people's time, what will those people do with the capacity that is freed? If the honest answer is "we are not sure yet", that uncertainty is the most important problem in your AI strategy. Because the value of the Autonomous Enterprise is not just what AI does. It is what your people do with the time and energy AI gives back to them. SAP SuccessFactors is the platform that ensures that question has a strategic answer, not an accidental one.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOOD NEWS -->
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">The Integration Story</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">☁️</div>
+        <div class="gn-card-title">Deployment Model</div>
+        <div class="gn-card-body">SAP SuccessFactors is a cloud-native SaaS platform with modular deployment, organizations can start with the capabilities most relevant to their immediate priorities and expand over time. Core HR and payroll, talent management, learning, and workforce analytics can be deployed independently or as an integrated suite depending on organizational readiness and strategic priorities.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">SAP Ecosystem Integration</div>
+        <div class="gn-card-body">Native integration with SAP S/4HANA for organizational data, SAP Business Data Cloud for unified workforce analytics, and SAP Joule for embedded HR AI. SuccessFactors is a core component of the RISE with SAP and SAP GROW offerings, meaning organizations on those pathways are already positioned to access SuccessFactors as part of their cloud transformation journey.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Non-SAP Compatibility</div>
+        <div class="gn-card-body">Pre-built integrations with major recruiting platforms, learning content providers, payroll processors, and benefits administrators. Organizations running non-SAP ERP systems can deploy SuccessFactors as a standalone HCM platform, it does not require S/4HANA to deliver its core human capital management capabilities, making it accessible regardless of broader ERP landscape decisions.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🏭</div>
+        <div class="gn-card-title">Industry and Size Fit</div>
+        <div class="gn-card-body">SAP SuccessFactors serves organizations from mid-market to the largest global enterprises across every industry. Particularly powerful in highly regulated sectors, financial services, healthcare, life sciences, and public sector, where compliance tracking, licensing management, and skills verification are regulatory requirements as well as talent management priorities.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">The Future Belongs to the Builders. Make Sure Your People Are Ready.</div>
+    <div class="bottom-line-text">
+      <p>Ten issues ago, SAP in 3 began with a simple premise, one SAP product, three sections, plain English, every week. Since then we have covered the full arc of SAP's strategic vision: the revenue optimization that drives growth, the procurement intelligence that manages cost, the transformation foundation that enables change, the Autonomous Enterprise platform that SAP unveiled at Sapphire, and now, in Issue 010: the human capital layer that determines whether all of that technology delivers its promised value.</p>
+      <p>The answer to the most human question in the Autonomous Enterprise story is not a complicated one. AI does not replace the need for great people. It raises the stakes for developing them, because when transactional work is handled by autonomous agents, the competitive advantage of any organization comes down entirely to the quality of the human judgment, relationships, and leadership that its people bring to the work that AI cannot do. SAP SuccessFactors is the platform that ensures your organization develops those capabilities deliberately, continuously, and with the strategic precision that the AI era requires.</p>
+      <p>The naysayers of every technological generation were not wrong that change was coming. They were wrong that it meant loss. The organizations that leaned into electricity built industries. The ones that embraced the automobile shaped the modern world. The ones that invested in their people for the AI era will lead it. SAP SuccessFactors is how that investment is made with intention, one skill developed, one career elevated, one great person freed to do the work they were always meant to do.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List, Your Human Capital Action Agenda</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Answer the freed capacity question now:</strong> Before your next Joule Assistant deployment, identify specifically which roles will have transactional work reduced and what higher-value activities that freed capacity should be redirected toward. The organizations that answer this question before AI deployment, rather than after, capture the full value of the human-AI combination rather than simply reducing headcount.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Audit your skills visibility honestly:</strong> Could your CHRO walk into a board meeting today and present a data-driven picture of your organization's current skills, your critical capability gaps, and your development pipeline for the AI era? If the honest answer is no: the gap between where you are and where SuccessFactors can take you is both large and strategically significant.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Break down your divisional talent silos:</strong> Map the talent visibility boundaries in your organization: the walls between business lines, geographies, and functions that prevent your best people from being seen and deployed where they are most needed. Those walls are not organizational design features. They are talent waste, and a unified skills architecture dissolves them with data rather than restructuring.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Connect human capital to AI deployment timing:</strong> The sequencing question matters enormously. Organizations that invest in workforce readiness, skills development, change management capability, leadership preparation for the AI era, before deploying autonomous agents at scale report dramatically higher adoption rates and faster time to value. SuccessFactors and WalkMe working together is the combination that lands AI change most effectively.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or HR advice. Content is based on publicly available SAP product documentation and industry research as of June 2026. The financial services scenario presented in this issue is illustrative and does not represent any specific organization or individual. Product availability, pricing, and specifications may vary by contract and region. Always consult qualified SAP advisors before making technology or business strategy decisions. SAP in 3 is an independent intelligence series and is not affiliated with or endorsed by SAP SE.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 010 · June 10, 2026 · SAP SuccessFactors · The Most Human Question in the Autonomous Enterprise
+</footer>
+
+</body>
+</html>
