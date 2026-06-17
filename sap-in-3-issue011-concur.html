@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 011 · SAP Concur · Your People Are Traveling. Your Finance Team Is Drowning.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628; --navy-mid: #152035; --navy-light: #1E2E47;
+      --gold: #C9A84C; --gold-light: #E2C47A; --gold-pale: #F5EDD5;
+      --cream: #FAF7F2; --slate: #8497B0; --red-accent: #C0392B;
+      --green-accent: #1A7C5C; --text-body: #2C3E50; --text-light: #5D6D7E; --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+
+    /* SUMMER BANNER */
+    .summer-banner { background: linear-gradient(135deg, #1A6B8A, #0B1628); border-bottom: 2px solid var(--gold); padding: 13px 60px; text-align: center; }
+    .summer-inner { max-width: 780px; margin: 0 auto; }
+    .summer-text { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+
+    /* MASTHEAD */
+    .masthead { background: var(--navy); color: white; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* BODY */
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; } .icon-alert { background: #FCE4EC; } .icon-ok { background: #E8F5E9; } .icon-blue { background: #E3F2FD; } .icon-gold { background: #FDF5E4; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); } .tag-gold { background: #FDF5E4; color: #8B6914; } .tag-green { background: #E8F5EF; color: var(--green-accent); } .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* TRAVEL COST GRID */
+    .travel-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .travel-card { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--red-accent); border-radius: 0 0 6px 6px; padding: 20px; text-align: center; }
+    .travel-card.ok { border-top-color: var(--green-accent); }
+    .travel-icon { font-size: 28px; margin-bottom: 10px; }
+    .travel-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--navy); margin-bottom: 8px; }
+    .travel-body { font-family: 'Source Serif 4', serif; font-size: 13px; line-height: 1.6; color: var(--text-light); }
+
+    /* BEFORE AFTER TABLE */
+    .ba-table { width: 100%; border-collapse: collapse; margin: 28px 0; background: white; border: 1px solid #E0D8C8; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .ba-table th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 14px 20px; text-align: left; }
+    .ba-table th:first-child { background: var(--navy); color: var(--gold); width: 34%; }
+    .ba-table th:nth-child(2) { background: #FDECEA; color: var(--red-accent); }
+    .ba-table th:nth-child(3) { background: #E8F5EF; color: var(--green-accent); }
+    .ba-table td { font-family: 'Source Serif 4', serif; font-size: 13px; line-height: 1.5; padding: 12px 20px; border-top: 1px solid #EEE8DC; vertical-align: top; }
+    .ba-table td:first-child { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); background: rgba(11,22,40,0.03); font-weight: 500; }
+    .ba-table td:nth-child(2) { color: var(--red-accent); background: rgba(192,57,43,0.03); }
+    .ba-table td:nth-child(3) { color: var(--green-accent); background: rgba(26,124,92,0.03); }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .travel-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .summer-banner { padding: 12px 24px; }
+      .ba-table { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ SUMMER BANNER ═════════════════════════════════ -->
+<div class="summer-banner">
+  <div class="summer-inner">
+    <div class="summer-text">☀️ Summer 2026 · A Good Time to Fix the Process Everyone Has Been Putting Off</div>
+  </div>
+</div>
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · Travel and Expense · Enterprise Finance</div>
+    <div class="masthead-issue">Issue 011 · June 17, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">The Most Painful Process in Enterprise Finance Has a Fix. Most Organizations Just Have Not Used It Yet.</div>
+    <div class="hero-deck">Travel and expense management is one of the most universally painful processes in enterprise finance — manual, error-prone, and stubbornly accepted as a cost of doing business. SAP Concur exists to prove that acceptance wrong.</div>
+    <div class="hero-pull">
+      "Every organization has a travel and expense problem. Most have simply accepted it as the cost of doing business. SAP Concur exists to prove that acceptance wrong."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>SAP Concur</strong>Travel and Expense · Issue 011</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<!-- ═══ BODY ════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- INTRODUCTION -->
+  <div class="intro-text">
+    <p class="drop-cap">There is a process running inside almost every enterprise organization right now that consumes far more time, money, and employee goodwill than anyone has formally calculated. It is not glamorous enough to make the digital transformation agenda. It is not strategic enough to attract serious technology investment. And it is familiar enough that most organizations have stopped noticing how broken it actually is. That process is travel and expense management — and the gap between how it typically works and how it could work with the right platform is one of the most straightforward improvement opportunities in enterprise finance.</p>
+    <p>SAP Concur is the platform that manages the complete travel and expense lifecycle — from trip booking and policy compliance through expense submission, approval, reconciliation, and reimbursement — with enough intelligence and automation to transform what is currently one of the most manual and error-prone processes in the enterprise into one that practically runs itself. This issue of SAP in 3 explains why the T&E problem is bigger than most organizations realize, how Concur solves it, and what changes when it does.</p>
+  </div>
+
+  <!-- FINDING 01 — WHY -->
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">Why Travel and Expense Is the Most Expensive Process Your Organization Is Ignoring</div>
+    </div>
+    <div class="finding-body">
+      <p>Travel and expense management sits in an unusual position in enterprise finance — it is simultaneously one of the highest-cost administrative processes in the organization and one of the least likely to receive serious technology investment. The reasons are understandable. T&E feels small compared to the strategic initiatives competing for attention and budget. Individual expense reports are low value. The process is familiar. And the pain it causes — to the employees submitting reports, the managers approving them, and the finance teams processing them — has been normalized over so many years that most organizations no longer see it as a problem to solve. They see it as a condition to manage.</p>
+      <p>That normalization is expensive. The average cost to process a single expense report manually is estimated at between $26 and $54 when staff time, approval cycles, error correction, and audit overhead are fully accounted for. Multiply that by the volume of reports a mid-size enterprise processes annually and the number becomes significant very quickly. Add the cost of out-of-policy spending that manual processes fail to catch, the fraud that paper-based systems cannot detect, and the cash flow uncertainty that comes from not knowing what travel liability is outstanding at any given moment — and the T&E problem reveals itself as a material financial management issue dressed in the clothes of an administrative inconvenience.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">The True Cost of Manual Travel and Expense Management</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">💸</div>
+          <div>
+            <div class="diagram-row-title">The Processing Cost — What Nobody Adds Up</div>
+            <div class="diagram-row-body">At $26 to $54 per report for manual processing, an organization with 500 traveling employees submitting monthly expense reports spends between $156,000 and $324,000 per year just on the administrative cost of processing those reports. That number does not include the time employees spend submitting them, the management time spent approving them, or the finance team hours spent reconciling them at month end. The visible cost of T&E is the travel itself. The invisible cost is everything that happens after the traveler returns.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">⚠️</div>
+          <div>
+            <div class="diagram-row-title">The Policy Leakage Problem — Spending You Cannot See</div>
+            <div class="diagram-row-body">Research consistently shows that between 19% and 25% of business travel spending occurs outside of policy in organizations without automated compliance controls. Employees book outside preferred vendors. Meals exceed per diem limits. Upgrades appear that the policy does not allow. Without automated policy enforcement at the point of booking and at the point of submission, these violations are either caught manually after the fact at significant cost, or they are not caught at all. Either outcome is more expensive than preventing them in the first place.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">🔍</div>
+          <div>
+            <div class="diagram-row-title">The Fraud Exposure — The Number That Surprises Every CFO</div>
+            <div class="diagram-row-body">The Association of Certified Fraud Examiners estimates that expense reimbursement fraud accounts for approximately 14% of all occupational fraud cases — with a median loss of $31,000 per incident before detection. Duplicate submissions, inflated amounts, personal expenses submitted as business costs, and fictitious receipts are all patterns that manual review processes routinely miss. Automated duplicate detection, receipt matching, and anomaly flagging in SAP Concur catch these patterns systematically rather than incidentally.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">📊</div>
+          <div>
+            <div class="diagram-row-title">The Visibility Gap — What Your CFO Cannot See Right Now</div>
+            <div class="diagram-row-body">In most organizations without integrated T&E management, the CFO cannot answer a simple question with confidence: what is our current outstanding travel liability? Approved trips not yet taken, expenses incurred not yet submitted, reports submitted not yet processed — all represent financial commitments that exist but are invisible to the financial reporting system until they complete the full manual processing cycle. That invisibility makes cash flow forecasting less accurate and budget management more reactive than it needs to be.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — The True Cost of Manual T&E Management · Enterprise Finance · Summer 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-red">$26–$54 to Process One Expense Report Manually</span>
+        <span class="tag tag-gold">19–25% of Travel Spend Outside Policy</span>
+        <span class="tag tag-navy">Real-Time Liability Invisible Without Integration</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The T&E problem is not a small administrative inconvenience. It is a material financial management issue that compounds every time a new employee travels, every time a receipt goes missing, and every time a policy exception slips through an approval process that was never designed to catch it.</div>
+        <div class="callout-source">SAP in 3 · Concur Analysis · Travel and Expense Intelligence · June 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about the last time you submitted an expense report. How long did it take you to find the receipts, log into the system, categorize each expense, attach the documentation, and submit it for approval? Now multiply that by every employee in your organization who travels. Now add the time your managers spend reviewing and approving those reports. Then add the time your finance team spends processing, reconciling, and auditing them. That total — measured in hours every single month — is the hidden tax that manual T&E management places on your organization. SAP Concur does not reduce that tax. It eliminates most of it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 02 — HOW -->
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP Concur Manages the Complete Travel and Expense Lifecycle — Before, During, and After the Trip</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP Concur is not an expense reporting tool with a travel booking feature added. It is an integrated platform that manages the complete travel and expense lifecycle as a single connected process — from the moment a trip is planned through the moment the reimbursement lands in the employee's account. That end-to-end integration is what makes Concur fundamentally different from the point solutions — standalone booking tools, separate expense apps, disconnected receipt capture utilities — that most organizations stitch together and then wonder why the reconciliation is still painful.</p>
+      <p>The platform operates across three distinct phases of the travel lifecycle and applies intelligence at each one. Before the trip, Concur enforces travel policy at the point of booking — ensuring employees select within preferred vendors and approved fare classes before spending occurs rather than flagging violations after the fact. During the trip, mobile receipt capture, real-time expense creation, and automated card transaction matching mean that expense reports build themselves as the travel happens rather than waiting for the employee to reconstruct the journey from memory and paper receipts a week after they return. After the trip, automated approval workflows, duplicate detection, policy compliance checking, and direct integration with payroll and ERP systems compress what once took days of manual processing into hours of automated reconciliation.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How SAP Concur Works · The Five Core Capabilities</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">✈️</div>
+          <div>
+            <div class="diagram-row-title">Integrated Travel Booking with Policy Enforcement</div>
+            <div class="diagram-row-body">A unified booking experience for flights, hotels, rental cars, and rail that surfaces only policy-compliant options for each traveler based on their role, destination, and travel purpose. Policy exceptions require approval before booking rather than explanation after return. Preferred vendor rates are automatically applied. And every booking creates a travel itinerary that flows directly into the expense management system, pre-populating the expense report with trip details before the traveler boards the first flight.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">📱</div>
+          <div>
+            <div class="diagram-row-title">Mobile Receipt Capture and Automated Expense Creation</div>
+            <div class="diagram-row-body">The Concur mobile app captures receipts by photo the moment they are received, uses optical character recognition to extract merchant, amount, date, and category automatically, and creates the expense entry without manual input. Corporate card transactions import directly and are matched to receipts automatically. By the time the traveler lands from their final flight, their expense report is largely complete rather than largely undone. The Sunday night ritual of fishing receipts out of pockets before Monday morning submission becomes a thing of the past.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-gold">🤖</div>
+          <div>
+            <div class="diagram-row-title">AI-Powered Compliance and Anomaly Detection</div>
+            <div class="diagram-row-body">Joule and SAP Concur's embedded AI layer reviews every expense submission against policy rules, flags potential duplicates across all submissions, identifies anomalies that suggest misclassification or fraud, and routes exceptions for human review while processing compliant expenses automatically. The result is a compliance system that catches what manual review misses, at the speed and scale that manual review cannot sustain, without the approver fatigue that comes from reviewing every line of every report regardless of risk.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">⚡</div>
+          <div>
+            <div class="diagram-row-title">Automated Approval Workflows and Rapid Reimbursement</div>
+            <div class="diagram-row-body">Configurable approval workflows route expense reports to the right approver automatically, with mobile approval capability that means managers are not a processing bottleneck when they are themselves traveling. Approved reports flow directly to payroll or accounts payable for reimbursement without manual re-entry. The combination of automated compliance checking and streamlined approval reduces average reimbursement cycle times from weeks to days, which matters more to employee experience and retention than most organizations recognize.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">📊</div>
+          <div>
+            <div class="diagram-row-title">Real-Time Spend Visibility and Analytics</div>
+            <div class="diagram-row-body">A unified view of all travel and expense spending in real time, broken down by employee, department, cost center, project, and vendor, with trend analysis, budget tracking, and predictive spend forecasting. The CFO's question, "what is our current travel liability?" becomes answerable in seconds rather than days. Budget owners can see actual versus planned travel spend in real time rather than discovering variances at month-end close when the ability to course correct has passed.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2 — SAP Concur Platform Capabilities · End-to-End Travel and Expense Lifecycle Management · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">Policy Enforcement at Point of Booking</span>
+        <span class="tag tag-navy">AI Receipt Capture and Auto-Matching</span>
+        <span class="tag tag-green">Automated Compliance and Fraud Detection</span>
+        <span class="tag tag-gold">Real-Time Spend Visibility</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">78<span>%</span></div>
+          <div class="stat-label">Reduction in expense report processing time reported by SAP Concur customers vs. manual processes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">$6.5<span>B</span></div>
+          <div class="stat-label">Saved by SAP Concur customers annually through automated policy enforcement and spend optimization</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">98<span>M+</span></div>
+          <div class="stat-label">Expense reports processed annually through the SAP Concur platform globally</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3<span>×</span></div>
+          <div class="stat-label">Faster reimbursement cycle reported by Concur customers vs. organizations using manual T&E processes</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think of SAP Concur as the difference between managing your personal finances with a shoebox of receipts versus a banking app that categorizes every transaction automatically, flags anything unusual, and shows you your real-time balance across every account. Both technically work. But one requires hours of monthly reconciliation and the other gives you an accurate financial picture in seconds. SAP Concur does for enterprise travel and expense what mobile banking did for personal finance, applying intelligence and automation to a process that was crying out for both and receiving neither.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 03 — WHAT -->
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Changes When Travel and Expense Finally Works the Way It Should</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from SAP Concur arrive across four constituencies that together cover every stakeholder in the T&E process. For traveling employees, the outcome is time reclaimed and frustration eliminated. The average employee spends 20 minutes per expense report on submission alone with manual tools. Concur reduces that to under five minutes through automated receipt capture, card transaction matching, and pre-populated trip data. Across an organization of any significant size, that time saving is substantial, measurable, and immediately felt by the people who experience it most directly.</p>
+      <p>For finance teams, the outcome is a fundamental shift from transaction processing to financial analysis. When automated systems handle receipt matching, policy compliance checking, duplicate detection, and approval routing, the finance professionals who previously managed those tasks manually can redirect their expertise toward the vendor negotiations, spend pattern analysis, and strategic cost management that create organizational value rather than just managing organizational overhead. For CFOs, the outcome is real-time visibility into a category of spend that has historically been the most opaque item on the balance sheet. And for the organization as a whole, the outcome is a T&E process that scales with the business rather than becoming increasingly painful as the team grows and the travel volume increases.</p>
+
+      <!-- BEFORE AFTER TABLE -->
+      <table class="ba-table">
+        <tr>
+          <th>Experience</th>
+          <th>Without Concur</th>
+          <th>With Concur</th>
+        </tr>
+        <tr>
+          <td>Employee Submission</td>
+          <td>20+ minutes per report, paper receipts, manual entry, lost documentation</td>
+          <td>Under 5 minutes, photo capture, auto-populated from card transactions</td>
+        </tr>
+        <tr>
+          <td>Policy Compliance</td>
+          <td>Violations caught after spending, manual review, exceptions approved retrospectively</td>
+          <td>Policy enforced at point of booking, exceptions flagged before approval</td>
+        </tr>
+        <tr>
+          <td>Approval Process</td>
+          <td>Email chains, spreadsheet tracking, approver bottlenecks, lost reports</td>
+          <td>Automated routing, mobile approval, real-time status visibility</td>
+        </tr>
+        <tr>
+          <td>Fraud Detection</td>
+          <td>Manual spot-checks, duplicate submissions missed, anomalies undetected</td>
+          <td>Automated duplicate detection, AI anomaly flagging, systematic audit trail</td>
+        </tr>
+        <tr>
+          <td>Reimbursement Speed</td>
+          <td>Two to four weeks from submission to payment</td>
+          <td>Days from submission to payment with automated processing</td>
+        </tr>
+        <tr>
+          <td>CFO Visibility</td>
+          <td>Travel liability unknown until reports processed, budget variances discovered at month end</td>
+          <td>Real-time spend visibility, live budget tracking, predictive forecasting</td>
+        </tr>
+      </table>
+
+      <div class="tag-row">
+        <span class="tag tag-green">20 Minutes per Report Becomes Under 5</span>
+        <span class="tag tag-gold">Finance Teams Freed for Strategic Work</span>
+        <span class="tag tag-navy">Real-Time CFO Visibility Into T&E Spend</span>
+        <span class="tag tag-green">Reimbursement in Days Not Weeks</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The organizations that get travel and expense right are not just saving money on processing costs. They are giving their finance teams their time back, giving their traveling employees a better experience, and giving their CFOs the real-time visibility they need to manage one of the largest discretionary cost categories in the business.</div>
+        <div class="callout-source">SAP in 3 · Concur Analysis · Enterprise Travel and Expense · June 2026</div>
+      </div>
+
+      <!-- TRAVEL COST GRID -->
+      <p style="margin-bottom:20px;">SAP Concur addresses three specific T&E pressure points that every enterprise finance team recognizes:</p>
+      <div class="travel-grid">
+        <div class="travel-card">
+          <div class="travel-icon">📈</div>
+          <div class="travel-title">Volume Spikes</div>
+          <div class="travel-body">When travel volumes increase around conferences, client visits, and project deployments, manual processes hit their ceiling. Concur scales automatically without adding headcount or extending processing cycles.</div>
+        </div>
+        <div class="travel-card">
+          <div class="travel-icon">🏖️</div>
+          <div class="travel-title">Approver Bottlenecks</div>
+          <div class="travel-body">When managers are unavailable, expense report approvals stall and reimbursements are delayed. Mobile approval in Concur means the process never stops because an approver is away from their desk.</div>
+        </div>
+        <div class="travel-card ok">
+          <div class="travel-icon">💳</div>
+          <div class="travel-title">Mixed Expense Types</div>
+          <div class="travel-body">Business travel increasingly blends with client entertainment, project costs, and remote work expenses. Concur's policy guardrails and receipt matching keep business expenses clean, categorized, and auditable regardless of complexity.</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is the simplest way to evaluate whether your organization has a Concur opportunity. Ask your finance team how many hours they spend each month processing expense reports. Ask a sample of your traveling employees how long it takes them to submit one. Ask your CFO how long it takes to get an accurate read on your current travel liability. If the answers to those three questions add up to significant time and significant uncertainty, the case for SAP Concur is already made. The only question is how long your organization continues to pay the price of the process it currently has.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOOD NEWS -->
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">The Integration Story</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">☁️</div>
+        <div class="gn-card-title">Deployment Model</div>
+        <div class="gn-card-body">SAP Concur is a cloud-native SaaS platform with rapid deployment timelines and a modular structure that allows organizations to start with expense management, travel booking, or both depending on where the pain is greatest. Mobile apps for iOS and Android are included and work globally, making the platform immediately usable by traveling employees from day one of deployment.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">SAP Ecosystem Integration</div>
+        <div class="gn-card-body">Native integration with SAP S/4HANA for financial posting, SAP SuccessFactors for employee data and organizational hierarchy, and SAP Business Data Cloud for unified spend analytics. Expense data flows directly into the general ledger without manual re-entry. Cost center assignments, project codes, and approval hierarchies sync automatically from the core HR and finance systems.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Non-SAP Compatibility</div>
+        <div class="gn-card-body">SAP Concur integrates with Oracle, Microsoft Dynamics, Workday, ADP, and hundreds of other ERP, HR, and payroll platforms through pre-built connectors and open APIs. It also connects to all major corporate card programs, global distribution systems for travel booking, and tax compliance platforms for VAT reclaim in international travel scenarios. Non-SAP organizations are a fully supported and common deployment pattern.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌍</div>
+        <div class="gn-card-title">Global Scale</div>
+        <div class="gn-card-body">SAP Concur operates in over 150 countries with multi-currency, multi-language, and multi-tax framework support built in. Global organizations can enforce consistent travel policies across all geographies while accommodating local regulatory requirements, per diem rates, and tax reclaim rules. For organizations managing travel across multiple countries, the global compliance capability alone frequently justifies the investment.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">The Fix Exists. The Question Is Why You Are Still Waiting.</div>
+    <div class="bottom-line-text">
+      <p>Travel and expense management is one of those processes that organizations tolerate rather than solve — because it feels too small to prioritize and too familiar to question. The result is a finance function that spends a disproportionate amount of its time managing a process that technology has been able to automate for years. SAP Concur is not a new idea. It is a proven platform used by organizations in over 150 countries to manage trillions of dollars of travel and expense spend annually. The question is not whether it works. The question is why your organization is still doing this manually.</p>
+      <p>The processing costs Concur eliminates, the policy leakage it prevents, and the fraud it detects frequently fund the platform investment within the first year. The business case is straightforward. The ROI is well-documented. The only remaining question is how much longer your organization will continue paying the price of the process it currently has.</p>
+      <p>Next week, SAP in 3 turns its attention to SAP Business Technology Platform — the connective tissue underneath every application, integration, and AI capability in the SAP ecosystem. After eleven issues covering the applications, it is time to explain the platform that makes them all work together. It will be the issue that ties everything we have covered into a single coherent architecture story.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — Your T&E Action Agenda This Summer</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Calculate your actual T&E processing cost:</strong> Take last month's expense report volume, multiply by $26 as a conservative per-report processing estimate, and present that number to your CFO alongside the Concur investment. For most mid-size organizations this calculation alone makes the business case without needing to factor in policy leakage savings or fraud prevention.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Survey your traveling employees:</strong> Ask five of your most frequent travelers how long it takes them to complete an expense report and how satisfied they are with the current process. Employee T&E experience is a more significant retention factor than most HR leaders recognize, and the data from that simple survey frequently surfaces urgency that the finance cost calculation alone does not.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Audit your out-of-policy spend:</strong> Pull last quarter's expense data and calculate what percentage of submissions required a policy exception. If that number exceeds 10%, your current process is not controlling discretionary spend effectively and automated policy enforcement at the point of booking would produce immediate measurable savings.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Preview next week — SAP BTP:</strong> Issue 012 of SAP in 3 will explain SAP Business Technology Platform in plain English for the first time in this series. After covering the applications for eleven weeks, we are ready to explain the platform underneath them all. It will be the issue that makes everything else make sense as a coherent system rather than a collection of individual products.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Statistics referenced reflect publicly available industry research and SAP product documentation as of June 2026. Product availability, pricing, and specifications may vary by contract and region. Always consult qualified SAP advisors before making technology or business strategy decisions. SAP in 3 is an independent intelligence series and is not affiliated with or endorsed by SAP SE.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 011 · June 17, 2026 · SAP Concur · Summer Travel Edition
+</footer>
+
+</body>
+</html>
