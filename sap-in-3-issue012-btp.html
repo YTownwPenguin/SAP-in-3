@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 012 · SAP Business Technology Platform · The Platform Underneath Everything</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628; --navy-mid: #152035; --navy-light: #1E2E47;
+      --gold: #C9A84C; --gold-light: #E2C47A; --gold-pale: #F5EDD5;
+      --cream: #FAF7F2; --slate: #8497B0; --red-accent: #C0392B;
+      --green-accent: #1A7C5C; --text-body: #2C3E50; --text-light: #5D6D7E; --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+
+    /* MASTHEAD */
+    .masthead { background: var(--navy); color: white; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* SERIES RECAP BANNER */
+    .series-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 14px 60px; }
+    .series-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+    .series-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+    .series-text { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--slate); font-style: italic; }
+
+    /* BODY */
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; } .icon-alert { background: #FCE4EC; } .icon-ok { background: #E8F5E9; } .icon-blue { background: #E3F2FD; } .icon-gold { background: #FDF5E4; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); } .tag-gold { background: #FDF5E4; color: #8B6914; } .tag-green { background: #E8F5EF; color: var(--green-accent); } .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* BTP STACK VISUAL */
+    .btp-stack { margin: 32px 0; }
+    .btp-layer { padding: 18px 24px; margin-bottom: 4px; border-radius: 4px; display: flex; align-items: center; gap: 16px; }
+    .btp-layer-top { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3); }
+    .btp-layer-mid { background: rgba(26,124,92,0.08); border: 1px solid rgba(26,124,92,0.25); }
+    .btp-layer-core { background: rgba(30,46,71,0.08); border: 2px solid var(--navy); }
+    .btp-layer-bot { background: #EBF0F7; border: 1px solid #B0BDD0; }
+    .btp-icon { font-size: 22px; flex-shrink: 0; }
+    .btp-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 3px; }
+    .btp-layer-top .btp-title { color: #7A5C0A; }
+    .btp-layer-mid .btp-title { color: var(--green-accent); }
+    .btp-layer-core .btp-title { color: var(--navy); }
+    .btp-layer-bot .btp-title { color: var(--navy); }
+    .btp-desc { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--text-body); line-height: 1.5; }
+    .btp-arrow { text-align: center; font-size: 18px; color: var(--gold); margin: 2px 0; opacity: 0.5; }
+
+    /* SERIES CONNECTIONS */
+    .series-connections { background: var(--navy); border-radius: 8px; padding: 36px 40px; margin: 48px 0; color: white; }
+    .series-connections-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .series-connections-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: white; margin-bottom: 24px; }
+    .connections-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    .connection-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 16px; }
+    .connection-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 4px; text-transform: uppercase; }
+    .connection-product { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .connection-btp { font-family: 'Source Serif 4', serif; font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.4; font-style: italic; }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .connections-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news, .series-connections { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .series-banner { padding: 12px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ SERIES BANNER ═════════════════════════════════ -->
+<div class="series-banner">
+  <div class="series-inner">
+    <div class="series-label">🔗 Issue 012</div>
+    <div class="series-text">Eleven issues covering the applications. This week we explain the platform underneath all of them — and why it changes everything you thought you knew about how SAP works.</div>
+  </div>
+</div>
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · Platform Architecture · SAP Ecosystem Series</div>
+    <div class="masthead-issue">Issue 012 · June 24, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">Eleven Issues. Eleven Products. One Platform Running Underneath All of Them.</div>
+    <div class="hero-deck">SAP Business Technology Platform is the most important thing in the SAP ecosystem that most organizations cannot clearly explain. After twelve weeks of building toward it — today we fix that.</div>
+    <div class="hero-pull">
+      "BTP is not a product you buy. It is the foundation that determines how well every other SAP product you already own performs — how it connects, how it extends, how it innovates, and how intelligently it operates in an AI-powered world."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>SAP Business Technology Platform</strong>Platform Architecture · Issue 012</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<!-- ═══ BODY ════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- INTRODUCTION -->
+  <div class="intro-text">
+    <p class="drop-cap">Over the past eleven weeks, SAP in 3 has covered the applications that run the world's most important business processes. Sales performance management. Procurement. Process intelligence. Enterprise architecture. Digital adoption. The Autonomous Enterprise. AI. Data. Cloud migration. Human capital. Travel and expense. Eleven products. Eleven plain-English explanations of what each one does and why it matters. And underneath every single one of them, quietly powering the connections, the extensions, the integrations, and the intelligence that makes each product more capable than it would be on its own, sits a platform that most SAP clients have heard of but surprisingly few can clearly explain.</p>
+    <p>SAP Business Technology Platform — BTP — is that platform. It is not an application in the traditional sense. It does not manage a specific business process or serve a defined user population. What it does is considerably more fundamental than that. BTP is the technical foundation that connects SAP's application portfolio into a coherent ecosystem, enables organizations to extend SAP capabilities without compromising the Clean Core principles that make continuous innovation possible, and delivers the AI, data, and integration capabilities that the Autonomous Enterprise vision depends on. Understanding BTP is not a technical exercise. It is a strategic one. And after twelve weeks of context, this is exactly the right moment to make it clear.</p>
+  </div>
+
+  <!-- FINDING 01 — WHY -->
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">Why Every SAP Investment Your Organization Has Made Depends on BTP to Reach Its Full Potential</div>
+    </div>
+    <div class="finding-body">
+      <p>There is a question that surfaces in almost every mature SAP environment — usually in a technology strategy review or an architecture assessment — that reveals more about an organization's SAP maturity than almost any other. The question is: how do your SAP applications talk to each other, how do they connect to your non-SAP systems, and how do you extend their capabilities when the standard product does not do exactly what your business requires? The answers to those three questions define whether an organization is getting the full value of its SAP investment — or running a collection of capable but insufficiently connected applications that are less than the sum of their parts.</p>
+      <p>Before BTP existed in its current form, those questions were answered with custom code, point-to-point integrations, and bespoke development that lived inside SAP applications and accumulated over years into the layers of complexity that make upgrades expensive and innovation slow. That accumulated custom code is the primary reason that SAP ECC migrations are so costly and so feared — because every customization has to be assessed, tested, and either migrated or rebuilt before the new system can go live. BTP exists to ensure that organizations never accumulate that debt again. By providing a dedicated platform layer for extensions, integrations, and custom development that sits outside the Clean Core rather than inside it, BTP enables organizations to build exactly what their business requires — without the architectural consequences that made the old approach so punishing.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">Why BTP Changes the SAP Value Equation · Three Problems It Permanently Solves</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">🔴</div>
+          <div>
+            <div class="diagram-row-title">The Custom Code Trap — Before BTP</div>
+            <div class="diagram-row-body">Organizations extending SAP capabilities through custom code embedded in the core ERP system accumulate technical debt with every enhancement. Each customization makes upgrades more complex, more expensive, and more risky — until the cost of staying current exceeds the cost of the customization itself. This is the cycle that turned SAP ECC environments from flexible systems into expensive liabilities. BTP breaks that cycle by moving extensions outside the core entirely — making the core upgradeable and the extensions sustainable.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🟡</div>
+          <div>
+            <div class="diagram-row-title">The Integration Complexity Problem — Connecting What Should Be Connected</div>
+            <div class="diagram-row-body">Large enterprises typically run dozens of systems that need to exchange data reliably — SAP applications connecting to Salesforce, to logistics platforms, to banking systems, to industry-specific tools. Without a dedicated integration platform, those connections are built point-to-point, each one a custom project that requires maintenance, breaks when either system updates, and creates the data silos that undermine analytics and AI. SAP Integration Suite on BTP provides pre-built connectors, standard protocols, and a managed integration environment that makes those connections reliable, maintainable, and scalable.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">✅</div>
+          <div>
+            <div class="diagram-row-title">The Innovation Access Problem — Getting New Capabilities Without New Risk</div>
+            <div class="diagram-row-body">Organizations that want to build new AI capabilities, custom workflows, or industry-specific applications on top of their SAP investment need a development environment that connects to SAP data and processes without requiring direct system modifications. SAP BTP provides that environment — with low-code and pro-code development tools, access to SAP's data and process APIs, pre-built AI services, and a deployment infrastructure that organizations use to build and run custom applications that extend SAP capabilities precisely where the standard product leaves a gap.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — Why SAP BTP Exists · Three Structural Problems in the SAP Ecosystem That BTP Was Built to Solve · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-red">Custom Code in Core = Technical Debt</span>
+        <span class="tag tag-gold">Point-to-Point Integration = Fragile Architecture</span>
+        <span class="tag tag-navy">BTP = The Clean Alternative to Both</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">BTP is where SAP organizations go when the standard product does not do exactly what the business requires — and where they go without paying the price of the customization approaches that defined the previous generation of SAP architecture.</div>
+        <div class="callout-source">SAP in 3 · BTP Platform Analysis · June 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think of SAP BTP the way you think about the electrical system in a modern building. The individual rooms — the offices, the conference rooms, the server rooms — are the SAP applications. Each one does what it was designed to do. But none of them work without the electrical infrastructure that powers them, connects them, and enables them to operate as part of a coherent building rather than a collection of separate spaces. BTP is that infrastructure. It is invisible when it is working well, fundamental when it is not, and the difference between a building where every room is connected and productive versus one where each space operates in isolation from the others.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 02 — HOW -->
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP BTP Works — Four Pillars That Power the Entire SAP Ecosystem</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP Business Technology Platform is organized around four integrated capability pillars — Database and Data Management, Analytics, Application Development and Integration, and Intelligent Technologies — that together cover every dimension of what organizations need to extend, connect, and enhance their SAP investment. Understanding these four pillars is the key to understanding BTP not as a single product but as a platform ecosystem that different parts of the organization access for different purposes.</p>
+      <p>The most strategically important of the four pillars in 2026 is the Application Development and Integration layer — because this is where Clean Core becomes operational. Every organization running SAP S/4HANA Cloud needs a place to build the extensions and integrations that make the standard product fit their specific business requirements without touching the core. BTP is that place. The SAP Integration Suite connects SAP to the world. The SAP Extension Suite enables organizations to build on top of SAP without building inside it. And the low-code tools within BTP — SAP Build — make that capability accessible not just to professional developers but to the business analysts and process experts who understand what needs to be built better than any IT team.</p>
+
+      <!-- BTP STACK VISUAL -->
+      <div class="diagram-box">
+        <div class="diagram-title">SAP Business Technology Platform · Four Pillars Explained</div>
+        <div class="btp-stack">
+          <div class="btp-layer btp-layer-top">
+            <div class="btp-icon">🤖</div>
+            <div>
+              <div class="btp-title">Intelligent Technologies · AI and Automation</div>
+              <div class="btp-desc">SAP AI Core and AI Launchpad, pre-built AI business services, robotic process automation, and the foundation for Joule across all SAP applications. This pillar is where the AI capabilities that power the Autonomous Enterprise are developed, deployed, and governed. Every Joule capability covered in Issue 007 runs on this layer of BTP.</div>
+            </div>
+          </div>
+          <div class="btp-arrow">↕</div>
+          <div class="btp-layer btp-layer-mid">
+            <div class="btp-icon">🔗</div>
+            <div>
+              <div class="btp-title">Application Development and Integration · The Clean Core Enabler</div>
+              <div class="btp-desc">SAP Integration Suite for connecting SAP and non-SAP systems. SAP Extension Suite for building custom applications that extend SAP without modifying the core. SAP Build for low-code application development, workflow automation, and business site creation. This is the pillar that makes Clean Core operational — providing the alternative to custom code that organizations need to extend SAP capabilities sustainably.</div>
+            </div>
+          </div>
+          <div class="btp-arrow">↕</div>
+          <div class="btp-layer btp-layer-core">
+            <div class="btp-icon">📊</div>
+            <div>
+              <div class="btp-title">Analytics · SAP Analytics Cloud and Data Visualization</div>
+              <div class="btp-desc">SAP Analytics Cloud for business intelligence, planning, and predictive analytics across SAP and non-SAP data sources. Embedded analytics that bring real-time reporting directly into SAP application workflows. The analytics pillar connects to SAP Business Data Cloud — covered in Issue 008 — to deliver unified insights from the organization's complete data landscape.</div>
+            </div>
+          </div>
+          <div class="btp-arrow">↕</div>
+          <div class="btp-layer btp-layer-bot">
+            <div class="btp-icon">🗄️</div>
+            <div>
+              <div class="btp-title">Database and Data Management · SAP HANA and Data Services</div>
+              <div class="btp-desc">SAP HANA Cloud as the in-memory database foundation. SAP Datasphere for data integration and federation across the enterprise landscape. Master data management services that ensure consistent, governed data flows across connected systems. This foundational layer is what makes real-time processing and analytics possible across the entire BTP ecosystem.</div>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2 — SAP BTP Four Pillar Architecture · From Data Foundation to AI Intelligence · 2026</div>
+      </div>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How BTP Connects to Every Issue in This Series</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🔗</div>
+          <div>
+            <div class="diagram-row-title">SAP Integration Suite — The Connector</div>
+            <div class="diagram-row-body">Pre-built integration packages for over 2,500 applications — SAP and non-SAP — managed through a single integration platform. API management, event mesh for real-time data streaming, and B2B integration for partner connectivity. When Ariba connects to Salesforce, when SuccessFactors syncs with SAP S/4HANA, when Concur posts to the general ledger — Integration Suite is the mechanism that makes those connections reliable, monitored, and maintainable at scale.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🏗️</div>
+          <div>
+            <div class="diagram-row-title">SAP Build — Low-Code Development for Everyone</div>
+            <div class="diagram-row-body">Three tools in one platform: SAP Build Apps for application development without traditional coding, SAP Build Process Automation for workflow and robotic process automation, and SAP Build Work Zone for creating unified digital work experiences. Build democratizes the ability to extend SAP capabilities — putting the power to create custom workflows, approval processes, and business applications in the hands of the people who understand the business requirements, not just the developers who understand the code.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-gold">🤖</div>
+          <div>
+            <div class="diagram-row-title">SAP AI Core — Enterprise AI Infrastructure</div>
+            <div class="diagram-row-body">The development and runtime environment for AI models across the SAP ecosystem. Joule, the AI business services embedded in SAP applications, and the custom AI models that organizations build for their specific use cases all run on SAP AI Core. Organizations using BTP to build custom AI capabilities have access to the same AI infrastructure that powers SAP's own Joule development — with enterprise-grade security, governance, and scalability built in.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🔐</div>
+          <div>
+            <div class="diagram-row-title">SAP Identity and Access Management — Governance Across the Ecosystem</div>
+            <div class="diagram-row-body">Centralized identity management, single sign-on, and role-based access control across all SAP cloud applications and BTP services. In an environment where employees access multiple SAP applications, partners connect through integration APIs, and AI agents operate autonomously across business processes, consistent identity governance is not an IT concern — it is a compliance and security imperative that BTP manages at the platform level.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3 — Key BTP Services · How Each One Connects to the SAP Application Ecosystem · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">2,500+ Pre-Built Integration Packages</span>
+        <span class="tag tag-navy">Low-Code Development with SAP Build</span>
+        <span class="tag tag-green">AI Infrastructure for Joule and Custom Models</span>
+        <span class="tag tag-gold">Clean Core Extension Layer</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">2<span>,500+</span></div>
+          <div class="stat-label">Pre-built integration packages available in SAP Integration Suite for SAP and non-SAP applications</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">30<span>K+</span></div>
+          <div class="stat-label">Organizations globally using SAP BTP to extend, connect, and enhance their SAP investments</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">4<span>×</span></div>
+          <div class="stat-label">Faster custom application development reported by organizations using SAP Build vs. traditional development approaches</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">75<span>%</span></div>
+          <div class="stat-label">Reduction in integration maintenance effort reported by organizations using SAP Integration Suite vs. custom point-to-point connections</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think of SAP BTP the way you think about a smartphone operating system. Your iPhone or Android phone comes with built-in applications — the camera, the maps, the messaging. But what makes the smartphone transformational is not those built-in apps. It is the platform layer underneath them — the operating system that lets thousands of other developers build applications that connect to your photos, your location, your contacts, and your calendar, extending the phone's capabilities far beyond what Apple or Google built themselves. SAP BTP is that operating system for the SAP ecosystem. The built-in apps are S/4HANA, SuccessFactors, Ariba, and the rest. BTP is the layer that lets your organization and SAP's broader partner ecosystem build on top of them — connecting, extending, and enhancing their capabilities in ways that no single product team could anticipate or deliver alone.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 03 — WHAT -->
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Changes When BTP Becomes the Foundation of Your SAP Strategy</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from SAP BTP are best understood not as standalone results but as multipliers on every other SAP investment the organization has made. BTP does not deliver value in isolation. It delivers value by making every other SAP application more connected, more extensible, more intelligent, and more aligned to the specific needs of the organization. An organization running S/4HANA without BTP has a powerful ERP system. An organization running S/4HANA with BTP has a powerful ERP system that connects seamlessly to every other system in its landscape, can be extended precisely where the standard product leaves a gap, and delivers AI capabilities that improve continuously as the platform evolves.</p>
+      <p>The most tangible outcome for organizations that adopt BTP strategically is the elimination of the choice between standardization and customization that has defined SAP implementations for decades. Before BTP, organizations faced a genuine dilemma: stay close to the standard product and sacrifice the custom capabilities their business required, or build the custom capabilities they needed and sacrifice the ability to upgrade easily. BTP resolves that dilemma by providing a dedicated place for customization that is architecturally separate from the core. Organizations can have both — a clean, continuously updatable core and custom capabilities built on BTP that extend exactly what they need without compromising the platform's ability to absorb SAP's quarterly innovations. That resolution is not a technical achievement. It is a strategic one that changes the economics of SAP investment permanently.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">Before and After BTP · What Changes for the SAP Organization</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">📉</div>
+          <div>
+            <div class="diagram-row-title">Before — SAP Without a Platform Strategy</div>
+            <div class="diagram-row-body">Custom extensions live inside the core ERP, making every upgrade an expensive regression testing exercise. Integrations to non-SAP systems are built point-to-point and break when either system updates. AI capabilities require custom development projects with long timelines and uncertain outcomes. Business users with process improvement ideas wait months for IT capacity. And the innovation gap between what SAP delivers and what the organization actually uses grows every year.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">📈</div>
+          <div>
+            <div class="diagram-row-title">After — SAP with BTP as the Strategic Foundation</div>
+            <div class="diagram-row-body">Extensions live on BTP outside the core, making upgrades faster and quarterly AI updates absorbable without regression risk. Integrations are managed through SAP Integration Suite with pre-built packages that maintain themselves as connected systems update. AI capabilities are built on SAP AI Core with enterprise governance built in. Business users build custom workflows and applications with SAP Build without IT bottlenecks. And the organization receives every SAP innovation automatically because the core is clean enough to accept it.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🏆</div>
+          <div>
+            <div class="diagram-row-title">The Strategic Gain — The SAP Ecosystem Becomes Greater Than the Sum of Its Parts</div>
+            <div class="diagram-row-body">Organizations with BTP as the connective tissue of their SAP landscape operate a genuinely integrated enterprise technology ecosystem rather than a collection of capable but insufficiently connected applications. Data flows freely. AI operates across the full landscape. Custom capabilities extend the standard product without compromising it. And every new SAP application — every new Joule capability, every new Autonomous Suite feature — arrives into an environment that is architecturally ready to receive it. The multiplier effect of BTP on every other SAP investment compounds over time.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 4 — BTP Strategic Impact · Before and After · The Platform That Makes the Ecosystem Work · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-green">Clean Core Made Operational</span>
+        <span class="tag tag-gold">Integration Complexity Eliminated</span>
+        <span class="tag tag-navy">AI Capabilities Across the Full Landscape</span>
+        <span class="tag tag-green">Business Users Empowered to Build</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">BTP is the answer to the question that every SAP organization eventually asks: how do we get more value from the investment we have already made? Not by adding more applications. By connecting the ones you have, extending them precisely where they fall short, and building the intelligence layer that makes the whole ecosystem operate as one.</div>
+        <div class="callout-source">SAP in 3 · BTP Strategic Analysis · June 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is the simplest question to bring to your next technology strategy conversation. If someone asked you today how your SAP applications connect to each other and to your non-SAP systems — who answers that question, how long does it take to get the answer, and how confident are you in its accuracy? If the honest answer reveals uncertainty, complexity, or a picture of point-to-point connections maintained by institutional knowledge rather than a managed platform — that gap is the BTP opportunity in your organization. Not as a new investment to justify. As the foundation that maximizes the return on the SAP investments you have already made.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW BTP CONNECTS TO THE SERIES -->
+  <div class="series-connections">
+    <div class="series-connections-label">🔗 Twelve Issues. One Platform Underneath.</div>
+    <div class="series-connections-title">How BTP Connects Everything We Have Covered</div>
+    <div class="connections-grid">
+      <div class="connection-card">
+        <div class="connection-issue">Issue 001</div>
+        <div class="connection-product">SAP Sales Performance Management</div>
+        <div class="connection-btp">BTP Integration Suite connects SPM to CRM transaction data for real-time commission calculation.</div>
+      </div>
+      <div class="connection-card">
+        <div class="connection-issue">Issue 002</div>
+        <div class="connection-product">SAP Ariba</div>
+        <div class="connection-btp">BTP connects Ariba to non-SAP ERP systems and logistics platforms through pre-built integration packages.</div>
+      </div>
+      <div class="connection-card">
+        <div class="connection-issue">Issue 003</div>
+        <div class="connection-product">SAP Signavio</div>
+        <div class="connection-btp">BTP feeds Signavio process mining with event log data from S/4HANA and connected systems.</div>
+      </div>
+      <div class="connection-card">
+        <div class="connection-issue">Issue 004</div>
+        <div class="connection-product">SAP LeanIX</div>
+        <div class="connection-btp">The SAP AI Agent Hub built on LeanIX runs on BTP — governing all AI agents across the enterprise.</div>
+      </div>
+      <div class="connection-card">
+        <div class="connection-issue">Issue 005</div>
+        <div class="connection-product">SAP WalkMe</div>
+        <div class="connection-btp">WalkMe's digital adoption layer connects to SAP application data through BTP APIs for contextual guidance.</div>
+      </div>
+      <div class="connection-card">
+        <div class="connection-issue">Issue 007</div>
+        <div class="connection-product">SAP Joule</div>
+        <div class="connection-btp">Joule runs on SAP AI Core — BTP's intelligent technologies pillar — for every autonomous workflow it executes.</div>
+      </div>
+      <div class="connection-card">
+        <div class="connection-issue">Issue 008</div>
+        <div class="connection-product">SAP Business Data Cloud</div>
+        <div class="connection-btp">Business Data Cloud is built on SAP Datasphere — a core BTP data management service.</div>
+      </div>
+      <div class="connection-card">
+        <div class="connection-issue">Issue 010</div>
+        <div class="connection-product">SAP SuccessFactors</div>
+        <div class="connection-btp">SuccessFactors integrates with S/4HANA for organizational data through BTP Integration Suite.</div>
+      </div>
+      <div class="connection-card">
+        <div class="connection-issue">Issue 011</div>
+        <div class="connection-product">SAP Concur</div>
+        <div class="connection-btp">Concur posts approved expenses directly to the S/4HANA general ledger via BTP integration — no manual re-entry.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOD NEWS -->
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">The Integration Story</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">☁️</div>
+        <div class="gn-card-title">Deployment Model</div>
+        <div class="gn-card-body">SAP BTP is a cloud-native platform available on all major hyperscalers — AWS, Microsoft Azure, Google Cloud, and Alibaba Cloud — as well as SAP's own data centers. Organizations choose their preferred cloud infrastructure while accessing the same BTP services and capabilities. A free tier with limited service quotas allows organizations to explore BTP capabilities before committing to a paid subscription.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">SAP Ecosystem Integration</div>
+        <div class="gn-card-body">BTP is the designated extension and integration platform for every SAP cloud application — S/4HANA, SuccessFactors, Ariba, Concur, and the full Autonomous Suite. Organizations on RISE with SAP receive BTP entitlements as part of the offering. Clean Core compliance for S/4HANA implementations requires extensions to be built on BTP rather than inside the core — making BTP a standard component of every cloud SAP deployment.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Non-SAP Connectivity</div>
+        <div class="gn-card-body">SAP Integration Suite on BTP provides pre-built connectors for Salesforce, Microsoft, Oracle, Workday, ServiceNow, and thousands of other enterprise applications. Open API standards, event-driven integration patterns, and support for MCP and A2A protocols announced at Sapphire 2026 make BTP the integration hub for hybrid landscapes where SAP and non-SAP systems need to operate as a coherent whole.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">👩‍💻</div>
+        <div class="gn-card-title">Low-Code and Pro-Code</div>
+        <div class="gn-card-body">BTP serves both professional developers building complex custom applications on SAP's full development stack and business users building workflows and simple applications with SAP Build's low-code tools. That dual audience makes BTP accessible across the organization — not just to the IT team but to the process experts and business analysts who understand what needs to be built and can now build it without a development queue.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">The Platform That Makes Everything Else Work.</div>
+    <div class="bottom-line-text">
+      <p>Twelve issues into SAP in 3, the picture is now complete. Sales performance, procurement, process intelligence, enterprise architecture, digital adoption, autonomous AI, data foundation, cloud migration, human capital, travel and expense — and now the platform layer that connects, extends, and amplifies every one of them. SAP Business Technology Platform is not the most exciting topic in the SAP ecosystem. It is the most important one. Because without it, everything else we have covered in this series operates below its potential — disconnected where it could be connected, limited where it could be extended, and static where it could be continuously innovating.</p>
+      <p>The organizations that treat BTP as a strategic foundation — not as an IT infrastructure item but as the platform that determines how much value they extract from every SAP investment they make — are the ones that will enter the AI era with the connected, extensible, continuously evolving ecosystem that the Autonomous Enterprise requires. The ones that treat it as optional, or that address it only when a specific integration project forces the conversation, will find themselves rebuilding the same point-to-point connections and managing the same custom code debt that BTP was specifically designed to eliminate.</p>
+      <p>SAP in 3 will return next week with a new issue and a new product. Twelve weeks in, the series has built a complete picture of the SAP ecosystem — from the applications that run business processes to the platform that makes them work together. Thank you for being part of it. The best issues are still ahead.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — Your BTP Action Agenda</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Audit your current integration landscape:</strong> Map every point-to-point connection between your SAP and non-SAP systems and ask how each one is maintained, who owns it, and what happens when either connected system updates. That audit will reveal both the fragility of your current integration architecture and the specific places where SAP Integration Suite on BTP would deliver immediate stability and maintenance savings.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Identify your Clean Core compliance gaps:</strong> If your organization is planning or executing an S/4HANA migration, assess which current ECC customizations can be moved to BTP extensions versus which need to be rebuilt as standard configurations. Clean Core compliance is not just an architectural preference — it is the prerequisite for receiving SAP's quarterly AI updates and Autonomous Suite capabilities automatically.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Explore SAP Build with a business use case:</strong> Identify one workflow in your organization that currently requires IT development to automate or improve — an approval process, a data collection form, a notification workflow. Use SAP Build's free tier to prototype it. The experience of building a working workflow without traditional development is frequently the moment that changes how business leaders think about what is possible with BTP.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Connect your BTP entitlements to your RISE contract:</strong> If your organization is on RISE with SAP, BTP entitlements are already included in your commercial agreement. Understanding exactly which BTP services and at what consumption levels your organization is entitled to — and comparing that to what is currently being used — frequently reveals significant untapped capability that requires no additional investment to access.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Statistics and product capabilities referenced reflect publicly available SAP documentation and industry research as of June 2026. Product availability, pricing, and entitlements vary by contract and region. Always consult qualified SAP advisors before making technology or business strategy decisions. SAP in 3 is an independent intelligence series and is not affiliated with or endorsed by SAP SE.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 012 · June 24, 2026 · SAP Business Technology Platform · The Platform Underneath Everything
+</footer>
+
+</body>
+</html>
