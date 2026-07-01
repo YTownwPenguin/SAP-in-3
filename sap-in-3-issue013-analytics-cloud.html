@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 013 · SAP Analytics Cloud · Stop Reporting on the Past. Start Deciding for the Future.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628; --navy-mid: #152035; --navy-light: #1E2E47;
+      --gold: #C9A84C; --gold-light: #E2C47A; --gold-pale: #F5EDD5;
+      --cream: #FAF7F2; --slate: #8497B0; --red-accent: #C0392B;
+      --green-accent: #1A7C5C; --text-body: #2C3E50; --text-light: #5D6D7E; --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+
+    /* MASTHEAD */
+    .masthead { background: var(--navy); color: white; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* CONTEXT BANNER */
+    .context-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 14px 60px; }
+    .context-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+    .context-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+    .context-text { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--slate); font-style: italic; }
+
+    /* BODY */
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; } .icon-alert { background: #FCE4EC; } .icon-ok { background: #E8F5E9; } .icon-blue { background: #E3F2FD; } .icon-gold { background: #FDF5E4; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); } .tag-gold { background: #FDF5E4; color: #8B6914; } .tag-green { background: #E8F5EF; color: var(--green-accent); } .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* THREE MODES GRID */
+    .modes-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .mode-card { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 0 0 6px 6px; padding: 22px; }
+    .mode-icon { font-size: 28px; margin-bottom: 10px; }
+    .mode-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--navy); margin-bottom: 8px; }
+    .mode-body { font-family: 'Source Serif 4', serif; font-size: 13px; line-height: 1.6; color: var(--text-light); }
+
+    /* REPORTING VS INTELLIGENCE TABLE */
+    .compare-table { width: 100%; border-collapse: collapse; margin: 28px 0; background: white; border: 1px solid #E0D8C8; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .compare-table th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 14px 20px; text-align: left; }
+    .compare-table th:first-child { background: var(--navy); color: var(--gold); width: 30%; }
+    .compare-table th:nth-child(2) { background: #FDECEA; color: var(--red-accent); }
+    .compare-table th:nth-child(3) { background: #E8F5EF; color: var(--green-accent); }
+    .compare-table td { font-family: 'Source Serif 4', serif; font-size: 13px; line-height: 1.5; padding: 12px 20px; border-top: 1px solid #EEE8DC; vertical-align: top; }
+    .compare-table td:first-child { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); background: rgba(11,22,40,0.03); font-weight: 500; }
+    .compare-table td:nth-child(2) { color: var(--red-accent); background: rgba(192,57,43,0.03); }
+    .compare-table td:nth-child(3) { color: var(--green-accent); background: rgba(26,124,92,0.03); }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .modes-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .context-banner { padding: 12px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ CONTEXT BANNER ════════════════════════════════ -->
+<div class="context-banner">
+  <div class="context-inner">
+    <div class="context-label">📊 Intelligence Layer</div>
+    <div class="context-text">Issue 012 covered the platform underneath everything. This week we cover what organizations do with all that connected data — and why most are still not doing it well enough.</div>
+  </div>
+</div>
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · Analytics and Planning · Enterprise Decision Making</div>
+    <div class="masthead-issue">Issue 013 · July 1, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">Stop Reporting on the Past. Start Deciding for the Future.</div>
+    <div class="hero-deck">Most organizations have more data than they have ever had — and less confidence in their decisions than they should. SAP Analytics Cloud is the platform that closes that gap.</div>
+    <div class="hero-pull">
+      "Data without intelligence is just storage. Reporting without planning is just history. SAP Analytics Cloud is the platform that turns the data your organization has accumulated into the decisions your organization needs to make — faster, more confidently, and with the full picture in view."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>SAP Analytics Cloud</strong>Analytics and Planning · Issue 013</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<!-- ═══ BODY ════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- INTRODUCTION -->
+  <div class="intro-text">
+    <p class="drop-cap">There is a paradox sitting at the center of almost every enterprise organization in 2026. These organizations have more data than at any point in their history. They have invested heavily in ERP systems, CRM platforms, HR applications, supply chain tools, and the integration infrastructure that connects them. The data exists. The systems are running. And yet, in boardroom after boardroom, the same question surfaces with remarkable regularity: why does it still take so long to get a clear picture of how the business is actually performing? The answer is not a data shortage. It is an intelligence gap — the distance between having data and being able to act on it with the speed and confidence that modern business demands.</p>
+    <p>SAP Analytics Cloud closes that gap. It is a cloud-native platform that unifies business intelligence, planning, and predictive analytics in a single environment — connecting to SAP and non-SAP data sources, enabling organizations to move from historical reporting to forward-looking planning in the same tool, and embedding the AI capabilities that transform data from a record of what happened into a foundation for what to do next. This issue of SAP in 3 explains why the intelligence gap is more expensive than most organizations realize, how SAP Analytics Cloud addresses it, and what changes when analytics and planning finally work the way every leader assumed they already did.</p>
+  </div>
+
+  <!-- FINDING 01 — WHY -->
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">Why Having More Data Has Not Made Most Organizations Better at Deciding</div>
+    </div>
+    <div class="finding-body">
+      <p>The relationship between data and decision quality is not as straightforward as the technology industry has implied for the past decade. More data does not automatically produce better decisions. What produces better decisions is accessible, trusted, timely intelligence that is available to the right people at the moment they need to act. And in most enterprise organizations, that requirement is not being met — not because the data does not exist, but because the systems that hold it were designed to record transactions rather than support decisions, and the tools used to extract insight from them were built for analysts rather than the leaders who need to act on the results.</p>
+      <p>The consequences of this intelligence gap show up in ways that are familiar to anyone who has spent time in enterprise leadership. Decisions that should take hours take days because the data needs to be pulled, reconciled, and formatted before anyone can reason from it. Planning cycles that should be dynamic are quarterly at best because the effort of assembling the baseline is too great to do more frequently. And the confidence that leaders should feel when making significant business decisions is undermined by the persistent awareness that the numbers on the slide might be telling a different story than the numbers in the system. SAP Analytics Cloud does not solve every dimension of this problem. But it addresses the core of it — by creating a single environment where data from across the organization becomes intelligence that leaders can act on without a three-day preparation cycle.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">The Enterprise Intelligence Gap · Why More Data Has Not Produced Better Decisions</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">🔴</div>
+          <div>
+            <div class="diagram-row-title">The Latency Problem — Decisions Made on Yesterday's Data</div>
+            <div class="diagram-row-body">In most enterprise environments, the data that informs leadership decisions is not current — it is a snapshot from the last reporting cycle, the last batch run, or the last time an analyst had capacity to pull an updated extract. For operational decisions where conditions change daily, that latency means leaders are navigating the present using a map of the past. SAP Analytics Cloud connects directly to live data sources — including SAP S/4HANA in real time — ensuring that the numbers in the dashboard reflect what is happening now, not what was happening when the last report was generated.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🟡</div>
+          <div>
+            <div class="diagram-row-title">The Trust Problem — Which Number Is Right?</div>
+            <div class="diagram-row-body">One of the most corrosive dynamics in enterprise analytics is the moment when two leaders walk into the same meeting with different numbers for the same metric — each drawn from a different system, a different extract date, or a different definition of the underlying measure. The conversation stops being about the decision and starts being about the data. SAP Analytics Cloud's unified semantic layer — connected to SAP Business Data Cloud — ensures that every dashboard, every report, and every planning model draws from the same governed data definitions. One version of the truth. Every time.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">📉</div>
+          <div>
+            <div class="diagram-row-title">The Separation Problem — Reporting and Planning in Different Tools</div>
+            <div class="diagram-row-body">In most organizations, business intelligence and financial planning live in separate tools — sometimes from different vendors, maintained by different teams, and requiring manual data transfer between them. The analyst who builds the report and the planner who builds the forecast are working in disconnected environments, which means the actuals that should inform the plan require a manual handoff, and the variances that should trigger a reforecast are not automatically visible in the planning tool. SAP Analytics Cloud eliminates that separation by unifying BI, planning, and predictive analytics in a single platform.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">✅</div>
+          <div>
+            <div class="diagram-row-title">The Access Problem — Intelligence for Analysts, Not for Decision Makers</div>
+            <div class="diagram-row-body">Traditional BI tools were designed for analysts who know how to build queries, structure data models, and navigate complex interfaces. The leaders who need to make decisions based on that analysis typically receive a static report rather than an interactive intelligence environment they can explore themselves. SAP Analytics Cloud's natural language query capability — powered by Joule — allows any user to ask business questions in plain English and receive answers drawn from live data, without waiting for an analyst to build a new report or modify an existing one.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — The Enterprise Intelligence Gap · Four Dimensions of the Problem SAP Analytics Cloud Solves · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-red">Decisions Made on Stale Data</span>
+        <span class="tag tag-gold">Multiple Versions of the Truth</span>
+        <span class="tag tag-navy">BI and Planning Disconnected</span>
+        <span class="tag tag-red">Intelligence Locked Behind Analysts</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The organizations losing ground in the AI era are not the ones without data. They are the ones whose data exists but whose intelligence does not — trapped in systems that record beautifully and decide poorly.</div>
+        <div class="callout-source">SAP in 3 · Analytics Cloud Analysis · Intelligence Layer Series · July 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about what it feels like to drive a car using only the rearview mirror. You can see exactly where you have been — every turn, every road, every decision that brought you to this moment. But you cannot see what is ahead. That is what enterprise reporting without planning feels like. SAP Analytics Cloud puts the windshield back in front of the driver — giving leaders a clear, real-time view of where the business is right now and where it is heading, not just a detailed record of where it has been. The rearview mirror is still there. It is just no longer the only view available.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 02 — HOW -->
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP Analytics Cloud Works — One Platform for Intelligence, Planning, and Prediction</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP Analytics Cloud is built around three integrated capabilities that together cover every dimension of what organizations need to turn data into decisions. Business intelligence for understanding what has happened and what is happening now. Planning for determining what should happen next and how to resource it. And predictive analytics for understanding what is likely to happen based on the patterns in historical data and the signals in current conditions. The integration of these three capabilities in a single platform is what makes SAP Analytics Cloud fundamentally different from the point solutions — standalone BI tools, separate planning applications, disconnected forecasting models — that most organizations currently manage as a collection of individual investments.</p>
+      <p>The platform connects natively to SAP S/4HANA Cloud, SAP SuccessFactors, SAP Ariba, SAP Business Data Cloud, and through SAP BTP to non-SAP data sources across the organization's full technology landscape. Data does not need to be extracted and loaded into a separate analytics environment — it flows directly from the source systems into SAP Analytics Cloud where it is available for reporting, planning, and prediction in real time. And with Joule embedded natively in the platform, users interact with their data through natural language rather than navigating complex dashboards — asking questions, exploring scenarios, and receiving AI-generated narrative insights that explain not just what the numbers show but what they mean.</p>
+
+      <!-- THREE MODES -->
+      <div class="diagram-box">
+        <div class="diagram-title">SAP Analytics Cloud · Three Integrated Capabilities</div>
+        <div class="modes-grid">
+          <div class="mode-card">
+            <div class="mode-icon">📊</div>
+            <div class="mode-title">Business Intelligence</div>
+            <div class="mode-body">Real-time dashboards, interactive reports, and data visualization that connect directly to live SAP and non-SAP data sources. No static exports. No stale extracts. The numbers you see reflect what is happening in the business right now — updated continuously as transactions occur in the underlying systems.</div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-icon">📋</div>
+            <div class="mode-title">Planning and Budgeting</div>
+            <div class="mode-body">Financial planning, budgeting, forecasting, and what-if scenario modeling in the same environment as the BI reporting it connects to. Actuals flow directly into plans. Variances trigger automatic reforecast prompts. Planning becomes a continuous process rather than a quarterly event disconnected from operational reality.</div>
+          </div>
+          <div class="mode-card">
+            <div class="mode-icon">🔮</div>
+            <div class="mode-title">Predictive Analytics</div>
+            <div class="mode-body">AI-powered forecasting that identifies patterns in historical data, detects anomalies in current performance, and generates forward-looking projections with confidence intervals. Business users access predictive insights without building statistical models — the AI generates the forecast and explains the factors driving it in plain language.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2 — SAP Analytics Cloud Three Capability Model · Business Intelligence, Planning, and Predictive Analytics Unified · 2026</div>
+      </div>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How SAP Analytics Cloud Works · Six Core Platform Capabilities</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🔗</div>
+          <div>
+            <div class="diagram-row-title">Live Data Connectivity — SAP and Non-SAP</div>
+            <div class="diagram-row-body">Native live connections to SAP S/4HANA Cloud, SAP BW, SAP SuccessFactors, SAP Ariba, and SAP Business Data Cloud — pulling real-time data without extraction or replication. For non-SAP sources, BTP integration connectors bring data from Salesforce, Microsoft, Oracle, and hundreds of other platforms into the same analytics environment. The result is a single analytics layer across the organization's complete data landscape, refreshed continuously rather than on a batch schedule.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🤖</div>
+          <div>
+            <div class="diagram-row-title">Joule for Analytics — Natural Language Intelligence</div>
+            <div class="diagram-row-body">SAP Joule embedded in SAP Analytics Cloud allows users to query their data in plain English — "show me revenue by region versus last quarter" or "which product lines are underperforming against plan" — and receive instant visual responses drawn from live data. Beyond question-answering, Joule generates AI-powered narrative summaries that explain what the data shows, highlights anomalies that require attention, and suggests the next analytical question worth asking. Analytics becomes a conversation rather than a navigation exercise.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-gold">📐</div>
+          <div>
+            <div class="diagram-row-title">Integrated Financial Planning — Actuals and Forecasts in One View</div>
+            <div class="diagram-row-body">Financial planning models connect directly to S/4HANA actuals — eliminating the manual export and import cycle that makes most planning processes slower and more error-prone than they need to be. Budget owners work in planning models that update automatically as actual results arrive, with variance analysis built in and scenario modeling that allows finance teams to evaluate the impact of changing assumptions before committing to a revised forecast. The planning cycle becomes continuous and responsive rather than periodic and rigid.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🎯</div>
+          <div>
+            <div class="diagram-row-title">Smart Predict — AI Forecasting Without Data Science</div>
+            <div class="diagram-row-body">Built-in predictive forecasting that requires no statistical expertise to use. Business analysts and finance professionals apply AI models to their data to generate demand forecasts, churn predictions, revenue projections, and anomaly alerts — selecting from pre-built predictive scenarios and receiving results with confidence intervals and plain-language explanations of the key drivers. The predictive capability that previously required a data science team is now accessible to the people who understand the business context behind the numbers.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">📱</div>
+          <div>
+            <div class="diagram-row-title">Mobile Analytics — Intelligence Wherever Decisions Happen</div>
+            <div class="diagram-row-body">Native iOS and Android applications that deliver the full SAP Analytics Cloud experience on mobile — including live dashboards, planning input, and Joule natural language queries. For leaders who make decisions outside the office — in client meetings, on travel, in operational reviews — mobile analytics ensures the intelligence they need is available where the decision is being made, not waiting on a desktop back at headquarters.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🔒</div>
+          <div>
+            <div class="diagram-row-title">Governed Self-Service — Intelligence Without Anarchy</div>
+            <div class="diagram-row-body">A governed self-service model that gives business users the freedom to explore their data and build their own analyses within a framework of data quality controls, metric definitions, and access permissions set by the analytics team. Users get the flexibility to answer their own questions without waiting for IT — and the organization maintains the governance standards that ensure those answers are drawing from trusted, consistently defined data rather than ad-hoc extracts with unknown quality.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3 — SAP Analytics Cloud Platform Capabilities · From Live Data to AI-Powered Decisions · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">Live SAP and Non-SAP Data Connectivity</span>
+        <span class="tag tag-navy">Joule Natural Language Queries</span>
+        <span class="tag tag-green">Integrated Planning and Actuals</span>
+        <span class="tag tag-gold">AI Forecasting Without Data Science</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">10<span>K+</span></div>
+          <div class="stat-label">Organizations globally using SAP Analytics Cloud across every major industry and market</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">70<span>%</span></div>
+          <div class="stat-label">Reduction in time spent preparing management reports reported by SAP Analytics Cloud customers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3<span>×</span></div>
+          <div class="stat-label">Faster planning cycles reported by organizations using integrated planning vs. separate BI and planning tools</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">40<span>%</span></div>
+          <div class="stat-label">Improvement in forecast accuracy reported by organizations using Smart Predict AI forecasting capabilities</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about the difference between reading last month's weather report and looking at a live weather radar. Both give you information about atmospheric conditions. But only one of them tells you what is happening right now and what is likely to happen in the next few hours — which is the information you actually need to decide whether to carry an umbrella. Most enterprise analytics tools are weather reports. SAP Analytics Cloud is the radar. It shows you what is happening in your business right now, what the patterns suggest about where it is heading, and what scenarios you should be planning for — all in the same view, updated continuously, accessible to everyone who needs to act on it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 03 — WHAT -->
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Changes When Intelligence and Planning Finally Work Together</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from SAP Analytics Cloud arrive across every function that makes decisions from data — which in a well-run organization is every function. For finance teams, the outcome is the elimination of the close and reporting cycle's most manual and error-prone phases, replaced by a continuous intelligence environment where actuals are always current, plans are always connected to reality, and the variance analysis that used to take three days of analyst time is available in minutes. For operations leaders, the outcome is the visibility into performance trends and operational metrics that makes proactive management possible rather than reactive.</p>
+      <p>For the C-suite, the outcome is perhaps the most significant of all — the ability to walk into any business review with a live, trusted, comprehensive picture of organizational performance rather than a deck assembled from system exports that were current three days ago. The quality of strategic decision-making that becomes possible when leadership has real-time, AI-augmented intelligence instead of periodic static reporting is categorically different from what most organizations currently experience. And for the organization as a whole, the cultural shift from reporting on the past to planning for the future changes how people at every level think about their data — from a compliance obligation that produces reports nobody fully trusts, to a strategic asset that powers the decisions that determine what happens next.</p>
+
+      <!-- COMPARE TABLE -->
+      <table class="compare-table">
+        <tr>
+          <th>Decision Scenario</th>
+          <th>Without SAP Analytics Cloud</th>
+          <th>With SAP Analytics Cloud</th>
+        </tr>
+        <tr>
+          <td>Monthly Performance Review</td>
+          <td>3-day data preparation, static slide deck, questions that cannot be answered in the room</td>
+          <td>Live dashboard, interactive exploration, Joule answers ad-hoc questions instantly</td>
+        </tr>
+        <tr>
+          <td>Annual Budget Cycle</td>
+          <td>Spreadsheet consolidation, manual actuals import, disconnected from operational data</td>
+          <td>Actuals flow automatically into plans, variance analysis built in, scenario modeling in minutes</td>
+        </tr>
+        <tr>
+          <td>Demand Forecasting</td>
+          <td>Historical averages, analyst judgment, quarterly updates that lag market signals</td>
+          <td>AI forecasting on live data, confidence intervals, automatic alerts when actuals diverge from forecast</td>
+        </tr>
+        <tr>
+          <td>Cross-Functional Reporting</td>
+          <td>Manual data collection from multiple systems, reconciliation debates, delayed publication</td>
+          <td>Single source of truth across all functions, consistent metric definitions, published in real time</td>
+        </tr>
+        <tr>
+          <td>Executive Decision Support</td>
+          <td>Static reports prepared by analysts, decisions made on data that may already be stale</td>
+          <td>Live intelligence environment, natural language exploration, AI narrative summaries of key trends</td>
+        </tr>
+      </table>
+
+      <div class="tag-row">
+        <span class="tag tag-green">Real-Time Performance Visibility</span>
+        <span class="tag tag-gold">Continuous Planning Replaces Quarterly Cycles</span>
+        <span class="tag tag-navy">One Version of Truth Across All Functions</span>
+        <span class="tag tag-green">AI Narrative Summaries for Every Leader</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The organizations that will lead in the next decade are not the ones with the most data. They are the ones that can turn their data into decisions fastest — with the most confidence, the most complete picture, and the least manual effort between insight and action. SAP Analytics Cloud is how that capability is built.</div>
+        <div class="callout-source">SAP in 3 · Analytics Cloud · Intelligence Layer · July 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is the most revealing question to ask in your next leadership meeting. When someone raises a question about business performance that was not anticipated in the pre-prepared deck — how long does it take to get the answer? If the honest answer is "we will have to get back to you on that" — your organization is operating with an intelligence gap that is costing you decision quality every single week. SAP Analytics Cloud is the platform that changes that answer to "let me show you right now." That shift from "we will follow up" to "here is the answer" is not just an efficiency improvement. It is a fundamental change in how confidently and how quickly your organization moves.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOOD NEWS -->
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">The Integration Story</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">☁️</div>
+        <div class="gn-card-title">Deployment Model</div>
+        <div class="gn-card-body">SAP Analytics Cloud is a cloud-native SaaS platform with no on-premise infrastructure requirement. Organizations access the full platform through a browser or mobile app — with automatic updates delivering new capabilities continuously. A free trial is available for organizations that want to explore the platform against their own data before committing to a full deployment.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">SAP Ecosystem Integration</div>
+        <div class="gn-card-body">Native live connections to SAP S/4HANA Cloud and on-premise, SAP BW, SAP SuccessFactors, SAP Ariba, SAP Datasphere, and SAP Business Data Cloud. Planning models connect directly to S/4HANA financial data without manual data transfer. Joule capabilities in SAP Analytics Cloud draw from the same AI infrastructure that powers Joule across the full SAP application portfolio covered in Issue 007.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Non-SAP Data Sources</div>
+        <div class="gn-card-body">Import connections to Salesforce, Google Analytics, Microsoft SQL Server, Oracle, Snowflake, Databricks, and hundreds of other data sources through SAP BTP integration. Organizations running hybrid SAP and non-SAP landscapes bring all of their data into a single analytics environment without requiring every source system to be replaced. Non-SAP data is a first-class citizen in SAP Analytics Cloud — not an afterthought.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🏭</div>
+        <div class="gn-card-title">Industry and Role Coverage</div>
+        <div class="gn-card-body">Pre-built content packages for finance, supply chain, HR, sales, and operations across major industries — accelerating deployment by providing starting-point dashboards, KPI definitions, and planning models that organizations customize rather than build from scratch. SAP Analytics Cloud serves organizations from mid-market to global enterprise in every industry — making it one of the most universally applicable products in the SAP portfolio.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">Your Data Has Been Waiting for This Conversation.</div>
+    <div class="bottom-line-text">
+      <p>Twelve issues into this series, SAP in 3 has covered the systems that generate your organization's data — the ERP that processes your transactions, the procurement platform that manages your spend, the HR system that tracks your talent, the travel platform that captures your expenses. Every one of those systems produces data that has value — not just as a record of what happened, but as the raw material for understanding where the business stands and where it should go next. SAP Analytics Cloud is the platform that converts that raw material into organizational intelligence.</p>
+      <p>The gap between organizations that compete on insight and organizations that compete on intuition is widening every year. The ones that can answer business questions in real time, adjust their plans continuously as conditions change, and give every leader access to the live intelligence they need to make confident decisions are operating at a fundamentally different speed than the ones still reconciling Excel spreadsheets three days before the board meeting. SAP Analytics Cloud is not a reporting upgrade. It is an organizational capability transformation — and one with a business case that most CFOs can calculate from their own experience of how long it currently takes to answer a question that should be answerable immediately.</p>
+      <p>Next week, SAP in 3 continues the intelligence layer story. Stay with us — the series is building toward something significant and the best issues are still ahead.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — Your Analytics Action Agenda</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Time your next management report preparation:</strong> Ask your analytics or finance team how many hours go into preparing the standard monthly management report — from data extraction through formatting to publication. That number, multiplied by twelve, is the annual cost of your current reporting process. Compare it against what SAP Analytics Cloud's automated, live-connected reporting would cost. The business case typically closes itself.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Identify your planning disconnects:</strong> Map the data handoffs in your current planning cycle — where actuals need to be manually exported from one system and imported into another, where plan versions exist in spreadsheets outside any governed system, and where planning assumptions are not connected to the operational data that would validate or challenge them. Each disconnect is a SAP Analytics Cloud integration opportunity.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Test the "follow up" question:</strong> In your next business review, count how many questions come up that cannot be answered in the room because the data is not available. Each one is a quantified intelligence gap — and a specific use case for SAP Analytics Cloud that your leadership team has just self-identified as worth solving.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Connect to your BTP investment:</strong> If your organization has deployed or is planning SAP BTP — covered in Issue 012 — SAP Analytics Cloud is the intelligence layer that maximizes the return on that platform investment. The data integration work done in BTP feeds directly into SAP Analytics Cloud dashboards and planning models. The two investments compound each other in a way that neither delivers alone.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Statistics and product capabilities referenced reflect publicly available SAP documentation and industry research as of July 2026. Product availability, pricing, and specifications may vary by contract and region. Always consult qualified SAP advisors before making technology or business strategy decisions. SAP in 3 is an independent intelligence series and is not affiliated with or endorsed by SAP SE.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 013 · July 1, 2026 · SAP Analytics Cloud · Stop Reporting on the Past. Start Deciding for the Future.
+</footer>
+
+</body>
+</html>
