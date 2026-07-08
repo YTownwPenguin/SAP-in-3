@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 014 · SAP Integrated Business Planning · Your Plan and Reality Are Not the Same Thing. They Should Be.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628; --navy-mid: #152035; --navy-light: #1E2E47;
+      --gold: #C9A84C; --gold-light: #E2C47A; --gold-pale: #F5EDD5;
+      --cream: #FAF7F2; --slate: #8497B0; --red-accent: #C0392B;
+      --green-accent: #1A7C5C; --text-body: #2C3E50; --text-light: #5D6D7E; --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+
+    /* MASTHEAD */
+    .masthead { background: var(--navy); color: white; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    /* CONTEXT BANNER */
+    .context-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 14px 60px; }
+    .context-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+    .context-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+    .context-text { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--slate); font-style: italic; }
+
+    /* BODY */
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; } .icon-alert { background: #FCE4EC; } .icon-ok { background: #E8F5E9; } .icon-blue { background: #E3F2FD; } .icon-gold { background: #FDF5E4; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); } .tag-gold { background: #FDF5E4; color: #8B6914; } .tag-green { background: #E8F5EF; color: var(--green-accent); } .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* IBP PROCESS GRID */
+    .ibp-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .ibp-card { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 0 0 6px 6px; padding: 22px; }
+    .ibp-icon { font-size: 28px; margin-bottom: 10px; }
+    .ibp-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--navy); margin-bottom: 8px; }
+    .ibp-body { font-family: 'Source Serif 4', serif; font-size: 13px; line-height: 1.6; color: var(--text-light); }
+
+    /* COMPARE TABLE */
+    .compare-table { width: 100%; border-collapse: collapse; margin: 28px 0; background: white; border: 1px solid #E0D8C8; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .compare-table th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 14px 20px; text-align: left; }
+    .compare-table th:first-child { background: var(--navy); color: var(--gold); width: 30%; }
+    .compare-table th:nth-child(2) { background: #FDECEA; color: var(--red-accent); }
+    .compare-table th:nth-child(3) { background: #E8F5EF; color: var(--green-accent); }
+    .compare-table td { font-family: 'Source Serif 4', serif; font-size: 13px; line-height: 1.5; padding: 12px 20px; border-top: 1px solid #EEE8DC; vertical-align: top; }
+    .compare-table td:first-child { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); background: rgba(11,22,40,0.03); font-weight: 500; }
+    .compare-table td:nth-child(2) { color: var(--red-accent); background: rgba(192,57,43,0.03); }
+    .compare-table td:nth-child(3) { color: var(--green-accent); background: rgba(26,124,92,0.03); }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .ibp-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .context-banner { padding: 12px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ CONTEXT BANNER ════════════════════════════════ -->
+<div class="context-banner">
+  <div class="context-inner">
+    <div class="context-label">🔗 Planning Layer</div>
+    <div class="context-text">Issue 013 covered SAP Analytics Cloud — seeing and understanding your business in real time. This week we cover what happens next — acting on that intelligence with a plan that actually reflects reality.</div>
+  </div>
+</div>
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · Supply Chain Planning · Enterprise Operations</div>
+    <div class="masthead-issue">Issue 014 · July 8, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">Your Plan and Reality Are Not the Same Thing. They Should Be.</div>
+    <div class="hero-deck">Most organizations plan in one place and operate in another — and spend enormous energy managing the gap between them. SAP Integrated Business Planning closes that gap for good.</div>
+    <div class="hero-pull">
+      "A plan that does not reflect reality is not a plan. It is a wish. SAP IBP is the platform that keeps your supply chain plan connected to the signals that actually determine whether it succeeds — demand, supply, inventory, and the disruptions that no spreadsheet ever anticipated."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>SAP Integrated Business Planning</strong>Supply Chain · Issue 014</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<!-- ═══ BODY ════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- INTRODUCTION -->
+  <div class="intro-text">
+    <p class="drop-cap">Every enterprise organization runs on a plan. A demand plan that tells the business how much of each product customers are expected to buy. A supply plan that determines how those products will be produced, sourced, and delivered. An inventory plan that balances the cost of holding stock against the risk of running out. And a financial plan that ties it all together into the revenue and margin commitments that leadership has made to its board, its investors, and its customers. These plans are constructed carefully, reviewed thoroughly, and approved formally. And then reality arrives — and the gap between what was planned and what is actually happening begins to widen immediately.</p>
+    <p>That gap between plan and reality is not a planning failure. It is a structural problem that exists in every organization that manages its supply chain planning in tools that are disconnected from the live operational signals that determine whether the plan is still valid. SAP Integrated Business Planning — SAP IBP — is the platform that eliminates that structural disconnect. It connects demand signals, supply constraints, inventory positions, and financial targets in a single real-time planning environment — ensuring that the plan your organization is executing against reflects the world as it actually is, not as it was when the spreadsheet was last updated. This issue of SAP in 3 explains why that connection matters more than ever, how IBP creates it, and what changes when planning and reality finally operate as one.</p>
+  </div>
+
+  <!-- FINDING 01 — WHY -->
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">Why the Gap Between Plan and Reality Is the Most Expensive Problem in Your Supply Chain</div>
+    </div>
+    <div class="finding-body">
+      <p>The cost of supply chain planning disconnection shows up in two ways that every operations leader recognizes immediately — and both are expensive in different directions. The first is excess inventory: products and materials procured against a demand plan that overestimated actual demand, now sitting in warehouses consuming working capital, generating carrying costs, and risking obsolescence before they can be sold. The second is stock-outs: situations where actual demand exceeded what the plan anticipated, leaving customers waiting for products that are not available and revenue sitting uncaptured because the supply chain was not positioned to fulfill it.</p>
+      <p>Both outcomes — too much and too little — stem from the same root cause: a planning process that cannot respond quickly enough to the signals that would allow it to course correct before the consequence materializes. Traditional supply chain planning operates on cycles — monthly or weekly planning runs that take a snapshot of conditions, generate a plan, and then execute against that plan until the next cycle runs. In a world where demand signals shift daily, supplier constraints emerge without warning, and geopolitical disruptions can invalidate a sourcing strategy overnight, a weekly planning cycle is not fast enough. SAP IBP replaces that cycle with a continuous planning environment where every signal that matters flows in real time — and the plan adjusts automatically rather than waiting for the next scheduled review.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">The Supply Chain Planning Gap · Why Traditional Planning Cannot Keep Up</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">🔴</div>
+          <div>
+            <div class="diagram-row-title">The Latency Problem — Planning on Last Week's Data</div>
+            <div class="diagram-row-body">Traditional supply chain planning runs on batch data — extracts from ERP systems, spreadsheet inputs from sales teams, and supplier updates that arrive on fixed schedules. By the time a plan is generated, reviewed, and approved, the conditions it was built on may already have changed. A demand spike that emerged three days ago is not in the plan. A supplier delay announced yesterday has not been factored in. The plan is always a portrait of conditions that no longer exist — and the supply chain executes against it until the next cycle corrects the course, usually after the cost has already been incurred.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🟡</div>
+          <div>
+            <div class="diagram-row-title">The Siloed Planning Problem — Demand, Supply, and Finance in Separate Tools</div>
+            <div class="diagram-row-body">In most organizations, demand planning, supply planning, inventory optimization, and financial planning are managed in separate tools by separate teams with separate data models. The demand planner's forecast does not automatically update the supply planner's production schedule. The supply planner's capacity constraints do not automatically flow into the financial plan. Each handoff between planning functions requires manual data transfer — introducing delay, version control problems, and the inevitable disagreements about which number is current. SAP IBP unifies all four planning domains in a single environment where every update propagates automatically across the full planning picture.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">💸</div>
+          <div>
+            <div class="diagram-row-title">The Volatility Problem — A World That Changes Faster Than Planning Cycles</div>
+            <div class="diagram-row-body">The supply chain environment of 2026 is structurally more volatile than any planning methodology designed for the previous decade was built to handle. Tariff changes that alter sourcing economics overnight. Geopolitical events that close trade corridors without warning. Consumer demand shifts that make last quarter's forecast irrelevant before it has been fully executed. Climate events that disrupt logistics networks across entire regions simultaneously. Organizations running monthly planning cycles in this environment are not just slow — they are structurally unable to respond to disruption before its cost is already baked in. Continuous, signal-driven planning is not a luxury in this environment. It is a competitive requirement.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">✅</div>
+          <div>
+            <div class="diagram-row-title">The Opportunity — Organizations That Plan in Real Time Win</div>
+            <div class="diagram-row-body">The organizations that are consistently outperforming their peers on supply chain efficiency — lower inventory carrying costs, higher service levels, faster response to disruption — are not doing so because they have better planners. They are doing so because they have better planning platforms. Platforms that connect demand signals to supply decisions in real time, that surface disruption before it materializes into cost, and that allow scenario modeling to happen in hours rather than days. SAP IBP is that platform — and the performance gap between organizations running it and those that are not continues to widen every year.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — The Supply Chain Planning Gap · Why Traditional Planning Cannot Keep Pace With Modern Volatility · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-red">Batch Planning Cannot Match Real-Time Volatility</span>
+        <span class="tag tag-gold">Demand, Supply, and Finance Planned in Silos</span>
+        <span class="tag tag-navy">Every Handoff Introduces Delay and Error</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The supply chain planning problem is not that organizations do not plan. It is that they plan in tools that cannot keep up with the speed at which reality changes — and they discover the gap between plan and reality only after the inventory write-down, the stock-out, or the missed service commitment has already occurred.</div>
+        <div class="callout-source">SAP in 3 · IBP Analysis · Supply Chain Planning Intelligence · July 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about what it would mean to navigate a ship using a map that was drawn last week. The coastline is probably still accurate. But the weather has changed. The currents have shifted. And the harbor you were planning to dock in has just reported unexpected congestion. A navigator using last week's map does not know any of this until they arrive and find conditions very different from what the plan assumed. That is what supply chain planning looks like without SAP IBP. The map is the plan. The ocean is reality. And the gap between them grows wider every day the plan is not updated to reflect what is actually happening.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 02 — HOW -->
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP IBP Works — One Integrated Planning Environment for Demand, Supply, Inventory, and Finance</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP Integrated Business Planning is a cloud-native supply chain planning platform that unifies demand planning, supply planning, inventory optimization, sales and operations planning, and financial planning in a single real-time environment. The defining architectural principle of IBP is that every planning domain — demand, supply, inventory, and finance — operates on the same data model, updated continuously from the same live data sources. A change in the demand forecast propagates immediately into the supply plan. A supplier constraint identified in the supply plan updates the inventory position automatically. The financial impact of both is visible in real time to the finance team without a manual reconciliation cycle.</p>
+      <p>The platform runs on SAP HANA's in-memory database — the same foundation we covered in Issue 009 when discussing S/4HANA Cloud — which means planning calculations that once took overnight batch runs complete in seconds. Planners can run scenario analyses, evaluate alternative sourcing strategies, and model the impact of demand shifts in real time rather than waiting for the next planning cycle to see how a change in assumptions affects the full supply chain picture. And with SAP Joule embedded in IBP, AI-generated demand signals, anomaly alerts, and recommended planning adjustments surface automatically — allowing planners to focus on the decisions that require judgment rather than the data assembly that previously consumed most of their time.</p>
+
+      <!-- IBP CAPABILITY GRID -->
+      <div class="diagram-box">
+        <div class="diagram-title">SAP IBP · Five Integrated Planning Domains</div>
+        <div class="ibp-grid">
+          <div class="ibp-card">
+            <div class="ibp-icon">📈</div>
+            <div class="ibp-title">Demand Planning</div>
+            <div class="ibp-body">AI-powered statistical forecasting combined with collaborative input from sales, marketing, and customer teams. Demand signals from point-of-sale data, customer orders, and market indicators flow in continuously — updating the forecast in real time rather than at the next planning cycle.</div>
+          </div>
+          <div class="ibp-card">
+            <div class="ibp-icon">🏭</div>
+            <div class="ibp-title">Supply Planning</div>
+            <div class="ibp-body">Capacity-constrained supply planning that matches demand requirements against actual production capacity, supplier lead times, and material availability. Constraints surface immediately when demand changes — allowing planners to identify and resolve conflicts before they become delivery failures.</div>
+          </div>
+          <div class="ibp-card">
+            <div class="ibp-icon">📦</div>
+            <div class="ibp-title">Inventory Optimization</div>
+            <div class="ibp-body">AI-driven inventory target setting that balances service level requirements against working capital efficiency. Safety stock levels update dynamically as demand variability and supply lead time uncertainty change — ensuring inventory positions reflect current risk rather than last quarter's assumptions.</div>
+          </div>
+          <div class="ibp-card">
+            <div class="ibp-icon">🤝</div>
+            <div class="ibp-title">Sales and Operations Planning</div>
+            <div class="ibp-body">A unified S&OP process that brings commercial, operational, and financial teams into a single collaborative planning environment — replacing the sequential review meetings and manual consolidation cycles that make traditional S&OP slow and contentious with a continuous, data-driven alignment process.</div>
+          </div>
+          <div class="ibp-card">
+            <div class="ibp-icon">💰</div>
+            <div class="ibp-title">Financial Planning Integration</div>
+            <div class="ibp-body">Automatic translation of supply chain plans into financial projections — showing the revenue, margin, and working capital impact of planning decisions in real time. Finance teams see the financial consequence of supply chain choices as they are made, not weeks later when the actuals arrive.</div>
+          </div>
+          <div class="ibp-card">
+            <div class="ibp-icon">🌐</div>
+            <div class="ibp-title">Supply Chain Control Tower</div>
+            <div class="ibp-body">End-to-end supply chain visibility that surfaces disruption signals from across the network — supplier delays, logistics exceptions, demand anomalies — and recommends response actions ranked by business impact. Planners see problems before they become crises and act before the cost is incurred.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2 — SAP IBP Six Planning Domain Architecture · Unified Real-Time Supply Chain Planning · 2026</div>
+      </div>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How SAP IBP Works · Four Core Platform Capabilities</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">⚡</div>
+          <div>
+            <div class="diagram-row-title">Real-Time Planning on SAP HANA</div>
+            <div class="diagram-row-body">SAP IBP runs on SAP HANA's in-memory database — the same foundation that powers S/4HANA Cloud. Planning calculations that traditionally required overnight batch processing complete in seconds on HANA. Planners run what-if scenarios, sensitivity analyses, and full network simulations interactively — evaluating the impact of demand changes, supply constraints, and disruption scenarios in real time rather than waiting for the next planning run to see the results.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🤖</div>
+          <div>
+            <div class="diagram-row-title">Joule for Supply Chain — AI-Powered Planning Intelligence</div>
+            <div class="diagram-row-body">SAP Joule embedded in IBP surfaces AI-generated demand forecasts, anomaly alerts, and recommended planning adjustments automatically. When actual orders diverge significantly from the statistical forecast, Joule flags the signal and recommends whether to adjust the plan or maintain the current position based on historical patterns and current market context. Planners receive prioritized exception alerts that direct their attention to the decisions that matter most — rather than spending their day searching for problems in dashboards.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-gold">📊</div>
+          <div>
+            <div class="diagram-row-title">Scenario Planning and What-If Analysis</div>
+            <div class="diagram-row-body">Multiple planning scenarios can be created, compared, and evaluated simultaneously — allowing supply chain teams to model the impact of tariff changes, supplier disruptions, demand spikes, or logistics constraints before committing to a response. The financial impact of each scenario is visible in real time, giving leadership the information needed to make supply chain decisions with full awareness of their business consequence. Scenario planning that once required days of analyst time takes minutes in IBP.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">🔗</div>
+          <div>
+            <div class="diagram-row-title">Native SAP S/4HANA Integration</div>
+            <div class="diagram-row-body">SAP IBP integrates natively with SAP S/4HANA Cloud — covered in Issue 009 — pulling live inventory positions, production orders, purchase orders, and sales orders directly into the planning environment without manual data extraction. Planning decisions made in IBP flow back into S/4HANA as execution instructions automatically. The plan and the execution system operate as a single connected environment rather than two separate systems that need to be periodically reconciled.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3 — SAP IBP Core Platform Capabilities · Real-Time Planning Engine · AI Intelligence · Scenario Modeling · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">Real-Time Planning on SAP HANA</span>
+        <span class="tag tag-navy">Joule AI Demand Signals and Alerts</span>
+        <span class="tag tag-green">Scenario Modeling in Minutes</span>
+        <span class="tag tag-gold">Native S/4HANA Integration</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">20<span>%</span></div>
+          <div class="stat-label">Average reduction in inventory carrying costs reported by SAP IBP customers through optimized inventory positioning</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">30<span>%</span></div>
+          <div class="stat-label">Improvement in forecast accuracy reported by organizations using SAP IBP AI-powered demand sensing vs. statistical forecasting alone</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">50<span>%</span></div>
+          <div class="stat-label">Reduction in S&OP cycle time reported by SAP IBP customers replacing sequential review meetings with continuous collaborative planning</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">15<span>%</span></div>
+          <div class="stat-label">Improvement in service levels reported by organizations using IBP supply planning vs. traditional ERP-based planning approaches</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about the difference between a chess player who plans three moves ahead and one who plans twenty. Both are playing the same game. But the one who can model further into the future — who can see the consequences of today's decisions playing out across a longer horizon — makes fundamentally better moves. SAP IBP gives supply chain planners that deeper planning horizon. Not because it makes them smarter, but because it gives them a platform that can run the scenarios, model the consequences, and surface the signals that allow them to see further and act faster than any team working with disconnected spreadsheets and weekly planning cycles ever could.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDING 03 — WHAT -->
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Changes When Your Supply Chain Plan Finally Reflects Reality</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from SAP IBP arrive in three dimensions that together define what supply chain excellence looks like in a volatile operating environment. The first dimension is financial — the direct working capital improvement that comes from carrying less inventory while maintaining or improving service levels. For most organizations, supply chain inventory represents one of the largest items on the balance sheet. A 20% reduction in inventory carrying costs on a significant inventory position is a material financial improvement that shows up directly in free cash flow and return on assets — numbers that CFOs and boards notice immediately.</p>
+      <p>The second dimension is operational — the elimination of the emergency responses, expedited shipments, and customer service escalations that are the inevitable consequence of a supply chain plan that cannot keep pace with reality. Every stock-out that is prevented because IBP's demand sensing caught the signal early enough to respond. Every expedite fee that is avoided because supplier constraints were identified before they became delivery failures. Every customer relationship that is protected because service level commitments were met rather than apologized for. The third dimension is strategic — the ability to respond to disruption faster than competitors. In supply chain, speed of response to disruption is increasingly the primary differentiator between organizations that protect their market position when conditions change and those that lose it.</p>
+
+      <table class="compare-table">
+        <tr>
+          <th>Planning Scenario</th>
+          <th>Without SAP IBP</th>
+          <th>With SAP IBP</th>
+        </tr>
+        <tr>
+          <td>Demand Spike Detection</td>
+          <td>Identified at next planning cycle, response delayed, stock-out risk realized</td>
+          <td>Detected in real time by AI demand sensing, supply response initiated before stock-out occurs</td>
+        </tr>
+        <tr>
+          <td>Supplier Disruption</td>
+          <td>Impact discovered when orders are delayed, expedite costs incurred, customer commitments missed</td>
+          <td>Alternative sourcing scenarios modeled immediately, response executed before customer impact materializes</td>
+        </tr>
+        <tr>
+          <td>New Tariff or Trade Policy</td>
+          <td>Weeks to model sourcing impact across the network, decisions made with incomplete information</td>
+          <td>Full network impact modeled in hours, alternative sourcing scenarios evaluated with financial impact visible</td>
+        </tr>
+        <tr>
+          <td>Inventory Positioning</td>
+          <td>Safety stock set on historical rules, carrying excess in low-risk nodes while stocking out in high-risk ones</td>
+          <td>AI-driven inventory targets updated dynamically as demand variability and lead time risk change</td>
+        </tr>
+        <tr>
+          <td>S&OP Process</td>
+          <td>Monthly meeting cycle, manual data consolidation, decisions made on data that is already stale</td>
+          <td>Continuous collaborative planning, live data across all functions, decisions made in real time</td>
+        </tr>
+      </table>
+
+      <div class="tag-row">
+        <span class="tag tag-green">20% Inventory Reduction — Working Capital Freed</span>
+        <span class="tag tag-gold">Disruption Response in Hours Not Weeks</span>
+        <span class="tag tag-navy">Service Levels Protected Through Real-Time Planning</span>
+        <span class="tag tag-green">Financial Impact Visible as Decisions Are Made</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">Supply chain is no longer an operational function that executes strategy. It is a strategic function that determines whether the strategy is executable. The organizations that recognize this — and invest in the planning platforms that make their supply chains as agile as their strategies require — are the ones setting the pace in their markets right now.</div>
+        <div class="callout-source">SAP in 3 · IBP Strategic Analysis · Supply Chain Planning · July 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is the most direct question to bring to your next supply chain or operations review. When was the last time your organization was surprised by a supply chain outcome that a better planning system would have seen coming? A stock-out that built up over weeks before it was caught. An excess inventory position that formed gradually while the plan stayed unchanged. A supplier disruption that could have been mitigated if the signal had been detected earlier. Each of those surprises has a cost — in working capital, in customer relationships, in expedite fees, and in the management time consumed responding to a crisis that a real-time planning platform would have converted into a routine adjustment. That cost, quantified honestly, is the business case for SAP IBP.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOOD NEWS -->
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">The Integration Story</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">☁️</div>
+        <div class="gn-card-title">Deployment Model</div>
+        <div class="gn-card-body">SAP IBP is a cloud-native SaaS platform with a familiar Microsoft Excel-based planning interface that allows demand planners and supply chain teams to work in an environment they already know while connecting to the real-time data and AI capabilities of the IBP platform. Deployment timelines are significantly shorter than traditional supply chain planning implementations — many organizations are live within weeks on core planning scenarios.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">SAP Ecosystem Integration</div>
+        <div class="gn-card-body">Native real-time integration with SAP S/4HANA Cloud and on-premise for inventory positions, production orders, and purchase orders. SAP Analytics Cloud — covered in Issue 013 — connects to IBP planning data for executive-level supply chain dashboards and performance reporting. SAP Ariba — covered in Issue 002 — connects for supplier collaboration and procurement signal integration. The SAP supply chain ecosystem operates as a coherent whole when IBP is the planning layer.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Non-SAP Compatibility</div>
+        <div class="gn-card-body">SAP IBP integrates with non-SAP ERP systems, third-party logistics platforms, supplier portals, and external market data sources through SAP BTP integration capabilities. Organizations running Oracle, Microsoft Dynamics, or other ERP environments can run SAP IBP as their supply chain planning layer without replacing their existing transaction system — making IBP accessible regardless of the broader ERP landscape.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🏭</div>
+        <div class="gn-card-title">Industry Coverage</div>
+        <div class="gn-card-body">SAP IBP serves organizations across every industry with supply chain complexity — consumer goods, retail, manufacturing, life sciences, automotive, high tech, and industrial — with industry-specific planning templates, KPI libraries, and best-practice process content that accelerates deployment. Pre-built integration content for the most common supply chain data scenarios reduces implementation effort significantly for organizations in supported industries.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">The Plan That Reflects Reality Is the Only Plan Worth Having.</div>
+    <div class="bottom-line-text">
+      <p>Two weeks ago, SAP in 3 covered SAP Analytics Cloud — the intelligence platform that helps organizations see and understand their business in real time. This week's issue completes the picture with SAP IBP — the planning platform that allows organizations to act on that intelligence with a supply chain plan that stays connected to reality as conditions change. Together they represent the intelligence-to-action cycle that separates organizations that respond to disruption from those that are surprised by it.</p>
+      <p>The supply chain environment of 2026 is not going to become more predictable. Tariff volatility, geopolitical complexity, climate disruption, and the accelerating pace of consumer demand shifts are structural features of the operating environment — not temporary conditions that will normalize back to the stable planning assumptions of a decade ago. The organizations that thrive in this environment will be the ones that have invested in the planning capabilities that allow them to sense change, model responses, and execute adjustments faster than their competitors. SAP IBP is that investment — and the gap in supply chain performance between the organizations running it and those that are not is measurable, growing, and worth closing.</p>
+      <p>Next week, SAP in 3 continues building the series with another essential chapter in the SAP ecosystem story. Fourteen issues in — and the best conversations are still ahead.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — Your IBP Action Agenda</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Quantify your last three supply chain surprises:</strong> Identify the three most significant unplanned supply chain outcomes from the past twelve months — stock-outs, excess inventory write-downs, expedite costs, or missed service commitments. Calculate the total cost of each. The sum is your current cost of planning disconnection — and the most direct business case for IBP you can bring to a leadership conversation.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Measure your S&OP cycle time:</strong> How long does your current sales and operations planning cycle take from data collection to approved plan? For most organizations the honest answer is measured in weeks. Every week of cycle time represents a week during which conditions may have changed in ways the plan cannot yet reflect. Comparing your current S&OP cycle time to the continuous planning model SAP IBP enables is frequently the most compelling demonstration of the opportunity available.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Assess your tariff and disruption exposure:</strong> Given the ongoing volatility in global trade policy, evaluate how long it would take your current planning process to model the full supply chain impact of a significant tariff change or supplier disruption across your network. If the answer is days or weeks rather than hours, your planning capability is not keeping pace with the speed at which your risk landscape can change.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Connect IBP to your Analytics Cloud investment:</strong> If your organization is deploying or evaluating SAP Analytics Cloud from Issue 013, the supply chain planning data from SAP IBP is among the highest-value inputs to the executive dashboards and operational reporting that Analytics Cloud delivers. The two platforms are designed to work together — and organizations that deploy both unlock a see-and-plan capability that neither delivers as powerfully alone.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Statistics and product capabilities referenced reflect publicly available SAP documentation and industry research as of July 2026. Product availability, pricing, and specifications may vary by contract and region. Always consult qualified SAP advisors before making technology or business strategy decisions. SAP in 3 is an independent intelligence series and is not affiliated with or endorsed by SAP SE.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 014 · July 8, 2026 · SAP Integrated Business Planning · The Plan That Reflects Reality Is the Only Plan Worth Having.
+</footer>
+
+</body>
+</html>
