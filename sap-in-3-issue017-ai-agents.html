@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 017 · AI Agents · Everyone Is Talking About AI Agents. Here Is What They Actually Are.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628; --navy-mid: #152035; --navy-light: #1E2E47;
+      --gold: #C9A84C; --gold-light: #E2C47A; --gold-pale: #F5EDD5;
+      --cream: #FAF7F2; --slate: #8497B0; --red-accent: #C0392B;
+      --green-accent: #1A7C5C; --text-body: #2C3E50; --text-light: #5D6D7E; --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+
+    .masthead { background: var(--navy); color: white; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 700px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    .context-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 14px 60px; }
+    .context-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+    .context-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+    .context-text { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--slate); font-style: italic; }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; } .icon-alert { background: #FCE4EC; } .icon-ok { background: #E8F5E9; } .icon-blue { background: #E3F2FD; } .icon-gold { background: #FDF5E4; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); } .tag-gold { background: #FDF5E4; color: #8B6914; } .tag-green { background: #E8F5EF; color: var(--green-accent); } .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* AGENT EVOLUTION STACK */
+    .evolution-stack { margin: 32px 0; }
+    .evolution-card { background: white; border: 1px solid #E0D8C8; border-left: 4px solid var(--gold); border-radius: 0 6px 6px 0; padding: 20px 24px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 16px; }
+    .evolution-step { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 900; color: rgba(201,168,76,0.2); line-height: 1; flex-shrink: 0; width: 50px; }
+    .evolution-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--navy); margin-bottom: 6px; }
+    .evolution-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .evolution-arrow { text-align: center; font-size: 20px; color: var(--gold); opacity: 0.5; margin: 4px 0; }
+
+    /* AGENT TYPES GRID */
+    .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .agent-card { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--navy); border-radius: 0 0 6px 6px; padding: 20px 22px; }
+    .agent-card.gold { border-top-color: var(--gold); }
+    .agent-card.green { border-top-color: var(--green-accent); }
+    .agent-icon { font-size: 26px; margin-bottom: 8px; }
+    .agent-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--navy); margin-bottom: 6px; }
+    .agent-body { font-family: 'Source Serif 4', serif; font-size: 13px; line-height: 1.6; color: var(--text-light); }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .agent-grid { grid-template-columns: 1fr; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .context-banner { padding: 12px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="context-banner">
+  <div class="context-inner">
+    <div class="context-label">🤖 AI Series — Issue 2 of 3</div>
+    <div class="context-text">Last week we defined SAP Business AI. This week we explain the concept everyone is talking about and almost nobody is explaining clearly — AI agents in plain English.</div>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · AI Agents · Enterprise Automation</div>
+    <div class="masthead-issue">Issue 017 · July 29, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">Everyone Is Talking About AI Agents. Here Is What They Actually Are.</div>
+    <div class="hero-deck">AI agents are the most discussed and least understood concept in enterprise technology right now. Every board is asking about them. Every vendor is selling them. And almost nobody is explaining them clearly. Until now.</div>
+    <div class="hero-pull">
+      "An AI agent is not a chatbot with ambition. It is not automation with a better interface. It is a fundamentally new category of software — one that perceives its environment, reasons about what to do, and acts on behalf of the business without waiting to be told. Understanding that distinction is the beginning of using agents well."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>AI Agents</strong>Plain English Explainer · Issue 017</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="intro-text">
+    <p class="drop-cap">If you have attended a technology conference, read a business publication, or sat in a board meeting in the last twelve months, you have heard the term "AI agent." You have probably heard it many times. And if you are like most of the leaders and technology professionals in the SAP in 3 community, you have nodded along in those conversations while carrying a quiet uncertainty about what an AI agent actually is — how it differs from the automation tools your organization already uses, why it represents something genuinely new rather than familiar technology with fresh branding, and what it means in practice for the way your business operates. That uncertainty is completely understandable. The term is used loosely, defined inconsistently, and surrounded by enough vendor enthusiasm to make careful thinking difficult.</p>
+    <p>This issue of SAP in 3 does one thing: explains AI agents in plain English. Not what vendors want you to believe about them. Not the most optimistic projection of what they might eventually do. What they actually are, how they actually work, and what genuinely changes when an organization deploys them thoughtfully in a business context grounded in the kind of enterprise data and process knowledge that makes agent actions trustworthy. By the end of this issue, you will be able to explain AI agents clearly in your next board meeting, evaluate vendor claims about them accurately, and understand where SAP's agent ecosystem fits in the broader picture that this series has been building since Issue 001.</p>
+  </div>
+
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">Why AI Agents Are Different From Everything That Came Before — And Why That Difference Matters</div>
+    </div>
+    <div class="finding-body">
+      <p>To understand why AI agents represent something genuinely new, it helps to understand what came before them and precisely where each previous generation of technology reached its limit. The first generation of business software automated transactions — recording what happened, storing the data, and making it retrievable. The second generation added rules-based automation — if this condition is true, execute this action. The third generation added intelligence — machine learning models that could identify patterns in data and generate predictions or recommendations. Each generation made businesses more capable. And each one reached a limit defined by the same fundamental constraint: the system could only do what it was explicitly told to do, in the sequence it was told to do it, within the boundaries it was programmed to recognize.</p>
+      <p>AI agents break that constraint. An AI agent does not execute a predefined sequence of steps in response to a trigger. It perceives the conditions in its environment, reasons about what those conditions mean and what response they require, selects from a range of possible actions, executes the one it determines is most appropriate, observes the result, and adjusts its approach based on what happened. That loop — perceive, reason, act, observe, adjust — is what makes an agent fundamentally different from automation. Automation executes. An agent decides. Automation follows a script. An agent navigates a situation. And in an enterprise environment where conditions change continuously, where exceptions outnumber the rule, and where the cost of a wrong decision is real and measurable, that difference is not philosophical. It is the difference between a system that breaks when reality diverges from what was programmed and a system that adapts.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">The Evolution of Business Software · Why AI Agents Represent a Genuine Breakthrough</div>
+        <div class="evolution-stack">
+          <div class="evolution-card">
+            <div class="evolution-step">1</div>
+            <div>
+              <div class="evolution-title">Transaction Systems — Record What Happened</div>
+              <div class="evolution-body">ERP systems, databases, and record-keeping platforms that capture business events, store them reliably, and make them retrievable. Foundational and essential — but entirely passive. The system knows what happened. It does nothing with that knowledge unless a human initiates an action. Value: the business has a record. Limit: the record requires a human to act on it.</div>
+            </div>
+          </div>
+          <div class="evolution-arrow">↓</div>
+          <div class="evolution-card">
+            <div class="evolution-step">2</div>
+            <div>
+              <div class="evolution-title">Rules-Based Automation — Do What You Are Told</div>
+              <div class="evolution-body">Workflow automation, robotic process automation, and configured business rules that execute predefined actions when predefined conditions are met. More capable than passive systems — actions happen without human initiation. But the range of actions is fixed, the conditions must be anticipated in advance, and any situation that falls outside the programmed rules requires human intervention. Value: high-volume repetitive tasks execute reliably. Limit: any exception breaks the process.</div>
+            </div>
+          </div>
+          <div class="evolution-arrow">↓</div>
+          <div class="evolution-card">
+            <div class="evolution-step">3</div>
+            <div>
+              <div class="evolution-title">Predictive AI — Tell You What Is Likely</div>
+              <div class="evolution-body">Machine learning models that identify patterns in historical data and generate predictions, recommendations, or anomaly alerts. More intelligent than rules — capable of recognizing patterns that no human would have thought to program. But still fundamentally advisory. The model produces a recommendation. A human decides whether to act on it. Value: better informed decisions. Limit: still dependent on human action to close the loop.</div>
+            </div>
+          </div>
+          <div class="evolution-arrow">↓</div>
+          <div class="evolution-card" style="border-left-color: var(--green-accent);">
+            <div class="evolution-step" style="color: rgba(26,124,92,0.3);">4</div>
+            <div>
+              <div class="evolution-title">AI Agents — Perceive, Reason, Act, and Adapt</div>
+              <div class="evolution-body">AI agents that monitor their environment continuously, reason about what they observe, select and execute the most appropriate response, evaluate the outcome, and adjust their approach — all without human initiation at each step. The loop closes itself. Exceptions are handled through reasoning rather than programmed rules. And the range of situations the agent can navigate expands with every interaction. Value: autonomous business operation at scale. This is the breakthrough.</div>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — The Four Generations of Business Software · Why AI Agents Represent a Genuine Category Break · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-navy">Automation Executes. Agents Decide.</span>
+        <span class="tag tag-gold">Automation Follows a Script. Agents Navigate a Situation.</span>
+        <span class="tag tag-green">The Loop Closes Itself — No Human Initiation Required</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The difference between automation and an AI agent is not a matter of degree. It is a matter of kind. Automation executes what it was told. An agent figures out what needs to be done. In a business environment where conditions change faster than any script can anticipate, that distinction is the difference between a system that handles what was expected and one that handles what actually happens.</div>
+        <div class="callout-source">SAP in 3 · AI Agents in Plain English · July 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about the difference between a vending machine and a skilled sales assistant. The vending machine is excellent automation. It accepts input, executes a predefined sequence of actions, and delivers a predetermined output. It does this reliably, at scale, and without human intervention — as long as reality matches what it was designed for. Put in a coin it does not recognize and the machine stops. Ask it for something not in the inventory and it cannot help. The skilled sales assistant is the agent. They observe the customer, assess the situation, draw on their knowledge and experience, decide what to do, do it, observe the reaction, and adjust. They handle the unexpected because they are reasoning about it — not because someone programmed a rule for every possible scenario. AI agents are the skilled sales assistant, at enterprise scale, working continuously, across every business process simultaneously.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How AI Agents Work — The Four Components That Make Autonomous Action Possible</div>
+    </div>
+    <div class="finding-body">
+      <p>An AI agent is not a single technology. It is a combination of four components that work together to create the perceive-reason-act-observe loop that distinguishes agents from every previous generation of business software. Understanding these four components is the foundation for evaluating any agent claim — from any vendor, in any context — with clarity rather than being swept along by the enthusiasm that surrounds the topic.</p>
+      <p>The first component is perception — the agent's ability to observe and understand the conditions in its environment. In an enterprise context, this means access to live business data: transactions as they occur, signals from connected systems, documents as they arrive, and events as they unfold across the business landscape the agent is responsible for. The second is reasoning — the ability to interpret what the perceived conditions mean and determine what response they require. This is where the large language model and the business AI capabilities covered in Issue 016 become central — the agent's reasoning capability is only as trustworthy as the model it runs on and the business context it has access to. The third is action — the ability to execute a response in the business system, initiating workflows, updating records, generating communications, or coordinating with other agents or humans as the situation requires. The fourth is memory — the ability to retain context across interactions, learn from outcomes, and improve the quality of future reasoning based on what previous actions produced.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">How an AI Agent Works · The Four Components of Autonomous Action</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">👁️</div>
+          <div>
+            <div class="diagram-row-title">Perception — What the Agent Sees</div>
+            <div class="diagram-row-body">The agent's connection to live data sources — ERP transactions, supply chain signals, customer interactions, financial postings, HR events, and any other data stream relevant to its domain. In SAP's architecture, this perception layer connects directly to S/4HANA, SuccessFactors, Ariba, SAP CX, and SAP Business Data Cloud — giving the agent a real-time, unified view of the business conditions it is responsible for monitoring. An agent that cannot perceive accurately cannot reason accurately. The quality of the perception layer determines the quality of everything that follows.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-gold">🧠</div>
+          <div>
+            <div class="diagram-row-title">Reasoning — What the Agent Thinks</div>
+            <div class="diagram-row-body">The cognitive layer where perceived conditions are interpreted, evaluated against business objectives and constraints, and converted into a decision about what action to take. In SAP's agent architecture, this reasoning layer runs on SAP Business AI — the business-specific AI model covered in Issue 016 that understands SAP process context, organizational rules, and the compliance requirements that constrain what actions are appropriate. An agent reasoning from general-purpose AI is approximating. An agent reasoning from SAP Business AI is deciding from grounded business knowledge.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">⚡</div>
+          <div>
+            <div class="diagram-row-title">Action — What the Agent Does</div>
+            <div class="diagram-row-body">The execution layer where the agent's decision becomes a business outcome — a workflow initiated, a record updated, a document generated, an approval routed, an alert sent, a system updated. In SAP's architecture, agent actions execute directly in the underlying SAP applications through governed API connections — meaning the action is subject to the same audit controls, approval hierarchies, and compliance checks as any human-initiated action in the same system. The agent acts within the governance framework, not around it.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">📚</div>
+          <div>
+            <div class="diagram-row-title">Memory — What the Agent Learns</div>
+            <div class="diagram-row-body">The context retention layer that allows the agent to remember what it has observed, what actions it has taken, and what outcomes those actions produced — and use that accumulated context to improve the quality of future reasoning. Short-term memory allows the agent to maintain context within a single workflow execution. Long-term memory allows the agent to recognize patterns across many interactions over time — identifying the supplier that has been late consistently, the expense category that generates the most policy exceptions, the customer segment that responds most strongly to a particular service approach.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 2 — The Four Components of an AI Agent · Perception, Reasoning, Action, Memory · Enterprise Architecture · 2026</div>
+      </div>
+
+      <p style="margin-bottom: 20px;">SAP's agent ecosystem spans four distinct agent types — each designed for a different relationship between the agent and the humans it works alongside:</p>
+
+      <div class="agent-grid">
+        <div class="agent-card gold">
+          <div class="agent-icon">💬</div>
+          <div class="agent-title">Conversational Agents</div>
+          <div class="agent-body">Agents that respond to natural language requests — answering questions, surfacing information, generating documents, and guiding users through processes. SAP Joule in its assistant mode is the primary example. These agents augment human work by making information and capability accessible through conversation rather than navigation. The human initiates. The agent responds.</div>
+        </div>
+        <div class="agent-card gold">
+          <div class="agent-icon">🔄</div>
+          <div class="agent-title">Process Agents</div>
+          <div class="agent-body">Agents that execute multi-step business workflows — managing the sequence of actions required to complete a business process from initiation to resolution. Invoice processing, expense approval, onboarding workflows, and procurement cycles are common examples. The human defines the process. The agent executes it — handling exceptions through reasoning rather than stopping at every deviation for human input.</div>
+        </div>
+        <div class="agent-card green">
+          <div class="agent-icon">📡</div>
+          <div class="agent-title">Monitoring Agents</div>
+          <div class="agent-body">Agents that watch defined conditions continuously and act when those conditions meet specified thresholds or patterns — without waiting to be triggered. A finance agent monitoring for journal entry anomalies. A supply chain agent watching for demand signals that deviate from forecast. A compliance agent tracking regulatory deadline proximity. These agents are always on — surfacing the situations that require attention before they become problems.</div>
+        </div>
+        <div class="agent-card green">
+          <div class="agent-icon">🤝</div>
+          <div class="agent-title">Orchestrating Agents</div>
+          <div class="agent-body">Agents that coordinate the work of other agents — decomposing complex business objectives into component tasks, assigning those tasks to specialized agents, monitoring their progress, and synthesizing their outputs into a unified business outcome. In SAP's Autonomous Suite, orchestrating agents manage the interaction between the Finance Agent, the Procurement Agent, and the Supply Chain Agent when a business situation requires all three to act in coordination.</div>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">Perceive, Reason, Act, Observe, Adjust</span>
+        <span class="tag tag-navy">Four Agent Types — Conversational to Orchestrating</span>
+        <span class="tag tag-green">Actions Governed by the Same Controls as Human Actions</span>
+        <span class="tag tag-gold">Memory That Improves Every Interaction</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">200<span>+</span></div>
+          <div class="stat-label">AI agents available in SAP's Autonomous Suite — each mapped to a specific business role and domain</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">50<span>+</span></div>
+          <div class="stat-label">Joule Assistants — the named business-role agents that operate across Finance, Procurement, Supply Chain, HR, and CX</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">26</div>
+          <div class="stat-label">Industries covered by SAP Industry AI agents — with sector-specific agent capabilities built on decades of domain expertise</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3<span>×</span></div>
+          <div class="stat-label">Faster exception resolution reported by organizations using monitoring agents vs. human-only exception management processes</div>
+        </div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is the clearest way to understand how an AI agent works in practice. Imagine a new hire in your finance department whose job is to monitor the accounts payable ledger. On their first day, they learn what a normal posting looks like, what patterns indicate a potential error or duplicate, and what approval threshold requires escalation to a manager. They start watching. When they see something that matches the pattern for a potential duplicate, they flag it. When they see an invoice that falls within their authorization level, they process it. When they see something outside their authority, they escalate it with a clear explanation. Over time they get better at spotting the patterns — because they remember what they have seen before. Now imagine that employee never leaves their desk, processes every posting the moment it arrives, and handles a volume of transactions no human team could sustain. That is a monitoring agent in an accounts payable context. The intelligence is human-like. The scale is not.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What AI Agents Change — And What to Watch Out For When Deploying Them</div>
+    </div>
+    <div class="finding-body">
+      <p>The business outcomes from well-deployed AI agents arrive at three levels. The first is efficiency — the elimination of the human time currently consumed by the monitoring, triage, and routine execution tasks that agents handle autonomously. For most enterprise organizations, a significant portion of every knowledge worker's day is spent on tasks that match the agent profile precisely — high volume, pattern-recognizable, rule-governed, and repetitive enough that human judgment adds little value per transaction but significant cumulative cost per week. Agents handle this work at machine speed and machine scale, freeing human capacity for the tasks where judgment, relationship, creativity, and contextual reasoning genuinely matter.</p>
+      <p>The second level is resilience — the ability to maintain operational continuity through disruptions that would overwhelm human capacity. When a tariff change requires the simultaneous evaluation of hundreds of supplier relationships. When a system issue generates thousands of exception alerts that need triage. When a major customer event creates a surge of service inquiries across multiple channels simultaneously. In each case, the organization with agents deployed handles the surge systematically while the organization without them faces it manually — with the delays, errors, and dropped items that manual handling at scale inevitably produces. The third level is strategic — the compounding intelligence advantage that agents build over time as their memory accumulates organizational knowledge that makes every future decision better informed than the one before it.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">What AI Agents Change — And the Risks Worth Managing</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">✅</div>
+          <div>
+            <div class="diagram-row-title">What Changes for Good — The Genuine Outcomes</div>
+            <div class="diagram-row-body">Transactional work that previously required human time executes continuously without human initiation. Exception volumes that previously overwhelmed teams are triaged automatically with only the genuinely ambiguous cases requiring human judgment. Process consistency improves because the agent applies the same logic every time — no variation based on who is handling the transaction, what time of day it is, or how tired the team is after a long close cycle. And the organizational knowledge embedded in agent memory accumulates over time in a way that human knowledge — which walks out the door when employees leave — does not.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">⚠️</div>
+          <div>
+            <div class="diagram-row-title">What to Watch — The Risks Worth Managing</div>
+            <div class="diagram-row-body">Agents that act autonomously on poor-quality data amplify errors at machine speed — making data quality a prerequisite for agent deployment rather than a nice-to-have. Agents operating outside clear governance frameworks can take actions that are technically within their capabilities but outside the intended boundaries of their role — making governance design a critical step before deployment rather than a cleanup task after problems emerge. And agents deployed in isolation from the humans who understand the business context they operate in can optimize for the metrics they are given while missing the judgment that would recognize when those metrics are pointing in the wrong direction.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🏆</div>
+          <div>
+            <div class="diagram-row-title">The Compounding Advantage — Why Starting Now Matters</div>
+            <div class="diagram-row-body">Agent intelligence compounds with deployment time. The organization that deploys a supply chain monitoring agent today begins accumulating organizational knowledge — about its specific demand patterns, its specific supplier behaviors, its specific exception profiles — that makes the agent more accurate and more capable every week. The organization that deploys the same agent in twelve months starts from zero. The gap between those two organizations at the end of year two is not twelve months of agent deployment. It is twelve months of compounded organizational learning that cannot be fast-forwarded.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3 — AI Agent Business Impact · What Changes, What to Watch, and Why Starting Now Matters · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-green">Transactional Work Automated at Scale</span>
+        <span class="tag tag-gold">Organizational Knowledge Compounds Over Time</span>
+        <span class="tag tag-red">Data Quality Is the Prerequisite — Not the Follow-Up</span>
+        <span class="tag tag-navy">Governance Before Deployment — Not After</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The organizations that will lead in the agent era are not the ones that deployed the most agents. They are the ones that deployed the right agents — on the right data, within the right governance framework, with the right human oversight — and then expanded systematically from a foundation of measured outcomes rather than vendor enthusiasm.</div>
+        <div class="callout-source">SAP in 3 · AI Agents in Plain English · Enterprise Deployment Strategy · July 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Here is the most important question to ask before deploying any AI agent in your organization. If this agent makes a wrong decision — and at some point, it will — how quickly will we know, how significant will the consequence be, and how easily can we correct it? The answer to that question determines the appropriate level of human oversight for that agent's actions. An agent that routes low-value expense reports for reimbursement can operate with significant autonomy — the consequence of an error is small and easily corrected. An agent that executes large financial postings or approves significant procurement decisions requires more oversight — not because agents cannot be trusted, but because the consequence of an error justifies the additional governance. Match the autonomy to the consequence. That is the principle that makes agent deployment responsible rather than reckless.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">SAP's Agent Ecosystem Is Ready — Right Now</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">🤖</div>
+        <div class="gn-card-title">200+ Agents Available Today</div>
+        <div class="gn-card-body">SAP's Autonomous Suite includes over 200 pre-built AI agents mapped to specific business roles across Finance, Procurement, Supply Chain, HR, and Customer Experience — each with defined KPIs and measurable ROI commitments. Organizations do not need to build agents from scratch. They activate agents that are already built, already grounded in SAP business context, and already governed by the same enterprise controls that the underlying applications operate under.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🏗️</div>
+        <div class="gn-card-title">Build Your Own With SAP Build</div>
+        <div class="gn-card-body">For organizations with specific use cases that pre-built agents do not cover, SAP Build on BTP provides the low-code and pro-code tools to build custom agents that run on SAP Business AI — inheriting the same governance framework, the same data connections, and the same enterprise-grade controls as native SAP agents. Custom agents built on SAP infrastructure are governed from birth rather than having governance added as an afterthought.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔒</div>
+        <div class="gn-card-title">SAP AI Agent Hub — Govern Everything</div>
+        <div class="gn-card-body">The SAP AI Agent Hub — available as part of the Business AI Platform — provides centralized governance for every agent deployed across the SAP landscape. Visibility into what every agent is doing. Controls over what actions each agent is authorized to take. Audit trails for every autonomous action executed. And performance monitoring that tracks whether each agent is delivering the KPIs it was deployed to achieve. Governance at the platform level rather than configured separately for each agent.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🌐</div>
+        <div class="gn-card-title">Open Standards — MCP and A2A</div>
+        <div class="gn-card-body">SAP's agent ecosystem supports the MCP and A2A open protocols announced at Sapphire 2026 — enabling SAP agents to communicate and collaborate with non-SAP agents from Microsoft, Salesforce, ServiceNow, and other enterprise platforms. Organizations with existing AI agent investments in non-SAP tools can integrate those agents with SAP's ecosystem rather than replacing them — making SAP the orchestration hub for a multi-vendor agent strategy rather than a proprietary alternative to existing investments.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">Agents Do Not Replace Your People. They Change What Your People Do.</div>
+    <div class="bottom-line-text">
+      <p>The most important thing to understand about AI agents — after you understand what they are — is what they are not. They are not a workforce reduction strategy. They are not a replacement for the human judgment, relationship intelligence, creative thinking, and organizational leadership that define the highest-value contributions your people make. What they are is a tool that eliminates the transactional, repetitive, and pattern-recognizable work that currently consumes a significant portion of those same people's days — freeing their capacity for the work that only humans can do well.</p>
+      <p>The organizations that deploy agents most effectively are the ones that are clearest about this distinction before they start. They identify the tasks where agent autonomy adds value without adding risk. They establish the governance frameworks that make autonomous action trustworthy. They measure outcomes against defined KPIs rather than assuming deployment equals value. And they build on what works rather than chasing every new agent announcement from every vendor simultaneously. Deployed thoughtfully, on the right data, within the right governance framework — AI agents do not just automate work. They elevate the people who no longer have to do it.</p>
+      <p>Next week, SAP in 3 closes the AI series with Issue 018 — the SAP AI Agent Hub. The governance layer that makes everything we have covered in this three-issue series deployable at enterprise scale with the controls, visibility, and accountability that boards and regulators require. It is the issue that completes the AI picture.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — Your AI Agent Action Agenda</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Identify your highest-volume pattern-recognizable tasks:</strong> Across your organization, identify the business processes where the work is high volume, the decisions are rule-governed, the exceptions are identifiable, and the consequence of an agent error is manageable. Those processes are your agent starting points — and they are almost certainly present in accounts payable, expense management, onboarding workflows, and customer service triage regardless of your industry.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Match autonomy to consequence before you deploy:</strong> For each agent use case you identify, explicitly define what actions the agent is authorized to take autonomously, what actions require human approval before execution, and what situations should escalate immediately to human review. Document this governance design before deployment — not after the first unexpected autonomous action creates an organizational conversation you were not ready for.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Evaluate your data quality as an agent prerequisite:</strong> Agents amplify what is in the data they operate on — including errors. Before deploying any monitoring or process agent, assess the quality, completeness, and governance of the data the agent will perceive and act on. The Business Data Cloud investment covered in Issue 008 is the foundation that makes agent perception trustworthy. Without it, agents may act confidently on a distorted picture of reality.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Explore the SAP AI Agent Hub before you need it:</strong> The organizations that scale agent deployment successfully are the ones that have the governance infrastructure in place before agents are operating at scale — not the ones that build it reactively after the first governance incident. Next week's issue covers the SAP AI Agent Hub in detail. Read it before your next agent deployment, not after.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Statistics and product capabilities referenced reflect publicly available SAP documentation and industry research as of July 2026. Product availability, pricing, and specifications may vary by contract and region. Always consult qualified SAP advisors before making technology or business strategy decisions. SAP in 3 is an independent intelligence series and is not affiliated with or endorsed by SAP SE.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 017 · July 29, 2026 · AI Agents · Everyone Is Talking About AI Agents. Here Is What They Actually Are.
+</footer>
+
+</body>
+</html>
