@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAP in 3 — Issue 028 · The Context Layer · Your AI Can Read the Data. The Context Layer Teaches It What the Data Means.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0B1628; --navy-mid: #152035; --navy-light: #1E2E47;
+      --gold: #C9A84C; --gold-light: #E2C47A; --gold-pale: #F5EDD5;
+      --cream: #FAF7F2; --slate: #8497B0; --red-accent: #C0392B;
+      --green-accent: #1A7C5C; --text-body: #2C3E50; --text-light: #5D6D7E; --rule: #D4C5A0;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--cream); font-family: 'Source Serif 4', Georgia, serif; color: var(--text-body); line-height: 1.75; }
+
+    .masthead { background: var(--navy); color: white; }
+    .masthead-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; border-bottom: 1px solid rgba(201,168,76,0.3); }
+    .masthead-meta { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .masthead-issue { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .masthead-main { padding: 48px 60px 40px; text-align: center; }
+    .publication-name { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 900; letter-spacing: -1px; color: white; line-height: 1; margin-bottom: 8px; }
+    .publication-name span { color: var(--gold); font-style: italic; }
+    .publication-tagline { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: var(--slate); text-transform: uppercase; margin-bottom: 36px; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 0 auto 32px; }
+    .hero-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: white; line-height: 1.2; max-width: 720px; margin: 0 auto 14px; }
+    .hero-deck { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; color: var(--gold-light); max-width: 600px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-pull { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); border-right: 3px solid var(--gold); padding: 20px 40px; max-width: 680px; margin: 0 auto; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--gold-pale); line-height: 1.6; }
+    .byline-bar { display: flex; justify-content: center; align-items: center; gap: 32px; padding: 20px 60px; border-top: 1px solid rgba(201,168,76,0.2); margin-top: 40px; }
+    .byline-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--slate); text-transform: uppercase; }
+    .byline-item strong { color: var(--gold-light); display: block; font-size: 11px; }
+    .byline-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+
+    .context-banner { background: var(--navy-mid); border-bottom: 1px solid rgba(201,168,76,0.2); padding: 14px 60px; }
+    .context-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
+    .context-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+    .context-text { font-family: 'Source Serif 4', serif; font-size: 13px; color: var(--slate); font-style: italic; }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 60px 40px; }
+    .intro-text { font-size: 19px; line-height: 1.85; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+    .intro-text p + p { margin-top: 20px; }
+    .intro-text .drop-cap::first-letter { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; float: left; line-height: 0.8; margin: 8px 10px -4px 0; color: var(--gold); }
+    .finding { margin-bottom: 64px; padding-bottom: 64px; border-bottom: 1px solid var(--rule); }
+    .finding-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .finding-number { font-family: 'Playfair Display', serif; font-size: 90px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 0.85; float: left; margin-right: 16px; margin-top: -8px; }
+    .finding-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 24px; padding-left: 80px; }
+    .finding-body { font-size: 17px; line-height: 1.85; clear: both; }
+    .finding-body p + p { margin-top: 18px; }
+    .diagram-box { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .diagram-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+    .diagram-row { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; border-bottom: 1px solid #EEE8DC; }
+    .diagram-row:last-child { border-bottom: none; }
+    .diagram-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .icon-warn { background: #FFF3CD; } .icon-alert { background: #FCE4EC; } .icon-ok { background: #E8F5E9; } .icon-blue { background: #E3F2FD; } .icon-gold { background: #FDF5E4; }
+    .diagram-row-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); margin-bottom: 4px; }
+    .diagram-row-body { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 16px; letter-spacing: 0.08em; }
+    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .tag-red { background: #FDECEA; color: var(--red-accent); } .tag-gold { background: #FDF5E4; color: #8B6914; } .tag-green { background: #E8F5EF; color: var(--green-accent); } .tag-navy { background: #EBF0F7; color: var(--navy); }
+    .callout { background: var(--navy); border-radius: 6px; padding: 28px 32px; margin: 28px 0; position: relative; }
+    .callout::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--gold); opacity: 0.3; position: absolute; top: -10px; left: 16px; line-height: 1; }
+    .callout-text { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: white; line-height: 1.6; padding-left: 20px; }
+    .callout-source { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; padding-left: 20px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .stat-card { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 20px 24px; }
+    .stat-number { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--gold); }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); line-height: 1.4; }
+    .plain-english { background: #F5F0E8; border-left: 4px solid var(--gold); padding: 20px 24px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .plain-english-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .plain-english-text { font-size: 15px; line-height: 1.7; color: var(--text-body); font-style: italic; }
+    .good-news { background: var(--navy); border-radius: 8px; padding: 40px 48px; margin: 48px 0; color: white; }
+    .good-news-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .checkmark-icon { width: 36px; height: 36px; background: var(--green-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; flex-shrink: 0; }
+    .good-news-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4CAF82; margin-bottom: 4px; }
+    .good-news-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; }
+    .good-news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .good-news-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 20px; }
+    .gn-card-icon { font-size: 22px; margin-bottom: 10px; }
+    .gn-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+    .gn-card-body { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+    .bottom-line { padding: 48px 0; border-top: 3px solid var(--navy); }
+    .bottom-line-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .bottom-line-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--navy); margin-bottom: 24px; }
+    .bottom-line-text { font-size: 17px; line-height: 1.85; }
+    .bottom-line-text p + p { margin-top: 18px; }
+    .watchlist { background: white; border: 1px solid #E0D8C8; border-top: 3px solid var(--gold); border-radius: 4px; padding: 24px 28px; margin-top: 28px; }
+    .watchlist-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+    .watchlist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #F0EAE0; font-size: 14px; line-height: 1.5; }
+    .watchlist-item:last-child { border-bottom: none; }
+    .watchlist-arrow { color: var(--gold); font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+
+    /* RECORD VS MEANING */
+    .vs-box { display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: white; border: 1px solid #E0D8C8; border-radius: 6px; overflow: hidden; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .vs-col { padding: 24px 28px; }
+    .vs-col-left { background: #F7F4EE; border-right: 1px solid #E0D8C8; }
+    .vs-col-right { background: #EBF2FA; }
+    .vs-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 14px; }
+    .vs-col-left .vs-tag { color: var(--text-light); }
+    .vs-col-right .vs-tag { color: #2C5E91; }
+    .vs-line { font-family: 'DM Mono', monospace; font-size: 12.5px; line-height: 1.9; color: var(--text-body); }
+    .vs-col-right .vs-line { font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.7; }
+    .vs-line strong { color: var(--navy); }
+
+    /* KNOWLEDGE GRAPH NODE DIAGRAM */
+    .kg { background: white; border: 1px solid #E0D8C8; border-radius: 6px; padding: 32px 36px; margin: 32px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .kg-flow { max-width: 420px; margin: 0 auto; }
+    .kg-node { border-radius: 6px; padding: 14px 20px; text-align: center; }
+    .kg-node-a { background: linear-gradient(90deg, rgba(201,168,76,0.20), rgba(201,168,76,0.08)); border: 1px solid var(--gold); }
+    .kg-node-b { background: #EBF0F7; border: 1px solid #B8CBE0; }
+    .kg-node-c { background: #E8F5EF; border: 1px solid #A5D6A7; }
+    .kg-node-d { background: var(--navy); }
+    .kg-node-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 3px; }
+    .kg-node-a .kg-node-label { color: #8B6914; }
+    .kg-node-b .kg-node-label { color: #2C5E91; }
+    .kg-node-c .kg-node-label { color: var(--green-accent); }
+    .kg-node-d .kg-node-label { color: var(--gold-light); }
+    .kg-node-value { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--navy); }
+    .kg-node-d .kg-node-value { color: white; }
+    .kg-edge { display: flex; flex-direction: column; align-items: center; padding: 4px 0; }
+    .kg-edge-line { width: 2px; height: 12px; background: var(--rule); }
+    .kg-edge-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); padding: 3px 10px; background: #FDF5E4; border-radius: 10px; margin: 2px 0; }
+    .kg-caption { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); margin-top: 20px; letter-spacing: 0.08em; text-align: center; }
+
+    .disclaimer { background: #F0EDE6; border-radius: 4px; padding: 16px 20px; margin-top: 40px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-light); line-height: 1.7; letter-spacing: 0.04em; }
+    footer { background: var(--navy); color: var(--slate); text-align: center; padding: 24px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-top: 2px solid var(--gold); }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .masthead-top, .masthead-main { padding: 24px; }
+      .publication-name { font-size: 36px; }
+      .hero-headline { font-size: 26px; }
+      .container { padding: 32px 24px; }
+      .stat-grid, .good-news-grid, .vs-box { grid-template-columns: 1fr; }
+      .vs-col-left { border-right: none; border-bottom: 1px solid #E0D8C8; }
+      .finding-number { font-size: 60px; }
+      .finding-title { font-size: 24px; }
+      .good-news { padding: 28px 24px; }
+      .byline-bar { flex-direction: column; gap: 12px; }
+      .byline-dot { display: none; }
+      .context-banner { padding: 12px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="context-banner">
+  <div class="context-inner">
+    <div class="context-label">🧭 Layer by Layer</div>
+    <div class="context-text">Last week's issue laid out the foundation stack: process, data, context, and AI. This issue climbs to the third layer, the one that turns unified data into business meaning. It is called the context layer, and it runs on a knowledge graph.</div>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Weekly Intelligence · The Context Layer</div>
+    <div class="masthead-issue">Issue 028 · November 4, 2026</div>
+  </div>
+  <div class="masthead-main">
+    <div class="publication-name">SAP <span>in 3</span></div>
+    <div class="publication-tagline">Why it matters · How it works · What you gain</div>
+    <div class="gold-rule"></div>
+    <div class="hero-headline">Your AI Can Read the Data. The Context Layer Teaches It What the Data Means.</div>
+    <div class="hero-deck">A unified data foundation tells an AI what is true. A knowledge graph tells it what that truth means, and how every fact connects to every other. This issue is about the layer that turns records an AI can read into a business an AI can understand.</div>
+    <div class="hero-pull">
+      "The difference between an AI that processes your data and an AI that understands your business is not a bigger model. It is a layer of meaning sitting between the two, and it has a name. The knowledge graph."
+    </div>
+  </div>
+  <div class="byline-bar">
+    <div class="byline-item"><strong>The Context Layer</strong>Knowledge Graph · Business Meaning</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Framework</strong>Why · How · What</div>
+    <div class="byline-dot"></div>
+    <div class="byline-item"><strong>Published</strong>Weekly · Every Wednesday</div>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="intro-text">
+    <p class="drop-cap">Last week this series made the case that the path to production is a stronger foundation, and it named the two investments that build one: Clean Core for the process layer and SAP Business Data Cloud for the data layer. Suppose an organization does that work. Suppose its data is finally unified, governed, and consistent, with one version of the truth sitting in one place. A fair question follows. Is that enough for an AI to actually understand the business? The honest answer is no, not yet, and the reason is worth an entire issue.</p>
+    <p>Unified data is a collection of facts that agree with each other. It is a tremendous achievement, and most organizations never get there. But a pile of facts, however clean, is not the same as an understanding. An AI handed a perfectly governed table still sees only values in rows. It does not know that this customer owns that account, that the account is exposed to that counterparty, or that the counterparty is a subsidiary of an entity flagged somewhere else entirely. The meaning of the business lives in the relationships between the facts, and those relationships are not in the rows. This issue is about the layer that supplies them. It covers why unified data still falls short of understanding, how SAP's knowledge graph builds the layer of meaning on top of the data, and what becomes possible when an AI can finally reason across the connections instead of reading one cell at a time.</p>
+  </div>
+
+  <section class="finding">
+    <div class="finding-label">Finding One — Why</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">01</div>
+      <div class="finding-title">Why Unified Data Still Is Not Enough for AI to Understand the Business</div>
+    </div>
+    <div class="finding-body">
+      <p>There is a quiet assumption buried in most enterprise AI programs, and it is the reason so many of them disappoint even after the data work is done. The assumption is that once the data is clean and unified, the AI will simply understand the business. It will not, and the gap is not a question of model quality. A language model is extraordinary at language and at drawing on broad general knowledge. What it does not have, and cannot acquire on its own, is an understanding of what your specific records mean and how they connect to each other. That understanding is not something intelligence alone produces. It has to be supplied.</p>
+      <p>Consider what an AI actually sees when it reads a well-governed database. It sees that a record labeled customer has a certain identifier, that an account record has a balance, that a position has an exposure value, that a counterparty has a name. Every one of those facts is correct and traceable. But the AI does not know that the customer holds the account, that the account carries the exposure, or that the exposure is to the counterparty. It does not know that two differently-named records refer to the same real-world entity. It does not know that a change in one place has consequences in three others. The facts are present. The meaning that connects them is absent, and without that meaning the AI can answer only the narrowest, most literal questions. Ask it something that requires following a chain of relationships, the kind of question a business actually cares about, and it has nowhere to go.</p>
+
+      <div class="vs-box">
+        <div class="vs-col vs-col-left">
+          <div class="vs-tag">What the Data Says</div>
+          <div class="vs-line">
+            Customer: C-4471<br>
+            Account: A-88213<br>
+            Exposure: 2.3M<br>
+            Counterparty: ACME Capital<br>
+            Parent entity: Northreef Group
+          </div>
+        </div>
+        <div class="vs-col vs-col-right">
+          <div class="vs-tag">What the Business Means</div>
+          <div class="vs-line">
+            Customer <strong>C-4471 holds</strong> account A-88213, which <strong>is exposed to</strong> ACME Capital, which <strong>is a subsidiary of</strong> Northreef Group, against which the firm already carries exposure in two other business lines. The <strong>real, total exposure</strong> is the sum, and no single table shows it.
+          </div>
+        </div>
+      </div>
+
+      <div class="diagram-box">
+        <div class="diagram-title">Three Questions Unified Data Alone Cannot Answer</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-alert">🔗</div>
+          <div>
+            <div class="diagram-row-title">What Is Our True Exposure Here</div>
+            <div class="diagram-row-body">The answer requires following relationships across customers, accounts, products, and corporate hierarchies that live in separate tables. The data holds every piece, but the connection between the pieces, which is where the real answer lives, is not stored as a fact. An AI reading the tables one at a time cannot assemble it.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-warn">👥</div>
+          <div>
+            <div class="diagram-row-title">Are These Two Records the Same Entity</div>
+            <div class="diagram-row-body">The same customer, counterparty, or vendor often appears under slightly different names across systems. Knowing that two records are in fact one is a statement about meaning, not about the values in the fields. Without it, an AI double-counts, misses risk, and treats one relationship as several unrelated ones.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🌊</div>
+          <div>
+            <div class="diagram-row-title">What Else Does This Change Affect</div>
+            <div class="diagram-row-body">A change to one record ripples through everything connected to it. Which downstream positions, obligations, or customers are affected is a question about the web of relationships, and a table has no web. It has rows. The ripple is invisible to an AI that cannot see how the rows relate.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 1 — The Context Gap · Questions That Live in the Relationships, Not the Records · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-red">Facts Alone Are Not Understanding</span>
+        <span class="tag tag-gold">Meaning Lives in the Relationships</span>
+        <span class="tag tag-navy">A Table Has Rows, Not a Web</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">Clean data tells an AI what is true. It does not tell the AI what the truth means. The business questions worth asking almost never live inside a single record. They live in the connections between records, and connections are exactly what a table was never built to hold.</div>
+        <div class="callout-source">SAP in 3 · The Context Layer · Enterprise AI Strategy · November 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about the difference between a list of addresses and a map. A list tells you that the clinic exists, that the pharmacy exists, and that the bus depot exists. Every entry is accurate. But you cannot plan a single trip from a list, because it does not tell you that the pharmacy is across the street from the clinic, or that one bus line connects both to the depot. The map holds exactly what the list leaves out: how everything relates to everything else. Unified data is the list of addresses. The knowledge graph is the map. You can have a perfect list and still be unable to find your way anywhere.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="finding">
+    <div class="finding-label">Finding Two — How</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">02</div>
+      <div class="finding-title">How SAP's Knowledge Graph Builds the Layer of Meaning on Top of the Data</div>
+    </div>
+    <div class="finding-body">
+      <p>SAP's answer to the context gap is a knowledge graph, and it lives inside SAP Business Data Cloud, the unified data foundation this series covered in Issue 008. A knowledge graph is a deceptively simple idea with a powerful effect. Instead of storing business information only as values in tables, it stores the entities of the business, such as customers, accounts, products, counterparties, and employees, and then stores the relationships between them as first-class facts in their own right. The relationship that a customer holds an account is not inferred or reconstructed at query time. It is recorded, explicitly, as part of the data itself. The web that a table could never hold becomes something the system knows directly.</p>
+      <p>There are three things the knowledge graph records, and together they are what turn data into meaning. The first is the entities, the nouns of the business. The second is the relationships, the verbs that connect them: holds, owns, reports to, is exposed to, is a subsidiary of. The third, and the part that is uniquely SAP's, is the business semantics, the understanding of what each entity and relationship means within the operating reality of an enterprise. SAP has spent decades modeling how businesses actually work, encoded in its applications and data models, and the knowledge graph draws on that to give the relationships genuine business meaning rather than generic links. The result is a representation an AI can reason over. When Joule or an agent asks a question, it is not querying isolated tables. It is traversing a connected model of the business.</p>
+
+      <div class="kg">
+        <div class="kg-flow">
+          <div class="kg-node kg-node-a">
+            <div class="kg-node-label">Entity · Customer</div>
+            <div class="kg-node-value">C-4471</div>
+          </div>
+          <div class="kg-edge"><div class="kg-edge-line"></div><div class="kg-edge-label">holds ↓</div><div class="kg-edge-line"></div></div>
+          <div class="kg-node kg-node-b">
+            <div class="kg-node-label">Entity · Account</div>
+            <div class="kg-node-value">A-88213</div>
+          </div>
+          <div class="kg-edge"><div class="kg-edge-line"></div><div class="kg-edge-label">is exposed to ↓</div><div class="kg-edge-line"></div></div>
+          <div class="kg-node kg-node-c">
+            <div class="kg-node-label">Entity · Counterparty</div>
+            <div class="kg-node-value">ACME Capital</div>
+          </div>
+          <div class="kg-edge"><div class="kg-edge-line"></div><div class="kg-edge-label">is a subsidiary of ↓</div><div class="kg-edge-line"></div></div>
+          <div class="kg-node kg-node-d">
+            <div class="kg-node-label">Entity · Parent Group</div>
+            <div class="kg-node-value">Northreef Group</div>
+          </div>
+        </div>
+        <div class="kg-caption">FIGURE 2 — A Knowledge Graph Stores the Verbs, Not Just the Nouns · Entities Connected by Explicit, Meaningful Relationships · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-gold">Entities Are the Nouns</span>
+        <span class="tag tag-navy">Relationships Are the Verbs</span>
+        <span class="tag tag-green">Semantics Give the Business Meaning</span>
+        <span class="tag tag-gold">It Lives Inside Business Data Cloud</span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Ingredients of meaning — entities, the relationships between them, and the business semantics that define both</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1</div>
+          <div class="stat-label">Connected model — the knowledge graph turns many separate tables into a single traversable web of the business</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">0</div>
+          <div class="stat-label">Reconstruction at query time — relationships are stored as explicit facts, not inferred on the fly from scattered data</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">008</div>
+          <div class="stat-label">The issue that introduced Business Data Cloud, the unified foundation the knowledge graph is built inside</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">A table stores the nouns of a business. A knowledge graph stores the verbs as well, and the verbs are where the meaning is. Once the relationships are facts the system knows directly, an AI stops reading records one at a time and starts reasoning across the business as a whole.</div>
+        <div class="callout-source">SAP in 3 · The Context Layer · Knowledge Graph in Business Data Cloud · November 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about a family tree next to a spreadsheet of the same family. The spreadsheet lists every person, their birthday, and their town. Every cell is accurate, and yet you cannot tell from it who is whose grandparent, which branches married into each other, or who inherited from whom. A family tree holds the identical people, but it records the thing the spreadsheet threw away: how everyone relates. That is the only difference, and it is everything. SAP's knowledge graph builds the family tree of your business. The customers, accounts, and counterparties are the people. The lines showing who holds, owns, and is exposed to whom are the branches. The AI finally has something it can trace.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="finding">
+    <div class="finding-label">Finding Three — What</div>
+    <div style="overflow:hidden; margin-bottom:4px;">
+      <div class="finding-number">03</div>
+      <div class="finding-title">What Becomes Possible When AI Can Reason Across Connected Meaning</div>
+    </div>
+    <div class="finding-body">
+      <p>The payoff of the context layer is a change in the kind of question an AI can answer at all. Without it, AI is confined to lookups and summaries, questions whose answers sit inside a record it can retrieve. With it, AI can answer the questions that matter, the ones whose answers are spread across the relationships and have to be assembled by following them. That is not a marginal improvement. It is the line between an AI that is impressive in a demo and an AI that is useful in the work, and for financial services in particular it is the line that decides whether AI can touch the problems that actually move risk and revenue.</p>
+      <p>The first thing that becomes possible is reasoning that spans the whole web. An AI with a knowledge graph can follow a chain from a customer to an account to a counterparty to a flagged parent entity and surface a concentration of exposure that no single report would ever show, because the exposure was never in one place to begin with. The second is genuine entity resolution, the ability to recognize that records which look different are in fact the same thing, which is foundational to anti-money-laundering work, know-your-customer processes, and any question about true relationships. The third is grounded, trustworthy answers. When Joule or an agent responds, the response is anchored in the connected model of the business rather than assembled from whatever a model guessed, which makes the answer both more accurate and, critically for a regulated industry, more explainable. You can show the path the AI followed, because the path is made of real, recorded relationships.</p>
+
+      <div class="diagram-box">
+        <div class="diagram-title">Three Things AI Can Do With a Knowledge Graph It Cannot Do Without One</div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-ok">🧠</div>
+          <div>
+            <div class="diagram-row-title">Reason Across the Whole Web of Relationships</div>
+            <div class="diagram-row-body">Follow a chain of connections from customer to account to counterparty to parent entity and assemble an answer, such as total concentrated exposure, that lives in no single record. The question a business actually asks is almost always a question about the web, and the knowledge graph is the only thing that holds the web in a form an AI can traverse.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-blue">🔍</div>
+          <div>
+            <div class="diagram-row-title">Resolve Entities That Look Different but Are the Same</div>
+            <div class="diagram-row-body">Recognize that two or more records refer to a single real-world customer, counterparty, or vendor, and treat them as one. This is the backbone of anti-money-laundering and know-your-customer work, where missing a hidden relationship or double-counting a single one are both expensive mistakes, and where the relationship, not the raw field, is what matters.</div>
+          </div>
+        </div>
+        <div class="diagram-row">
+          <div class="diagram-icon icon-gold">🛡️</div>
+          <div>
+            <div class="diagram-row-title">Give Answers That Are Grounded and Explainable</div>
+            <div class="diagram-row-body">Anchor every answer in the connected model rather than in a model's best guess, so the response is both more accurate and traceable to the relationships that produced it. In a regulated industry, being able to show the path an answer followed is not a nicety. It is often the condition that lets the answer be used in a real decision at all.</div>
+          </div>
+        </div>
+        <div class="diagram-caption">FIGURE 3 — What the Context Layer Unlocks · Reasoning, Resolution, and Explainability · 2026</div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag tag-green">Reason Across the Web</span>
+        <span class="tag tag-navy">Resolve Hidden Entities</span>
+        <span class="tag tag-gold">Explain the Path to the Answer</span>
+        <span class="tag tag-green">From Lookups to Understanding</span>
+      </div>
+
+      <div class="callout">
+        <div class="callout-text">The context layer does not make an AI sound smarter. It makes an AI right about your business. The questions worth asking are the ones whose answers are woven through the relationships, and an AI that can follow those relationships is answering a different, far more valuable class of question than one that can only read a row.</div>
+        <div class="callout-source">SAP in 3 · The Context Layer · Enterprise AI Strategy · November 2026</div>
+      </div>
+
+      <div class="plain-english">
+        <div class="plain-english-label">In Plain English</div>
+        <div class="plain-english-text">Think about a detective's evidence board, the one with photographs pinned up and string running between them. Any single photograph is close to worthless. The person in it did something, somewhere, once. The insight is never in a photograph. It is in the string that connects this person to that account, this shell company to that director, this transaction to that flagged entity. A room full of facts solves nothing. The strings solve the case. A knowledge graph is the string. It is the part of the board that holds the connections, and an AI that can follow the string can see the pattern that the pile of photographs was hiding in plain sight.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="good-news">
+    <div class="good-news-header">
+      <div class="checkmark-icon">✓</div>
+      <div>
+        <div class="good-news-label">The Good News</div>
+        <div class="good-news-title">You Are Not Buying a New Thing. You Are Switching On a Layer You Are Already Building Toward.</div>
+      </div>
+    </div>
+    <div class="good-news-grid">
+      <div class="good-news-card">
+        <div class="gn-card-icon">🧩</div>
+        <div class="gn-card-title">It Comes With the Foundation</div>
+        <div class="gn-card-body">The knowledge graph is part of SAP Business Data Cloud, covered in Issue 008 and named as the data layer of the foundation in Issue 027. For organizations already investing in that foundation, the context layer is not a separate initiative to justify. It is a capability of the ground you are already laying.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🔗</div>
+        <div class="gn-card-title">It Is What Makes the Rest Work</div>
+        <div class="gn-card-body">The context layer is the piece that lets everything above it deliver. Joule from Issue 007, the agents from Issue 017, the AI Agent Hub from Issue 018, and the finance use cases from Issue 019 all reason better when they reason over a connected model. The graph is quietly underneath each of them.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">🧭</div>
+        <div class="gn-card-title">It Rewards Starting Small</div>
+        <div class="gn-card-body">You do not model the entire business at once. Mapping the entities and relationships that matter most to your highest-value use case first, such as the customer and counterparty web behind exposure or compliance, delivers meaning where it counts before the full model exists. Context is a journey, like the foundation beneath it.</div>
+      </div>
+      <div class="good-news-card">
+        <div class="gn-card-icon">⚖️</div>
+        <div class="gn-card-title">The Hard Part Is Knowing Your Business</div>
+        <div class="gn-card-body">The real work is deciding which relationships genuinely matter and defining what they mean, and that is business knowledge, not technology. It is also exactly the knowledge your organization already holds and competitors cannot copy, which makes the context layer a place where real advantage is built, not bought.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-line">
+    <div class="bottom-line-label">The Bottom Line</div>
+    <div class="bottom-line-title">The Context Layer Is the Quiet Difference Between AI That Sounds Right and AI That Is Right.</div>
+    <div class="bottom-line-text">
+      <p>It is easy to spend an entire AI program thinking about models and data and never notice the layer in between, and that is precisely why so many programs plateau. They reach clean, unified data, they connect a capable model, and they are surprised when the results are shallow. The missing piece was never a better model or cleaner data. It was the meaning that connects the data, the layer that tells the AI not just what is true but what the truth is about and how it all hangs together. Without it, an AI reads. With it, an AI understands.</p>
+      <p>For organizations running SAP, that layer is not something to go and acquire. It is the knowledge graph inside SAP Business Data Cloud, the same foundation Issue 027 described, waiting to be shaped by the one thing only your organization can supply: a clear account of which relationships in your business actually matter and what they mean. That is the work. It is less about technology than about knowing your own enterprise well enough to teach it to a machine. And the reward is an AI that reasons the way your best people do, across the whole connected picture, rather than one cell at a time.</p>
+      <p>Next week, SAP in 3 continues the series by moving up to the top of the stack, where the foundation and the context layer finally meet the AI itself, and asking what it takes to put an agent to work on a business it can genuinely understand.</p>
+    </div>
+
+    <div class="watchlist">
+      <div class="watchlist-title">📍 Watch List — Your Context Layer Action Agenda</div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Name the questions your AI keeps failing to answer well:</strong> List the handful of questions your teams most want AI to answer and that it currently answers shallowly. The ones that require connecting information across systems, such as true exposure or genuine entity relationships, are almost always context-layer problems, not model problems, and naming them tells you exactly which relationships to map first.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Identify your highest-value entities and the relationships between them:</strong> Pick the few entities that drive your most important decisions, such as customer, counterparty, account, and product, and write down how they relate. That small map is the seed of your knowledge graph, and starting with the relationships that carry the most risk or revenue delivers meaning where it matters before the full model exists.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Test whether your AI can explain the path to an answer:</strong> Take one AI-generated answer and ask whether the system can show the chain of relationships it followed to get there. If it cannot, the answer is a guess dressed as an insight, and in a regulated setting that gap is the difference between an answer you can act on and one you cannot defend.</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="watchlist-arrow">→</span>
+        <span><strong>Treat context as business work, not an IT project:</strong> Deciding which relationships matter and what they mean is knowledge your business holds and your technology team cannot invent. Put the people who understand the business in the room when the graph is shaped. The quality of the context layer is set by the quality of that conversation, and it is where durable advantage is actually built.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This publication is produced for informational and educational purposes only. It does not constitute financial, legal, or technology advice. Product capabilities, platform architecture, and strategic positioning referenced herein reflect publicly available SAP product documentation and announcements as of November 2026. Illustrative data entities and relationships used in figures are fictional and for explanatory purposes only. Always consult qualified SAP advisors before making technology or business strategy decisions. SAP in 3 is an independent intelligence series and is not affiliated with or endorsed by SAP SE.
+  </div>
+
+</main>
+
+<footer>
+  <span>SAP in 3</span> · Weekly Intelligence · Issue 028 · November 4, 2026 · The Context Layer · The Knowledge Graph in Business Data Cloud
+</footer>
+
+</body>
+</html>
